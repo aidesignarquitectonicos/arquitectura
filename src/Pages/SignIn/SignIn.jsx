@@ -1,9 +1,19 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Container, Grid } from "@mui/material";
+import {
+    AppBar,
+    TextField,
+    IconButton,
+    Toolbar,
+    Typography,
+    Button,
+    Box,
+    Container,
+    Grid,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig";
-
+import { ArrowBack } from "@mui/icons-material";
 function SignIn() {
     //Constante para navegar
     const navegationrender = useNavigate();
@@ -22,8 +32,6 @@ function SignIn() {
         }));
     };
 
-
-
     const handleSignIn = () => {
         if (!credentials.email || !credentials.password) {
             setLoginError("Por favor, introduce tu correo electrónico y contraseña.");
@@ -41,11 +49,11 @@ function SignIn() {
                 let errorMessage = "Error al intentar iniciar sesión.";
 
                 // Puedes personalizar el mensaje de error basado en errorCode
-                if (errorCode === 'auth/wrong-password') {
+                if (errorCode === "auth/wrong-password") {
                     errorMessage = "Contraseña incorrecta.";
-                } else if (errorCode === 'auth/user-not-found') {
+                } else if (errorCode === "auth/user-not-found") {
                     errorMessage = "Usuario no encontrado.";
-                } else if (errorCode === 'auth/invalid-email') {
+                } else if (errorCode === "auth/invalid-email") {
                     errorMessage = "Formato de correo electrónico inválido.";
                 }
 
@@ -53,67 +61,93 @@ function SignIn() {
             });
     };
 
+    const handleBack = () => {
+        navegationrender(-1);
+    };
+
     return (
-        <Container maxWidth="sm">
-            <Box
+        <>
+            <AppBar
+                position="fixed"
                 sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh",
+                    background: "#f4f4f4",
+                    color: "#000",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
             >
+                <Toolbar>
+                    <IconButton onClick={handleBack} aria-label="Regresar">
+                        <ArrowBack fontSize="32px" />
+                    </IconButton>
+                    <Typography>Gallery</Typography>
+                </Toolbar>
+            </AppBar>
+            <Container maxWidth="sm" sx={{
+                overflowY: 'auto',
+                padding: '20px',
+                marginTop: 8,
+                marginBottom: 4
+            }}>
                 <Box
-                    component="form"
-                    noValidate
-                    autoComplete="off"
-                    sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+
+                    }}
                 >
-                    <Grid
-                        container
-                        spacing={2}
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
+                    <Box
+                        component="form"
+                        noValidate
+                        autoComplete="off"
+                        sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
                     >
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Email"
-                                variant="outlined"
-                                name="email"
-                                value={credentials.email}
-                                onChange={handleInputChange}
-                                margin="normal"
-                            />
+                        <Grid
+                            container
+                            spacing={2}
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                        >
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Email"
+                                    variant="outlined"
+                                    name="email"
+                                    value={credentials.email}
+                                    onChange={handleInputChange}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Password"
+                                    variant="outlined"
+                                    type="password"
+                                    name="password"
+                                    value={credentials.password}
+                                    onChange={handleInputChange}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button
+                                    onClick={handleSignIn}
+                                    variant="contained"
+                                    sx={{ mt: 2 }}
+                                >
+                                    Sign In
+                                </Button>
+                                {loginError && (
+                                    <Box sx={{ color: "red", mt: 2 }}>{loginError}</Box>
+                                )}
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Password"
-                                variant="outlined"
-                                type="password"
-                                name="password"
-                                value={credentials.password}
-                                onChange={handleInputChange}
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button
-                                onClick={handleSignIn}
-                                variant="contained"
-                                sx={{ mt: 2 }}
-                            >
-                                Sign In
-                            </Button>
-                            {loginError && (
-                                <Box sx={{ color: "red", mt: 2 }}>{loginError}</Box>
-                            )}
-                        </Grid>
-                    </Grid>
+                    </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </>
     );
 }
 
