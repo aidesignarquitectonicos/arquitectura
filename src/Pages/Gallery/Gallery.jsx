@@ -62,7 +62,7 @@ function Gallery() {
 
     return (
         <>
-            <AppBar position="static" sx={{ background: "#f4f4f4", color: "#000" }}>
+            <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <IconButton onClick={handleBack} aria-label="Regresar">
                         <ArrowBack fontSize='32px' />
@@ -72,7 +72,12 @@ function Gallery() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Box sx={{ overflowY: 'auto', maxHeight: '90vh', padding: '20px' }}>
+            <Box maxWidth="sm" sx={{
+                overflowY: 'auto',
+                padding: '20px',
+                marginTop: 8,
+                marginBottom: 4
+            }}>
                 <ImageList
                     cols={getColsForBreakpoints()}
                     gap={8}

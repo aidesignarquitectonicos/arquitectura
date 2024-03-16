@@ -77,7 +77,7 @@ function Upload() {
     };
     return (
         <>
-            <AppBar position="static" sx={{ background: "#f4f4f4", color: "#000" }}>
+            <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar >
                     <IconButton onClick={handleBack} aria-label="Regresar">
                         <ArrowBack fontSize='32px' />
@@ -87,8 +87,15 @@ function Upload() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Container maxWidth="sm">
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+            <Container maxWidth="sm" sx={{ marginTop: 8, marginBottom: 4 }}>
+                <Box sx={{
+               
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                 
+            
+                    paddingTop: 2
+                }}>
                     {showAlert && <Alert severity="success" sx={{ width: '100%', mb: 2 }}>Imágenes y datos enviados correctamente.</Alert>}
                     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} sx={{ '& > :not(style)': { m: 1, width: '100%' } }}>
                         <Grid container spacing={2} direction="column" alignItems="center" justify="center">

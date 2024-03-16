@@ -4,6 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import {
     AppBar,
     Avatar,
+    Box,
     CssBaseline,
     IconButton,
     Menu,
@@ -20,7 +21,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
 
 const Home = () => {
-    
+
     // Estado para controlar la apertura del menú
     const [anchorEl, setAnchorEl] = useState(null);
     //Constante para navegar
@@ -75,7 +76,7 @@ const Home = () => {
         <>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <AppBar position="static" sx={{ background: "#f4f4f4", color: "#000" }}>
+                <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                     <Toolbar sx={{ justifyContent: "space-between" }}>
                         <Typography variant="h6">AIDesign</Typography>
                         <IconButton onClick={handleClick}>
@@ -95,7 +96,7 @@ const Home = () => {
                             }}
                         >
                             <MenuItem onClick={handleGallery}>Gallery</MenuItem>
-                             {isAuthenticated && <MenuItem onClick={handleUpload}>Upload</MenuItem>}
+                            {isAuthenticated && <MenuItem onClick={handleUpload}>Upload</MenuItem>}
                             {isAuthenticated ? (
                                 <>
                                     <MenuItem onClick={handleClose}>{user.displayName || "Usuario"}</MenuItem>
@@ -107,7 +108,9 @@ const Home = () => {
                         </Menu>
                     </Toolbar>
                 </AppBar>
-                <Content />
+                <Box sx={{ marginTop: 8, marginBottom: 4 }}>
+                    <Content />
+                </Box>
             </ThemeProvider>
             <Footer />
         </>
