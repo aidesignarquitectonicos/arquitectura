@@ -5,7 +5,11 @@ import {
     AppBar,
     Avatar,
     Box,
+    Card,
+    CardActionArea,
+    CardContent,
     CssBaseline,
+    Dialog,
     IconButton,
     Menu,
     MenuItem,
@@ -19,8 +23,15 @@ import { useNavigate } from "react-router-dom";
 import Content from "../../Components/Content/Content";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
+import QRCode from 'qrcode.react';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 const Home = () => {
+
+    //Constante URL
+    const url = "https://aidesignarquitectonicos.github.io/arquitectura/";
+    const [open, setOpen] = useState(false);
 
     // Estado para controlar la apertura del menú
     const [anchorEl, setAnchorEl] = useState(null);
@@ -36,7 +47,7 @@ const Home = () => {
     // Cierra el menú
     const handleClose = () => {
         setAnchorEl(null);
-
+        setOpen(false);
     };
 
     const handleGallery = () => {
@@ -61,6 +72,10 @@ const Home = () => {
             console.error("Error al cerrar sesión", error);
         });
     };
+
+    const handleQr = () => {
+        setOpen(true);
+    }
 
     const isAuthenticated = !!user;
 
@@ -97,6 +112,38 @@ const Home = () => {
                         >
                             {isAuthenticated && <MenuItem onClick={handleClose}>{user.email || "Usuario"}</MenuItem>}
                             <MenuItem onClick={handleGallery}>Gallery</MenuItem>
+                            <MenuItem onClick={handleQr}>Codigo Qr</MenuItem>
+                            <Dialog
+
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="qr-code-dialog-title"
+                                fullWidth={true}
+                                maxWidth="sm"
+                            >
+                                <div style={{
+                                    background: "#f4f4f4",
+                                    display: 'flex', justifyContent: 'flex-end',
+                                }}>
+                                    <IconButton onClick={handleClose}>
+                                        <CloseIcon sx={{color:'#000'}}/>
+                                    </IconButton>
+                                </div>
+                                <div style={{
+                                    background: "#f4f4f4",
+                                    display: 'flex', flexDirection: 'column',
+                                    alignItems: 'center', paddingBottom: '20px'
+                                }}>
+                                    <h2 id="qr-code-dialog-title">Escanea este código QR</h2>
+                                    <Card>
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <QRCode value={url} size={256} level={"L"} />
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
+                                </div>
+                            </Dialog>
                             {isAuthenticated && <MenuItem onClick={handleUpload}>Upload</MenuItem>}
                             {isAuthenticated ? (
                                 <>
