@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/arquitectura/static/css/main.e6c13ad2.css",
-    "main.js": "/arquitectura/static/js/main.864e30a2.js",
+    "main.js": "/arquitectura/static/js/main.477ed986.js",
     "static/js/453.feb77398.chunk.js": "/arquitectura/static/js/453.feb77398.chunk.js",
     "static/media/icono.png": "/arquitectura/static/media/icono.3ea4b846a3f8053782fc.png",
     "index.html": "/arquitectura/index.html",
     "main.e6c13ad2.css.map": "/arquitectura/static/css/main.e6c13ad2.css.map",
-    "main.864e30a2.js.map": "/arquitectura/static/js/main.864e30a2.js.map",
+    "main.477ed986.js.map": "/arquitectura/static/js/main.477ed986.js.map",
     "453.feb77398.chunk.js.map": "/arquitectura/static/js/453.feb77398.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.864e30a2.js"
+    "static/js/main.477ed986.js"
   ]
 }
