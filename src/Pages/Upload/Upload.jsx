@@ -10,6 +10,13 @@ import { useNavigate } from 'react-router-dom';
 function Upload() {
     const navigate = useNavigate();
 
+    //Constantes del ALERT
+    const [alertInfo, setAlertInfo] = useState({
+        showAlert: false,
+        type: 'success', // Puede ser 'error', 'warning', 'info', 'success'
+        message: ''
+    });
+
     const [fields, setFields] = useState({
         field1: '',
         field2: '',
@@ -49,6 +56,16 @@ function Upload() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validación para asegurar que hay texto en los campos y al menos una imagen seleccionada
+        if (!fields.field1 || !fields.field2 || !fields.field3 || files.length === 0) {
+            setAlertInfo({
+                showAlert: true,
+                type: 'error',
+                message: 'No hay datos para enviar. Asegúrate de haber llenado los campos de texto y seleccionado al menos una imagen.'
+            });
+            return;
+        }
+
         // Aquí iría la lógica para enviar la información al backend,
         const folderUuid = uuidv4();
         const imageRefs = [];
@@ -71,7 +88,12 @@ function Upload() {
             images: imageRefs,
         });
 
-        alert('Imágenes y datos enviados correctamente.');
+        // Si todo sale bien y los datos se envían correctamente:
+        setAlertInfo({
+            showAlert: true,
+            type: 'success',
+            message: 'Imágenes y datos enviados correctamente.'
+        });
         setShowAlert(true);
 
     };
@@ -89,14 +111,17 @@ function Upload() {
             </AppBar>
             <Container maxWidth="sm" sx={{ marginTop: 8, marginBottom: 4 }}>
                 <Box sx={{
-               
+
                     alignItems: 'center',
                     justifyContent: 'center',
-                 
-            
+
+
                     paddingTop: 2
                 }}>
-                    {showAlert && <Alert severity="success" sx={{ width: '100%', mb: 2 }}>Imágenes y datos enviados correctamente.</Alert>}
+                    {alertInfo.showAlert && <Alert severity={alertInfo.type} sx={{ width: '100%', mb: 2 }}>
+                        {alertInfo.message}
+                    </Alert>}
+
                     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} sx={{ '& > :not(style)': { m: 1, width: '100%' } }}>
                         <Grid container spacing={2} direction="column" alignItems="center" justify="center">
 

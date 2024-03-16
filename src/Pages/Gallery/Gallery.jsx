@@ -10,6 +10,7 @@ import {
     Typography,
     Card,
     CardActionArea,
+    CardContent,
 } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import { ArrowBack } from "@mui/icons-material";
@@ -105,20 +106,23 @@ function Gallery() {
                                             background: "#f4f4f4",
                                         }}>
                                         <CardActionArea >
-                                            <Box key={index} sx={{
-                                                position: 'relative', display: 'flex',
-                                                justifyContent: 'center', alignItems: 'center'
-                                            }}>
-                                                <img
-                                                    loading="lazy"
-                                                    src={image}
-                                                    alt={`Imagen ${index + 1}`}
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "100%",
-                                                        objectFit: "cover",
-                                                    }} />
-                                            </Box>
+                                            <CardContent sx={{ padding: '0px' }}>
+                                                <Box key={index} sx={{
+                                                    height: 240,
+                                                    position: 'relative', display: 'flex',
+                                                    justifyContent: 'center', alignItems: 'center'
+                                                }}>
+                                                    <img
+                                                        loading="lazy"
+                                                        src={image}
+                                                        alt={`Imagen ${index + 1}`}
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "100%",
+                                                            objectFit: "cover",
+                                                        }} />
+                                                </Box>
+                                            </CardContent>
                                         </CardActionArea>
                                     </Card>
                                 ))}
