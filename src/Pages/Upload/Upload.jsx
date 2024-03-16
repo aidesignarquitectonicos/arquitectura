@@ -99,7 +99,8 @@ function Upload() {
     };
     return (
         <>
-            <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <AppBar position="fixed" sx={{ background: "#f4f4f4", 
+            color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar >
                     <IconButton onClick={handleBack} aria-label="Regresar">
                         <ArrowBack fontSize='32px' />
