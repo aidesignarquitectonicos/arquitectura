@@ -31,7 +31,7 @@ function Footer() {
                     gap: '20px',
                     '@media (max-width: 600px)': {
                         gap: '10px',
-                         
+
                     },
                 }}
             >
@@ -45,10 +45,16 @@ function Footer() {
                 </IconButton>
                 <IconButton component="a" href="https://www.instagram.com/aidesign.jm/" target="_blank" aria-label="Instagram">
                     <InstagramIcon
+
                         sx={{
+                            color: '#dc2743',
                             fontSize: '84px',
-                            '@media (max-width: 600px)':
-                                { fontSize: '40px' }
+                            '@media (max-width: 600px)': {
+                                fontSize: '40px',
+                            },
+                            background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                         }}
                     />
                 </IconButton>

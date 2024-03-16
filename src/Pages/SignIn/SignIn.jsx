@@ -9,11 +9,14 @@ import {
     Box,
     Container,
     Grid,
+    Card,
+    CardContent,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig";
 import { ArrowBack } from "@mui/icons-material";
+import { useSpring, animated } from "@react-spring/web";
 function SignIn() {
     //Constante para navegar
     const navegationrender = useNavigate();
@@ -65,6 +68,12 @@ function SignIn() {
         navegationrender(-1);
     };
 
+    const fadeIn = useSpring({
+        to: { opacity: 1, transform: "translateY(0)" },
+        from: { opacity: 0, transform: "translateY(20px)" },
+        delay: 200,
+    });
+
     return (
         <>
             <AppBar
@@ -103,47 +112,56 @@ function SignIn() {
                         autoComplete="off"
                         sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
                     >
-                        <Grid
-                            container
-                            spacing={2}
-                            direction="column"
-                            alignItems="center"
-                            justify="center"
-                        >
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Email"
-                                    variant="outlined"
-                                    name="email"
-                                    value={credentials.email}
-                                    onChange={handleInputChange}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Password"
-                                    variant="outlined"
-                                    type="password"
-                                    name="password"
-                                    value={credentials.password}
-                                    onChange={handleInputChange}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Button
-                                    onClick={handleSignIn}
-                                    variant="contained"
-                                    sx={{ mt: 2 }}
-                                >
-                                    Sign In
-                                </Button>
-                                {loginError && (
-                                    <Box sx={{ color: "red", mt: 2 }}>{loginError}</Box>
-                                )}
-                            </Grid>
-                        </Grid>
+                        <animated.div style={fadeIn}>
+                            <Card sx={{
+                                background: "#f4f4f4",
+                            }}>
+                                <CardContent>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        direction="column"
+                                        alignItems="center"
+                                        justify="center"
+                                    >
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Email"
+                                                variant="outlined"
+                                                name="email"
+                                                value={credentials.email}
+                                                onChange={handleInputChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Password"
+                                                variant="outlined"
+                                                type="password"
+                                                name="password"
+                                                value={credentials.password}
+                                                onChange={handleInputChange}
+                                                margin="normal"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                onClick={handleSignIn}
+                                                variant="contained"
+                                                sx={{ mt: 2 }}
+                                            >
+                                                Sign In
+                                            </Button>
+                                            {loginError && (
+                                                <Box sx={{ color: "red", mt: 2 }}>{loginError}</Box>
+                                            )}
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </animated.div>
+
                     </Box>
                 </Box>
             </Container>

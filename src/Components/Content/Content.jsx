@@ -4,8 +4,8 @@ import { useSpring, animated } from "@react-spring/web";
 import {
     Box,
     Card,
+    CardActionArea,
     CardContent,
-    CardMedia,
     Grid,
     Typography,
 } from '@mui/material';
@@ -53,25 +53,27 @@ function Content() {
                             raised
                             style={{ cursor: "pointer", background: "#f4f4f4" }}
                         >
-                            <CardContent>
-                                <Typography variant="h5" component="h2" style={{ margin: "20px" }}>
-                                    Proyecto: {project.field1}
+                            <CardActionArea>
+                                <CardContent sx={{ padding: '0px' }}>
+                                    <Typography variant="h5" component="h2" style={{ margin: "20px" }}>
+                                        Proyecto: {project.field1}
+                                    </Typography>
+                                    <AutoPlaySwipeableViews>
+                                        {project.images?.map((image, index) => (
+                                            <Box key={index} sx={{ height: 140, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                <img src={image} alt={`Imagen ${index + 1}`} style={{ height: '100%', width: '98%' }} />
+                                            </Box>
+                                        ))}
+                                    </AutoPlaySwipeableViews>
+                                </CardContent>
+                                <Typography
+                                    variant="body2"
+                                    component="p"
+                                    style={{ margin: "20px" }}
+                                >
+                                    Descripción: {project.field2}
                                 </Typography>
-                                <AutoPlaySwipeableViews>
-                                    {project.images?.map((image, index) => (
-                                        <Box key={index} sx={{ height: 140, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <img src={image} alt={`Imagen ${index + 1}`} style={{ height: '100%', width: 'auto' }} />
-                                        </Box>
-                                    ))}
-                                </AutoPlaySwipeableViews>
-                            </CardContent>
-                            <Typography
-                                variant="body2"
-                                component="p"
-                                style={{ margin: "20px" }}
-                            >
-                                Descripción: {project.field2}
-                            </Typography>
+                            </CardActionArea>
                         </Card>
                     </animated.div>
                 </Grid>

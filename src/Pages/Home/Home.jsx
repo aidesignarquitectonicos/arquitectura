@@ -95,11 +95,11 @@ const Home = () => {
                                 horizontal: "right",
                             }}
                         >
+                            {isAuthenticated && <MenuItem onClick={handleClose}>{user.email || "Usuario"}</MenuItem>}
                             <MenuItem onClick={handleGallery}>Gallery</MenuItem>
                             {isAuthenticated && <MenuItem onClick={handleUpload}>Upload</MenuItem>}
                             {isAuthenticated ? (
                                 <>
-                                    <MenuItem onClick={handleClose}>{user.displayName || "Usuario"}</MenuItem>
                                     <MenuItem onClick={handleSignOut}>Cerrar sesión</MenuItem>
                                 </>
                             ) : (
