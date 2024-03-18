@@ -29,7 +29,7 @@ function Content() {
     //Sistema de filtrado
     const [filter, setFilter] = useState("");
     const [projects, setProjects] = useState([]);
- 
+
     // Nueva función para manejar cambios en el filtro
     const handleFilterChange = (category) => {
         setFilter(category);
@@ -54,19 +54,27 @@ function Content() {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            const database = getDatabase();
-            const projectsRef = ref(database, "Projects");
-            const snapshot = await get(projectsRef);
-
-            if (snapshot.exists()) {
-                const projectsData = snapshot.val();
-                const projectsArray = Object.keys(projectsData).map((key) => ({
-                    uuid: key,
-                    ...projectsData[key],
-                }));
-                setProjects(projectsArray);
+            // Intenta recuperar los proyectos desde localStorage
+            const storedProjects = localStorage.getItem('projects');
+            if (storedProjects) {
+                setProjects(JSON.parse(storedProjects));
             } else {
-                console.log("No se encontraron proyectos.");
+                // Si no hay proyectos en localStorage, realiza la solicitud a la base de datos
+                const database = getDatabase();
+                const projectsRef = ref(database, "Projects");
+                const snapshot = await get(projectsRef);
+                if (snapshot.exists()) {
+                    const projectsData = snapshot.val();
+                    const projectsArray = Object.keys(projectsData).map((key) => ({
+                        uuid: key,
+                        ...projectsData[key],
+                    }));
+                    setProjects(projectsArray);
+                    // Actualiza localStorage con los nuevos proyectos
+                    localStorage.setItem('projects', JSON.stringify(projectsArray));
+                } else {
+                    console.log("No se encontraron proyectos.");
+                }
             }
         };
 
@@ -167,6 +175,16 @@ function Content() {
             const database = getDatabase();
             const projectRef = ref(database, `Projects/${uuid}`);
             await update(projectRef, editedProjects[uuid]);
+
+            // Actualiza el proyecto en el estado 'projects'
+            const updatedProjects = projects.map(project =>
+                project.uuid === uuid ? { ...project, ...editedProjects[uuid] } : project
+            );
+            setProjects(updatedProjects);
+
+            // Actualiza localStorage con los proyectos actualizados
+            localStorage.setItem('projects', JSON.stringify(updatedProjects));
+
             setAlertInfo({
                 showAlert: true,
                 type: "success",
@@ -202,7 +220,6 @@ function Content() {
                     sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        p: 3,
                     }}
                 >
                     <Card
@@ -216,7 +233,7 @@ function Content() {
                             justifyContent: "space-between",
                             width: "100%",
                         }}>
-                            <div style={{ padding: "5px" }}>
+                            <div >
                                 <Button
                                     sx={{
                                         background: '#f4f4f4',
@@ -231,7 +248,7 @@ function Content() {
                                     Todos
                                 </Button>
                             </div>
-                            <div style={{ padding: "5px" }}>
+                            <div >
                                 <Button
                                     sx={{
                                         fontSize: "11px",
@@ -244,7 +261,7 @@ function Content() {
                                     Fachada
                                 </Button>
                             </div>
-                            <div style={{ padding: "5px" }}>
+                            <div >
                                 <Button
                                     sx={{
                                         fontSize: "11px",
@@ -257,7 +274,7 @@ function Content() {
                                     Diseño de Interiores
                                 </Button>
                             </div>
-                            <div style={{ padding: "5px" }}>
+                            <div >
                                 <Button
                                     sx={{
                                         fontSize: "11px",
@@ -273,6 +290,7 @@ function Content() {
                         </CardContent>
                     </Card>
                 </Box>
+                <br />
                 {alertInfo.showAlert && (
                     <Alert
                         severity={alertInfo.type}

@@ -32,20 +32,27 @@ function Gallery() {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            const database = getDatabase();
-            const projectsRef = ref(database, "Projects");
-            const snapshot = await get(projectsRef);
-
-            if (snapshot.exists()) {
-                const projectsData = snapshot.val();
-                const projectsArray = Object.keys(projectsData).map((key) => ({
-                    uuid: key,
-                    ...projectsData[key],
-                }));
-                setProjects(projectsArray);
-                console.log(projectsArray);
+            // Primero, intenta recuperar los proyectos desde localStorage
+            const storedProjects = localStorage.getItem('projects');
+            if (storedProjects) {
+                setProjects(JSON.parse(storedProjects));
             } else {
-                console.log("No se encontraron proyectos.");
+                // Si no hay proyectos en localStorage, realiza la solicitud a la base de datos
+                const database = getDatabase();
+                const projectsRef = ref(database, "Projects");
+                const snapshot = await get(projectsRef);
+                if (snapshot.exists()) {
+                    const projectsData = snapshot.val();
+                    const projectsArray = Object.keys(projectsData).map((key) => ({
+                        uuid: key,
+                        ...projectsData[key],
+                    }));
+                    setProjects(projectsArray);
+                    // Actualiza localStorage con los nuevos proyectos
+                    localStorage.setItem('projects', JSON.stringify(projectsArray));
+                } else {
+                    console.log("No se encontraron proyectos.");
+                }
             }
         };
 
@@ -62,9 +69,6 @@ function Gallery() {
     const handleBack = () => {
         navigate(-1);
     };
-
-
-
 
     return (
         <>

@@ -111,7 +111,10 @@ const Home = () => {
                             }}
                         >
                             {isAuthenticated && <MenuItem onClick={handleClose}>{user.email || "Usuario"}</MenuItem>}
-                            <MenuItem onClick={handleGallery}>Gallery</MenuItem>
+                            <MenuItem onClick={handleGallery}>Galeria</MenuItem>
+                            <MenuItem onClick={() => {
+                                navegationrender("/About");
+                            }}>Acerca de</MenuItem>
                             <MenuItem onClick={handleQr}>Codigo Qr</MenuItem>
                             <Dialog
 
@@ -126,7 +129,7 @@ const Home = () => {
                                     display: 'flex', justifyContent: 'flex-end',
                                 }}>
                                     <IconButton onClick={handleClose}>
-                                        <CloseIcon sx={{color:'#000'}}/>
+                                        <CloseIcon sx={{ color: '#000' }} />
                                     </IconButton>
                                 </div>
                                 <div style={{
@@ -134,7 +137,7 @@ const Home = () => {
                                     display: 'flex', flexDirection: 'column',
                                     alignItems: 'center', paddingBottom: '20px'
                                 }}>
-                                    <h2 id="qr-code-dialog-title">Escanea este código QR</h2>
+                                    <h2 id="qr-code-dialog-title">Comparte con tu circulo social</h2>
                                     <Card>
                                         <CardActionArea>
                                             <CardContent>
