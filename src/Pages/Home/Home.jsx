@@ -27,6 +27,7 @@ import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es e
 import QRCode from 'qrcode.react';
 
 import CloseIcon from '@mui/icons-material/Close';
+import { MenuOutlined } from "@mui/icons-material";
 
 const Home = () => {
 
@@ -95,9 +96,20 @@ const Home = () => {
                 <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                     <Toolbar sx={{ justifyContent: "space-between" }}>
                         <Typography variant="h6">AIDesign</Typography>
-                        <IconButton onClick={handleClick}>
-                            <Avatar src={logo} />
-                        </IconButton>
+                        {isAuthenticated ? (
+                            <>
+                                <IconButton onClick={handleClick}>
+                                    <Avatar src={logo} />
+                                </IconButton>
+                            </>) : (
+                            <>
+                                <IconButton onClick={handleClick}>
+                                    <MenuOutlined />
+
+                                </IconButton>
+                            </>
+                        )}
+
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
