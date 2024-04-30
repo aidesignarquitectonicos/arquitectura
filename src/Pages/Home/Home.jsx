@@ -170,7 +170,7 @@ const Home = () => {
                         </Menu>
                     </Toolbar>
                 </AppBar>
-                <Box sx={{ marginTop: 8,  }}>
+                <Box sx={{ marginTop: 8, marginBottom: 4 }}>
                     <GalleryView />
                 </Box>
             </ThemeProvider>

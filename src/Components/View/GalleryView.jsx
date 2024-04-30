@@ -4,16 +4,11 @@ import { useSpring, animated } from "@react-spring/web";
 import {
     Alert,
     Box,
-    Button,
     Card,
     CardContent,
-    FormControl,
     CardActionArea,
     Grid,
     IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     Typography,
 } from "@mui/material";
@@ -34,9 +29,9 @@ function GalleryView({ project, index, image }) {
     const [projects, setProjects] = useState([]);
 
     // Nueva función para manejar cambios en el filtro
-    const handleFilterChange = (category) => {
-        setFilter(category);
-    };
+    //const handleFilterChange = (category) => {
+    //   setFilter(category);
+    //};
 
     // Filtrar proyectos basados en la selección
     const filteredProjects = projects.filter((project) => {
@@ -151,7 +146,7 @@ function GalleryView({ project, index, image }) {
                 await navigator.share({
                     image: project.image,
                     title: `Proyecto: ${project.field3} - ${project.role}`, // Título del contenido a compartir
-                    text: `Echa un vistazo a este proyecto: ${project.field1}`, // Texto descriptivo
+                    text: `Descripción: ${project.field1}`, // Texto descriptivo
                     url: projectUrl, // Puedes personalizar esta URL si cada proyecto tiene su propia página
                 });
                 setAlertInfo({
@@ -255,7 +250,7 @@ function GalleryView({ project, index, image }) {
                                         <animated.div style={fadeIn}>
                                             <Card
                                                 raised
-                                                style={{ cursor: "pointer", background: "#f4f4f4", }}
+                                                style={{ cursor: "pointer", background: "#f4f4f4", marginBottom:'25%' }}
                                             >
                                                 <CardContent
                                                     sx={{
@@ -293,7 +288,7 @@ function GalleryView({ project, index, image }) {
                                                         </IconButton>
                                                     ) : (
                                                         <IconButton onClick={() => shareProject(project)}>
-                                                            <Share sx={{ color: "green" }} />
+                                                            <Share fontSize='32px' />
                                                         </IconButton>
                                                     )}
                                                 </CardContent>

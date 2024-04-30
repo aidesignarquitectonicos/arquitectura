@@ -12,7 +12,7 @@ function Footer() {
             sx={{
                 width: '100vw',
                 bottom: 0,
-                height: '15vh',
+                height: '10vh',
                 display: 'flex',
                 zIndex: (theme) => theme.zIndex.drawer + 1,
                 flexDirection: 'column',
@@ -23,7 +23,7 @@ function Footer() {
                 borderTop: '1px solid #e0e0e0', // Borde superior para separar el footer del contenido
                 '@media (max-width: 600px)': { // Media query para pantallas pequeñas
                     padding: '10px',
-                    minHeight: '20vh',
+                    minHeight: '15vh',
                 }
             }} 
         >
@@ -32,7 +32,7 @@ function Footer() {
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '20px',
+                    gap: '15px',
                     '@media (max-width: 600px)': {
                         gap: '10px',
 
@@ -41,11 +41,11 @@ function Footer() {
             >
                 <IconButton component="a" href="https://www.facebook.com/ARQ.JAVIERMS" target="_blank" aria-label="Facebook">
                     <FacebookIcon sx={{
-                        fontSize: '40px',
-                        marginTop: '10px',
+                        fontSize: '30px',
+                        
                         color: 'blue',
                         '@media (max-width: 600px)':
-                            { fontSize: '40px' }
+                            { fontSize: '30px' }
                     }} />
                 </IconButton>
                 <IconButton component="a" href="https://www.instagram.com/aidesign.jm/" target="_blank" aria-label="Instagram">
@@ -53,11 +53,11 @@ function Footer() {
 
                         sx={{
                             color: '#dc2743',
-                            fontSize: '40px',
-                            marginTop: '10px',
+                            fontSize: '30px',
+                            
                             '@media (max-width: 600px)': {
-                                fontSize: '40px',
-                                marginTop: '10px',
+                                fontSize: '30px',
+                                
                             },
                             background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
                             WebkitBackgroundClip: 'text',
@@ -67,21 +67,21 @@ function Footer() {
                 </IconButton>
                 <IconButton component="a" href="https://wa.me/c/593969565333" target="_blank" aria-label="WhatsApp">
                     <WhatsAppIcon sx={{
-                        fontSize: '40px',
-                        marginTop: '10px',
+                        fontSize: '30px',
+                        
                         color: 'green',
                         '@media (max-width: 600px)':
-                            { fontSize: '40px' }
+                            { fontSize: '30px' }
                     }} />
                 </IconButton>
                 <IconButton component="a" href="https://www.tiktok.com" target="_blank" aria-label="TikTok">
                     <TikTokIcon
                         sx={{
-                            fontSize: '40px',
-                            marginTop: '10px',
+                            fontSize: '30px',
+                            
                             color: 'black',
                             '@media (max-width: 600px)':
-                                { fontSize: '40px' }
+                                { fontSize: '30px' }
                         }} />
                 </IconButton>
             </Box>
@@ -90,7 +90,7 @@ function Footer() {
                 color="text.secondary"
                 align="center"
                 sx={{
-                    marginTop: '10px',
+                     
                     '@media (max-width: 600px)':
                         { fontSize: '0.75rem' }
                 }}>

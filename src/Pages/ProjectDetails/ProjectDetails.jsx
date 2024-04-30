@@ -81,8 +81,8 @@ function ProjectDetails() {
             try {
                 await navigator.share({
                     image: `${project.image}`,
-                    title: `Proyecto: ${project.field1}`, // Título del contenido a compartir
-                    text: `Echa un vistazo a este proyecto: ${project.field1}`, // Texto descriptivo
+                    title: `Proyecto: ${project.field3} - ${project.role}`, // Título del contenido a compartir
+                    text: `Descripción: ${project.field1}`, // Texto descriptivo
                     url: projectUrl, // Puedes personalizar esta URL si cada proyecto tiene su propia página
                 });
                 setAlertInfo({
