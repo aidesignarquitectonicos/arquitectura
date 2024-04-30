@@ -104,7 +104,7 @@ function GalleryView({ project, index, image }) {
     const fade = useSpring({
         from: { opacity: 0 },
         to: { opacity: 1 },
-        config: { duration: 1000 },
+        config: { duration: 1500 },
     });
 
     // Modificación previa
@@ -149,9 +149,9 @@ function GalleryView({ project, index, image }) {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    image: `${project.image}`,
-                    title: `Proyecto: ${project.field1}`, // Título del contenido a compartir
-                    text: `Echa un vistazo a este proyecto: ${project.field1}`, // Texto descriptivo
+                    image: project.image,
+                    title: `Proyecto: ${project.field1} - ${project.field3}`, // Título del contenido a compartir
+                    text: `Echa un vistazo a este proyecto: ${project.field2}`, // Texto descriptivo
                     url: projectUrl, // Puedes personalizar esta URL si cada proyecto tiene su propia página
                 });
                 setAlertInfo({
