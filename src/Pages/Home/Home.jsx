@@ -105,7 +105,6 @@ const Home = () => {
                             <>
                                 <IconButton onClick={handleClick}>
                                     <MenuOutlined />
-
                                 </IconButton>
                             </>
                         )}
@@ -171,7 +170,7 @@ const Home = () => {
                         </Menu>
                     </Toolbar>
                 </AppBar>
-                <Box sx={{ marginTop: 8, marginBottom: 4 }}>
+                <Box sx={{ marginTop: 8,  }}>
                     <GalleryView />
                 </Box>
             </ThemeProvider>
