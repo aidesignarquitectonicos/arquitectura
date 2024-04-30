@@ -8,20 +8,24 @@ import TikTokIcon from '@mui/icons-material/MusicNote'; // Material-UI no tiene 
 function Footer() {
     return (
         <Box
+            position="fixed"
             sx={{
-                height: '100vh',
+                width: '100vw',
+                bottom: 0,
+                height: '15vh',
                 display: 'flex',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '20px',
-                backgroundColor: '#f8f8f8', // Ajusta el color de fondo según tu preferencia
+                padding: '10px',
+                background: "#f4f4f4", // Ajusta el color de fondo según tu preferencia
                 borderTop: '1px solid #e0e0e0', // Borde superior para separar el footer del contenido
                 '@media (max-width: 600px)': { // Media query para pantallas pequeñas
                     padding: '10px',
-                    minHeight: '30vh',
+                    minHeight: '20vh',
                 }
-            }}
+            }} 
         >
             {/* Contenedor de íconos de redes sociales */}
             <Box
@@ -37,7 +41,8 @@ function Footer() {
             >
                 <IconButton component="a" href="https://www.facebook.com/ARQ.JAVIERMS" target="_blank" aria-label="Facebook">
                     <FacebookIcon sx={{
-                        fontSize: '84px',
+                        fontSize: '40px',
+                        marginTop: '10px',
                         color: 'blue',
                         '@media (max-width: 600px)':
                             { fontSize: '40px' }
@@ -48,9 +53,11 @@ function Footer() {
 
                         sx={{
                             color: '#dc2743',
-                            fontSize: '84px',
+                            fontSize: '40px',
+                            marginTop: '10px',
                             '@media (max-width: 600px)': {
                                 fontSize: '40px',
+                                marginTop: '10px',
                             },
                             background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
                             WebkitBackgroundClip: 'text',
@@ -60,7 +67,8 @@ function Footer() {
                 </IconButton>
                 <IconButton component="a" href="https://wa.me/c/593969565333" target="_blank" aria-label="WhatsApp">
                     <WhatsAppIcon sx={{
-                        fontSize: '84px',
+                        fontSize: '40px',
+                        marginTop: '10px',
                         color: 'green',
                         '@media (max-width: 600px)':
                             { fontSize: '40px' }
@@ -69,7 +77,8 @@ function Footer() {
                 <IconButton component="a" href="https://www.tiktok.com" target="_blank" aria-label="TikTok">
                     <TikTokIcon
                         sx={{
-                            fontSize: '84px',
+                            fontSize: '40px',
+                            marginTop: '10px',
                             color: 'black',
                             '@media (max-width: 600px)':
                                 { fontSize: '40px' }

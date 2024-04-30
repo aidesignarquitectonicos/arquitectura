@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Button, TextField, Box, Grid, Typography, Container, Alert, FormControl, InputLabel, Select, MenuItem, AppBar, Toolbar, IconButton } from '@mui/material';
+import {
+    Button, TextField, Box, Grid, Typography,
+    Container, Alert, FormControl, InputLabel, Select,
+    MenuItem, AppBar, Toolbar, IconButton
+} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { storage, database } from '../../Data/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -99,8 +103,10 @@ function Upload() {
     };
     return (
         <>
-            <AppBar position="fixed" sx={{ background: "#f4f4f4", 
-            color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <AppBar position="fixed" sx={{
+                background: "#f4f4f4",
+                color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1
+            }}>
                 <Toolbar >
                     <IconButton onClick={handleBack} aria-label="Regresar">
                         <ArrowBack fontSize='32px' />

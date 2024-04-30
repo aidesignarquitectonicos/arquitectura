@@ -103,32 +103,34 @@ function Gallery() {
 
                             <AutoPlaySwipeableViews>
                                 {project.images.map((image, index) => (
-                                    <Card
-                                        raised
-                                        style={{
-                                            cursor: "pointer",
-                                            background: "#f4f4f4",
-                                        }}>
-                                        <CardActionArea >
-                                            <CardContent sx={{ padding: '0px' }}>
-                                                <Box key={index} sx={{
-                                                    height: 240,
-                                                    position: 'relative', display: 'flex',
-                                                    justifyContent: 'center', alignItems: 'center'
-                                                }}>
-                                                    <img
-                                                        loading="lazy"
-                                                        src={image}
-                                                        alt={`Imagen ${index + 1}`}
-                                                        style={{
-                                                            width: "100%",
-                                                            height: "100%",
-                                                            objectFit: "cover",
-                                                        }} />
-                                                </Box>
-                                            </CardContent>
-                                        </CardActionArea>
-                                    </Card>
+                                    <>
+                                        <Card
+                                            raised
+                                            style={{
+                                                cursor: "pointer",
+                                                background: "#f4f4f4",
+                                            }}>
+                                            <CardActionArea >
+                                                <CardContent sx={{ padding: '0px' }}>
+                                                    <Box key={index} sx={{
+                                                        height: 240,
+                                                        position: 'relative', display: 'flex',
+                                                        justifyContent: 'center', alignItems: 'center'
+                                                    }}>
+                                                        <img
+                                                            loading="lazy"
+                                                            src={image}
+                                                            alt={`Imagen ${index + 1}`}
+                                                            style={{
+                                                                width: "100%",
+                                                                height: "100%",
+                                                                objectFit: "cover",
+                                                            }} />
+                                                    </Box>
+                                                </CardContent>
+                                            </CardActionArea>
+                                        </Card>
+                                    </>
                                 ))}
                             </AutoPlaySwipeableViews>
 

@@ -20,7 +20,8 @@ import theme from "../../Themes/theme";
 import logo from "../../Assets/icono.png";
 import Footer from "../../Pages/Footer/Footer";
 import { useNavigate } from "react-router-dom";
-import Content from "../../Components/Content/Content";
+//import Content from "../../Components/Content/Content";
+import GalleryView from '../../Components/View/GalleryView';
 import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
 import QRCode from 'qrcode.react';
@@ -159,7 +160,7 @@ const Home = () => {
                     </Toolbar>
                 </AppBar>
                 <Box sx={{ marginTop: 8, marginBottom: 4 }}>
-                    <Content />
+                    <GalleryView />
                 </Box>
             </ThemeProvider>
             <Footer />
