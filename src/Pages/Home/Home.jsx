@@ -25,7 +25,6 @@ import GalleryView from '../../Components/View/GalleryView';
 import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
 import QRCode from 'qrcode.react';
-
 import CloseIcon from '@mui/icons-material/Close';
 import { MenuOutlined } from "@mui/icons-material";
 
@@ -135,6 +134,7 @@ const Home = () => {
                                 aria-labelledby="qr-code-dialog-title"
                                 fullWidth={true}
                                 maxWidth="sm"
+
                             >
                                 <div style={{
                                     background: "#f4f4f4",
@@ -149,11 +149,13 @@ const Home = () => {
                                     display: 'flex', flexDirection: 'column',
                                     alignItems: 'center', paddingBottom: '20px'
                                 }}>
-                                    <h2 id="qr-code-dialog-title">Comparte con tu circulo social</h2>
+                                    <Typography variant="" component="div">
+                                        Comparte con tu circulo social
+                                    </Typography>
                                     <Card>
                                         <CardActionArea>
                                             <CardContent>
-                                                <QRCode value={url} size={256} level={"L"} />
+                                                <QRCode value={url} size={Math.min(window.innerWidth * 0.6, 156)} level={"L"} />
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>

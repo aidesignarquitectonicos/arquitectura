@@ -25,7 +25,7 @@ function Footer() {
                     padding: '10px',
                     minHeight: '15vh',
                 }
-            }} 
+            }}
         >
             {/* Contenedor de íconos de redes sociales */}
             <Box
@@ -42,7 +42,7 @@ function Footer() {
                 <IconButton component="a" href="https://www.facebook.com/ARQ.JAVIERMS" target="_blank" aria-label="Facebook">
                     <FacebookIcon sx={{
                         fontSize: '30px',
-                        
+
                         color: 'blue',
                         '@media (max-width: 600px)':
                             { fontSize: '30px' }
@@ -54,10 +54,10 @@ function Footer() {
                         sx={{
                             color: '#dc2743',
                             fontSize: '30px',
-                            
+
                             '@media (max-width: 600px)': {
                                 fontSize: '30px',
-                                
+
                             },
                             background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
                             WebkitBackgroundClip: 'text',
@@ -68,7 +68,7 @@ function Footer() {
                 <IconButton component="a" href="https://wa.me/c/593969565333" target="_blank" aria-label="WhatsApp">
                     <WhatsAppIcon sx={{
                         fontSize: '30px',
-                        
+
                         color: 'green',
                         '@media (max-width: 600px)':
                             { fontSize: '30px' }
@@ -78,7 +78,7 @@ function Footer() {
                     <TikTokIcon
                         sx={{
                             fontSize: '30px',
-                            
+
                             color: 'black',
                             '@media (max-width: 600px)':
                                 { fontSize: '30px' }
@@ -90,7 +90,7 @@ function Footer() {
                 color="text.secondary"
                 align="center"
                 sx={{
-                     
+
                     '@media (max-width: 600px)':
                         { fontSize: '0.75rem' }
                 }}>
