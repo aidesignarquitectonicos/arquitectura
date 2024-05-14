@@ -1,16 +1,32 @@
 {
   "files": {
     "main.css": "/arquitectura/static/css/main.83d8b7f8.css",
-    "main.js": "/arquitectura/static/js/main.94853ed7.js",
+    "main.js": "/arquitectura/static/js/main.a2904f8b.js",
+    "static/js/208.a0e319af.chunk.js": "/arquitectura/static/js/208.a0e319af.chunk.js",
+    "static/js/293.fe3844ce.chunk.js": "/arquitectura/static/js/293.fe3844ce.chunk.js",
+    "static/js/917.623b7cd8.chunk.js": "/arquitectura/static/js/917.623b7cd8.chunk.js",
+    "static/js/516.4b407e53.chunk.js": "/arquitectura/static/js/516.4b407e53.chunk.js",
+    "static/js/519.563203db.chunk.js": "/arquitectura/static/js/519.563203db.chunk.js",
+    "static/js/946.1888f4a0.chunk.js": "/arquitectura/static/js/946.1888f4a0.chunk.js",
+    "static/js/160.61ac3572.chunk.js": "/arquitectura/static/js/160.61ac3572.chunk.js",
+    "static/js/23.3854c213.chunk.js": "/arquitectura/static/js/23.3854c213.chunk.js",
     "static/js/453.feb77398.chunk.js": "/arquitectura/static/js/453.feb77398.chunk.js",
     "static/media/icono.png": "/arquitectura/static/media/icono.3ea4b846a3f8053782fc.png",
     "index.html": "/arquitectura/index.html",
     "main.83d8b7f8.css.map": "/arquitectura/static/css/main.83d8b7f8.css.map",
-    "main.94853ed7.js.map": "/arquitectura/static/js/main.94853ed7.js.map",
+    "main.a2904f8b.js.map": "/arquitectura/static/js/main.a2904f8b.js.map",
+    "208.a0e319af.chunk.js.map": "/arquitectura/static/js/208.a0e319af.chunk.js.map",
+    "293.fe3844ce.chunk.js.map": "/arquitectura/static/js/293.fe3844ce.chunk.js.map",
+    "917.623b7cd8.chunk.js.map": "/arquitectura/static/js/917.623b7cd8.chunk.js.map",
+    "516.4b407e53.chunk.js.map": "/arquitectura/static/js/516.4b407e53.chunk.js.map",
+    "519.563203db.chunk.js.map": "/arquitectura/static/js/519.563203db.chunk.js.map",
+    "946.1888f4a0.chunk.js.map": "/arquitectura/static/js/946.1888f4a0.chunk.js.map",
+    "160.61ac3572.chunk.js.map": "/arquitectura/static/js/160.61ac3572.chunk.js.map",
+    "23.3854c213.chunk.js.map": "/arquitectura/static/js/23.3854c213.chunk.js.map",
     "453.feb77398.chunk.js.map": "/arquitectura/static/js/453.feb77398.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.83d8b7f8.css",
-    "static/js/main.94853ed7.js"
+    "static/js/main.a2904f8b.js"
   ]
 }
