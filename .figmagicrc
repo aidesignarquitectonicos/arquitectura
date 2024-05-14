@@ -1,0 +1,11 @@
+{
+  "token": "figd_IQAqJnuFtkQzy1GSKPMIJ5UnHpilBJGiaFBJOclt",
+  "url": "https://www.figma.com/design/NpIgolRGtmHJ7dt2MomH7c/AIDesign?node-id=0%3A1&t=SJXmMzS0E7uJDdbz-1",
+  "outputFolderElements": "src/elements",
+  "outputFolderGraphics": "src/graphics",
+  "outputFolderTokens": "src/tokens",
+  "syncElements": true,
+  "syncGraphics": true,
+  "syncTokens": true,
+  "remSize": 16
+}

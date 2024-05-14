@@ -4,10 +4,12 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import TikTokIcon from '@mui/icons-material/MusicNote'; // Material-UI no tiene un ícono específico de TikTok, así que usamos MusicNote como alternativa
+import "./Fotter.css";
 
 function Footer() {
     return (
         <Box
+            className="appbarfotter"
             position="fixed"
             sx={{
                 width: '100vw',
@@ -24,7 +26,9 @@ function Footer() {
                 '@media (max-width: 600px)': { // Media query para pantallas pequeñas
                     padding: '10px',
                     minHeight: '15vh',
-                }
+                },
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px'
             }}
         >
             {/* Contenedor de íconos de redes sociales */}

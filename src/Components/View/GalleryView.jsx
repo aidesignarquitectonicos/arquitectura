@@ -250,7 +250,7 @@ function GalleryView({ project, index, image }) {
                                         <animated.div style={fadeIn}>
                                             <Card
                                                 raised
-                                                style={{ cursor: "pointer", background: "#f4f4f4", marginBottom:'25%' }}
+                                                style={{ cursor: "pointer", background: "#f4f4f4", }}
                                             >
                                                 <CardContent
                                                     sx={{
@@ -292,52 +292,49 @@ function GalleryView({ project, index, image }) {
                                                         </IconButton>
                                                     )}
                                                 </CardContent>
-                                                <CardContent sx={{ padding: '0px', paddingBottom: '0px', }}>
-                                                    <AutoPlaySwipeableViews onClick={() => handleClick(project)}>
-                                                        {project.images?.map((image, index) => (
-                                                            <CardActionArea sx={{ borderRadius: 2 }}>
-                                                                <CardContent sx={{ padding: '0px', paddingBottom: '0px', }}>
-                                                                    <Box
-                                                                        key={index}
-                                                                        sx={{
-                                                                            height: "100%",
-                                                                            maxWidth: "100%",
-                                                                            display: "flex",
-                                                                            position: 'relative',
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center",
-                                                                        }}
-                                                                    >
-                                                                        <img
-                                                                            loading="lazy"
-                                                                            src={image}
-                                                                            alt={`Imagen ${index + 1}`}
-                                                                            style={{
-                                                                                height: "100%",
-                                                                                width: "100%",
-                                                                                objectFit: "cover",
-                                                                                borderRadius: 2
-                                                                            }}
-                                                                        />
-                                                                    </Box>
-                                                                </CardContent>
-                                                            </CardActionArea>
-                                                        ))}
-                                                    </AutoPlaySwipeableViews>
-                                                </CardContent>
+
                                             </Card>
+                                            <AutoPlaySwipeableViews onClick={() => handleClick(project)}>
+                                                {project.images?.map((image, index) => (
+                                                    <>
+                                                        <CardActionArea sx={{ borderRadius: 2 }}>
+                                                            <Box
+                                                                key={index}
+                                                                sx={{
+                                                                    height: "100%",
+                                                                    maxWidth: "100%",
+                                                                    display: "flex",
+                                                                    position: 'relative',
+                                                                    justifyContent: "center",
+                                                                    alignItems: "center",
+                                                                }}
+                                                            >
+                                                                <img
+                                                                    loading="lazy"
+                                                                    src={image}
+                                                                    alt={`Imagen ${index + 1}`}
+                                                                    style={{
+                                                                        height: "100%",
+                                                                        width: "100%",
+                                                                        objectFit: "cover",
+                                                                        borderRadius: 4,
+                                                                        cursor: 'pointer'
+                                                                    }} />
+                                                            </Box>
+                                                        </CardActionArea>
+
+                                                    </>
+                                                ))}
+                                            </AutoPlaySwipeableViews>
                                         </animated.div>
                                     </Box>
                                 ))}
                             </Grid>
                         ))}
-
                     </Grid>
                 </Grid>
             </animated.div>
-
         </>
-
     );
 }
 

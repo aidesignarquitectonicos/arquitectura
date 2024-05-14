@@ -110,7 +110,11 @@ function ProjectDetails() {
         <>
             <React.Fragment>
                 <animated.div style={fade}>
-                    <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000" }}>
+                    <AppBar position="fixed" sx={{
+                        background: "#f4f4f4", color: "#000",
+                        borderBottomLeftRadius: '20px',
+                        borderBottomRightRadius: '20px'
+                    }}>
                         <Toolbar>
                             <IconButton onClick={handleBack} aria-label="Regresar" edge="start">
                                 <ArrowBack fontSize='32px' />

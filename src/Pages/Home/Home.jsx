@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 import React, { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { ThemeProvider } from "@emotion/react";
@@ -22,6 +23,7 @@ import Footer from "../../Pages/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 //import Content from "../../Components/Content/Content";
 import GalleryView from '../../Components/View/GalleryView';
+import Framer_motion_component from '../../Widget/framer_motion_component';
 import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
 import QRCode from 'qrcode.react';
@@ -87,12 +89,17 @@ const Home = () => {
         });
         return unsubscribe; // Limpiar suscripción
     }, []);
-
+    //<Framer_motion_component />
     return (
         <>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <AppBar position="fixed" sx={{ background: "#f4f4f4", color: "#000", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <AppBar position="fixed" sx={{
+                    background: "#f4f4f4", color: "#000",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    borderBottomLeftRadius: '20px',
+                    borderBottomRightRadius: '20px'
+                }}>
                     <Toolbar sx={{ justifyContent: "space-between" }}>
                         <Typography variant="h6">AIDesign</Typography>
                         {isAuthenticated ? (
@@ -174,6 +181,7 @@ const Home = () => {
                 </AppBar>
                 <Box sx={{ marginTop: 8, marginBottom: 4 }}>
                     <GalleryView />
+
                 </Box>
             </ThemeProvider>
             <Footer />
