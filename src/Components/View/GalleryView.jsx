@@ -303,7 +303,7 @@ function GalleryView({ project, index, image }) {
                                                         <Box
                                                             key={index}
                                                             sx={{
-                                                                height: "500px",
+                                                                height: "100%",
                                                                 maxWidth: "100%",
                                                                 display: "flex",
                                                                 position: "relative",
@@ -317,10 +317,11 @@ function GalleryView({ project, index, image }) {
                                                                 src={image}
                                                                 alt={`Imagen ${index + 1}`}
                                                                 style={{
-                                                                    height: "100%",
+                                                                    borderBottomLeftRadius: '20px',
+                                                                    borderBottomRightRadius: '20px',
                                                                     width: "100%",
                                                                     objectFit: "cover",
-                                                                    borderRadius: 4,
+
                                                                     cursor: "pointer",
                                                                 }}
                                                             />
