@@ -30,6 +30,7 @@ import QRCode from 'qrcode.react';
 import CloseIcon from '@mui/icons-material/Close';
 import { MenuOutlined } from "@mui/icons-material";
 import SplineModel from "../../Widget/Spline/Design3d";
+import Viewer from "../../Components/Viewer/Viewer";
 
 const Home = () => {
 
@@ -181,7 +182,6 @@ const Home = () => {
                     </Toolbar>
                 </AppBar>
                 <Box sx={{ marginTop: 8, marginBottom: 4 }}>
-                    <SplineModel />
                     <GalleryView />
                 </Box>
             </ThemeProvider>

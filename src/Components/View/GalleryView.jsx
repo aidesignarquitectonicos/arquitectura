@@ -17,13 +17,11 @@ import { autoPlay } from "react-swipeable-views-utils";
 import { Edit, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-
 function GalleryView({ project, index, image }) {
-
     //Sistema de filtrado
     const [filter, setFilter] = useState("");
     const [projects, setProjects] = useState([]);
@@ -53,7 +51,7 @@ function GalleryView({ project, index, image }) {
     useEffect(() => {
         const fetchProjects = async () => {
             // Intenta recuperar los proyectos desde localStorage
-            const storedProjects = localStorage.getItem('projects');
+            const storedProjects = localStorage.getItem("Projects");
             if (storedProjects) {
                 setProjects(JSON.parse(storedProjects));
             } else {
@@ -69,7 +67,7 @@ function GalleryView({ project, index, image }) {
                     }));
                     setProjects(projectsArray);
                     // Actualiza localStorage con los nuevos proyectos
-                    localStorage.setItem('projects', JSON.stringify(projectsArray));
+                    localStorage.setItem("projects", JSON.stringify(projectsArray));
                 } else {
                     console.log("No se encontraron proyectos.");
                 }
@@ -115,7 +113,7 @@ function GalleryView({ project, index, image }) {
 
     const handleRoleChange = (event, uuid) => {
         // Actualizar el proyecto específico con el nuevo rol en el estado editedProjects
-        setEditedProjects(prevState => ({
+        setEditedProjects((prevState) => ({
             ...prevState,
             [uuid]: {
                 ...prevState[uuid],
@@ -172,7 +170,6 @@ function GalleryView({ project, index, image }) {
 
     //Save data
     const saveChanges = async (uuid) => {
-
         if (!editedProjects[uuid]) {
             console.error("No hay cambios para guardar");
             return;
@@ -184,13 +181,15 @@ function GalleryView({ project, index, image }) {
             await update(projectRef, editedProjects[uuid]);
 
             // Actualiza el proyecto en el estado 'projects'
-            const updatedProjects = projects.map(project =>
-                project.uuid === uuid ? { ...project, ...editedProjects[uuid] } : project
+            const updatedProjects = projects.map((project) =>
+                project.uuid === uuid
+                    ? { ...project, ...editedProjects[uuid] }
+                    : project
             );
             setProjects(updatedProjects);
 
             // Actualiza localStorage con los proyectos actualizados
-            localStorage.setItem('projects', JSON.stringify(updatedProjects));
+            localStorage.setItem("projects", JSON.stringify(updatedProjects));
 
             setAlertInfo({
                 showAlert: true,
@@ -200,7 +199,6 @@ function GalleryView({ project, index, image }) {
 
             // Opcionalmente, recargar los proyectos desde la base de datos para reflejar los cambios
             // fetchProjects(); // Deberás asegurarte de que fetchProjects no dependa del ciclo de vida de useEffect para poder llamarla directamente
-
         } catch (error) {
             console.error("Error al guardar los cambios: ", error);
             setAlertInfo({
@@ -209,7 +207,7 @@ function GalleryView({ project, index, image }) {
                 message: "Hubo un error al guardar los cambios.",
             });
         }
-    }
+    };
 
     const navigate = useNavigate();
 
@@ -220,9 +218,7 @@ function GalleryView({ project, index, image }) {
     return (
         <>
             <animated.div style={fade}>
-                <Grid
-                    container spacing={1}
-                    style={{ padding: 20 }}>
+                <Grid container spacing={1} style={{ padding: 20 }}>
                     <Grid
                         item
                         xs={12}
@@ -233,7 +229,6 @@ function GalleryView({ project, index, image }) {
                             alignItems: "center",
                         }}
                     >
-
                         {alertInfo.showAlert && (
                             <Alert
                                 severity={alertInfo.type}
@@ -245,90 +240,97 @@ function GalleryView({ project, index, image }) {
                         )}
                         {filteredProjects.map((project) => (
                             <Grid xs={12}>
-                                {projects.map((project) => (
-                                    <Box item key={project.uuid} sx={{ paddingBottom: '0px', }}>
-                                        <animated.div style={fadeIn}>
-                                            <Card
-                                                raised
-                                                style={{ cursor: "pointer", background: "#f4f4f4", }}
+                                <Box item key={project.uuid} sx={{ paddingBottom: "0px", marginBottom: 5 }}>
+                                    <animated.div style={fadeIn}>
+                                        <Card
+                                            raised
+                                            style={{
+                                                cursor: "pointer",
+                                                backgroundColor: "transparent",
+                                                borderTopLeftRadius: '20px',
+                                                borderTopRightRadius: '20px',
+                                            }}
+                                        >
+                                            <CardContent
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                }}
                                             >
-                                                <CardContent
-                                                    sx={{
-                                                        display: "flex",
-                                                        justifyContent: "space-between",
-                                                    }}
-                                                >
-                                                    {editMode[project.uuid] ? (
-                                                        <TextField
-                                                            variant="outlined"
-                                                            defaultValue={project.field1}
-                                                            onChange={(e) =>
-                                                                handleEditChange(
-                                                                    project.uuid,
-                                                                    "field1",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            fullWidth
-                                                        />
-                                                    ) : (
-                                                        <Typography
-                                                            variant="h8"
-                                                            component="h2"
-                                                            style={{}}
+                                                {editMode[project.uuid] ? (
+                                                    <TextField
+                                                        variant="outlined"
+                                                        defaultValue={project.field1}
+                                                        onChange={(e) =>
+                                                            handleEditChange(
+                                                                project.uuid,
+                                                                "field1",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        fullWidth
+                                                    />
+                                                ) : (
+                                                    <Typography variant="h8" component="h2" style={{}}>
+                                                        Proyecto:{" "}
+                                                        {editedProjects[project.uuid]?.field1 ||
+                                                            project.field1}
+                                                    </Typography>
+                                                )}
+                                                {isUserLoggedIn ? (
+                                                    <IconButton
+                                                        onClick={() => toggleEditMode(project.uuid)}
+                                                    >
+                                                        {editMode[project.uuid] ? (
+                                                            <Save sx={{ color: "black" }} />
+                                                        ) : (
+                                                            <Edit sx={{ color: "black" }} />
+                                                        )}
+                                                    </IconButton>
+                                                ) : (
+                                                    <IconButton onClick={() => shareProject(project)}>
+                                                        <Share fontSize="32px" />
+                                                    </IconButton>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                        <AutoPlaySwipeableViews
+                                            onClick={() => handleClick(project)}
+                                        >
+                                            {project.images?.map((image, index) => (
+                                                <>
+                                                    <CardActionArea sx={{ borderRadius: 2 }}>
+                                                        <Box
+                                                            key={index}
+                                                            sx={{
+                                                                height: "500px",
+                                                                maxWidth: "100%",
+                                                                display: "flex",
+                                                                position: "relative",
+                                                                justifyContent: "center",
+                                                                alignItems: "center",
+                                                                overflow: "hidden",
+                                                            }}
                                                         >
-                                                            Proyecto:{" "}
-                                                            {editedProjects[project.uuid]?.field1 ||
-                                                                project.field1}
-                                                        </Typography>
-                                                    )}
-                                                    {isUserLoggedIn ? (
-                                                        <IconButton onClick={() => toggleEditMode(project.uuid)}>
-                                                            {editMode[project.uuid] ? <Save sx={{ color: "black" }} /> : <Edit sx={{ color: "black" }} />}
-                                                        </IconButton>
-                                                    ) : (
-                                                        <IconButton onClick={() => shareProject(project)}>
-                                                            <Share fontSize='32px' />
-                                                        </IconButton>
-                                                    )}
-                                                </CardContent>
-
-                                            </Card>
-                                            <AutoPlaySwipeableViews onClick={() => handleClick(project)}>
-                                                {project.images?.map((image, index) => (
-                                                    <>
-                                                        <CardActionArea sx={{ borderRadius: 2 }}>
-                                                            <Box
-                                                                key={index}
-                                                                sx={{
+                                                            <img
+                                                                loading="lazy"
+                                                                src={image}
+                                                                alt={`Imagen ${index + 1}`}
+                                                                style={{
                                                                     height: "100%",
-                                                                    maxWidth: "100%",
-                                                                    display: "flex",
-                                                                    position: 'relative',
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
+                                                                    width: "100%",
+                                                                    objectFit: "cover",
+                                                                    borderRadius: 4,
+                                                                    cursor: "pointer",
                                                                 }}
-                                                            >
-                                                                <img
-                                                                    loading="lazy"
-                                                                    src={image}
-                                                                    alt={`Imagen ${index + 1}`}
-                                                                    style={{
-                                                                        height: "100%",
-                                                                        width: "100%",
-                                                                        objectFit: "cover",
-                                                                        borderRadius: 4,
-                                                                        cursor: 'pointer'
-                                                                    }} />
-                                                            </Box>
-                                                        </CardActionArea>
-
-                                                    </>
-                                                ))}
-                                            </AutoPlaySwipeableViews>
-                                        </animated.div>
-                                    </Box>
-                                ))}
+                                                            />
+                                                        </Box>
+                                                    </CardActionArea>
+                                                </>
+                                            ))}
+                                        </AutoPlaySwipeableViews>
+                                    </animated.div>
+                                </Box>
                             </Grid>
                         ))}
                     </Grid>

@@ -113,9 +113,13 @@ function Gallery() {
                                             <CardActionArea >
                                                 <CardContent sx={{ padding: '0px' }}>
                                                     <Box key={index} sx={{
-                                                        height: 240,
-                                                        position: 'relative', display: 'flex',
-                                                        justifyContent: 'center', alignItems: 'center'
+                                                        height: "500px",
+                                                        maxWidth: "100%",
+                                                        position: 'relative',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        overflow: "hidden",
                                                     }}>
                                                         <img
                                                             loading="lazy"
@@ -125,6 +129,7 @@ function Gallery() {
                                                                 width: "100%",
                                                                 height: "100%",
                                                                 objectFit: "cover",
+                                                                borderRadius: 4,
                                                             }} />
                                                     </Box>
                                                 </CardContent>
