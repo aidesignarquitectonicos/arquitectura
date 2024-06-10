@@ -31,6 +31,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { MenuOutlined } from "@mui/icons-material";
 import SplineModel from "../../Widget/Spline/Design3d";
 import Viewer from "../../Components/Viewer/Viewer";
+import Gallery from "../Gallery/Gallery";
+import Quilted_image from "../../Components/Quiltedimage/Quilted_image";
 
 const Home = () => {
 
@@ -181,8 +183,8 @@ const Home = () => {
                         </Menu>
                     </Toolbar>
                 </AppBar>
-                <Box sx={{ marginTop: 8, marginBottom: 4 }}>
-                    <GalleryView />
+                <Box sx={{ marginTop: 8, marginBottom: 4, width: "100%", }}>
+                    <Quilted_image />
                 </Box>
             </ThemeProvider>
             <Footer />
