@@ -70,30 +70,37 @@ function Quilted_image({ project }) {
     return (
         <>
             <Box
-
                 sx={{
                     overflowY: "auto",
                     padding: "20px",
                     marginTop: 8,
                     marginBottom: 4,
                     width: "100%",
+                    height: { xs: "100%", md: "100%" },
+                    borderTopLeftRadius: "20px",
+                    borderTopRightRadius: "20px",
+                    borderBottomLeftRadius: "20px",
+                    borderBottomRightRadius: "20px",
                 }}
             >
-                <ImageList sx={{
-                    display: 'flex', position: "relative",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    overflow: "hidden",
-                }}>
+                <ImageList
+                    sx={{
+                        display: "flex",
+                        position: "relative",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        overflow: "hidden",
+                    }}
+                >
                     {randomProject && randomProject.images && (
                         <Box
                             key={randomProject.uuid}
                             sx={{
                                 marginBottom: 4,
-                                width: "100%",
-                            }}>
+                            }}
+                        >
                             <AutoPlaySwipeableViews>
                                 {randomProject.images.map((image, index) => (
                                     <>
@@ -104,7 +111,6 @@ function Quilted_image({ project }) {
                                                 background: "transparent",
                                                 width: "100%",
                                             }}
-
                                         >
                                             <CardActionArea
                                                 onClick={() => handleClick(randomProject)}
