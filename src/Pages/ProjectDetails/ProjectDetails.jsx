@@ -63,7 +63,7 @@ function ProjectDetails() {
     const fade = useSpring({
         from: { opacity: 0 },
         to: { opacity: 1 },
-        config: { duration: 1500 },
+        config: { duration: 1800 },
     });
 
     //Constantes para el Alert

@@ -14,29 +14,41 @@ import {
     Container,
     TextField,
     Input,
-    Snackbar, Alert
+    Snackbar,
+    Alert,
 } from "@mui/material";
-import { onValue } from 'firebase/database';
-import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as databaseRef, set } from 'firebase/database';
-import { ArrowBack, Edit, Save, Star, StarBorderOutlined } from "@mui/icons-material";
+import { onValue } from "firebase/database";
+import {
+    getStorage,
+    ref as storageRef,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "firebase/storage";
+import { getDatabase, ref as databaseRef, set } from "firebase/database";
+import {
+    ArrowBack,
+    Edit,
+    Save,
+    Star,
+    StarBorderOutlined,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import RenderImage from "../../Components/Render/RenderImage";
-import { database } from '../../Data/FirebaseConfig';
+import { database } from "../../Data/FirebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AboutPage = () => {
     // Arreglo de colores por los que se ciclará
     const colors = [
-        '#FAD2E1', // Rosado pastel
-        '#C5E0DC', // Verde agua pastel
-        '#F9E2AE', // Amarillo pastel
-        '#E2E2FA', // Lavanda pastel
-        '#AED9E0', // Celeste pastel
-        '#F9D8D6', // Salmón pastel
-        '#F6EAC2', // Beige pastel
-        '#D8A7B1', // Rosa viejo pastel
-        '#B5EAD7'  // Menta pastel
+        "#FAD2E1", // Rosado pastel
+        "#C5E0DC", // Verde agua pastel
+        "#F9E2AE", // Amarillo pastel
+        "#E2E2FA", // Lavanda pastel
+        "#AED9E0", // Celeste pastel
+        "#F9D8D6", // Salmón pastel
+        "#F6EAC2", // Beige pastel
+        "#D8A7B1", // Rosa viejo pastel
+        "#B5EAD7", // Menta pastel
     ];
 
     // Estado para controlar el índice del color actual
@@ -44,8 +56,8 @@ const AboutPage = () => {
 
     //controlador de alert
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState("info");
 
     const handleSnackbar = (message, severity) => {
         setSnackbarMessage(message);
@@ -54,18 +66,17 @@ const AboutPage = () => {
     };
 
     const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
         setSnackbarOpen(false);
     };
 
-
     //navegation
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Este estado debe basarse en tu lógica de autenticación
     const [isEditing, setIsEditing] = useState(false);
-    const [starActive,] = useState(false);
+    const [starActive] = useState(false);
 
     // Animaciones con react-spring
     const fade = useSpring({ from: { opacity: 0 }, opacity: 1, delay: 500 });
@@ -75,7 +86,6 @@ const AboutPage = () => {
         delay: 800,
     });
 
-
     const [personalInfo, setPersonalInfo] = useState({
         name: "",
         profession: "",
@@ -84,7 +94,7 @@ const AboutPage = () => {
     });
 
     useEffect(() => {
-        const personalInfoRef = databaseRef(database, 'Admin'); // Asegúrate de que la ruta sea correcta
+        const personalInfoRef = databaseRef(database, "Admin"); // Asegúrate de que la ruta sea correcta
         onValue(personalInfoRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -105,7 +115,7 @@ const AboutPage = () => {
 
     const handleInputChange = (event, field) => {
         // Utiliza el nombre del campo para determinar qué parte del estado actualizar
-        setPersonalInfo(prevState => ({
+        setPersonalInfo((prevState) => ({
             ...prevState,
             [field]: event.target.value,
         }));
@@ -127,13 +137,16 @@ const AboutPage = () => {
             },
             (error) => {
                 // Opcional: Manejo de errores de carga
-                handleSnackbar("Error al subir archivo: " + error.message, 'error');
+                handleSnackbar("Error al subir archivo: " + error.message, "error");
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    handleSnackbar("Archivo disponible en: " + downloadURL, 'success');
+                    handleSnackbar("Archivo disponible en: " + downloadURL, "success");
                     // Actualizar el estado y posteriormente la base de datos
-                    setPersonalInfo((prevState) => ({ ...prevState, image: downloadURL }));
+                    setPersonalInfo((prevState) => ({
+                        ...prevState,
+                        image: downloadURL,
+                    }));
                 });
             }
         );
@@ -145,11 +158,11 @@ const AboutPage = () => {
         const infoRef = databaseRef(db, "Admin");
         set(infoRef, personalInfo)
             .then(() => {
-                handleSnackbar("Datos guardados correctamente", 'success');
+                handleSnackbar("Datos guardados correctamente", "success");
                 setIsEditing(false); // Desactiva el modo de edición después de guardar
             })
             .catch((error) => {
-                handleSnackbar("Error al guardar los datos" + error.message, 'success');
+                handleSnackbar("Error al guardar los datos" + error.message, "success");
             });
     };
 
@@ -163,155 +176,161 @@ const AboutPage = () => {
         }
     };
 
-
-
     return (
         <>
-            <AppBar
-                position="fixed"
-                sx={{
-                    background: "#f4f4f4",
-                    color: "#000",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                    borderBottomLeftRadius: '20px',
-                    borderBottomRightRadius: '20px'
-                }}
-            >
-                <Toolbar>
-                    <IconButton
-                        onClick={() => {
-                            navigate(-1);
-                        }}
-                        aria-label="Regresar"
-                    >
-                        <ArrowBack fontSize="32px" />
-                    </IconButton>
-                    <Typography>Acerca de</Typography>
-                    <Typography>Acerca de</Typography>
-                </Toolbar>
-            </AppBar>
-            <Container>
-                <Box
-                    maxWidth="sm"
+            <animated.div style={fade}>
+                <AppBar
+                    position="fixed"
                     sx={{
-                        overflowY: "auto",
-                        padding: "10px",
-                        marginTop: 8,
-                        marginBottom: 4,
-                        maxWidth: "100%",
-                        flexGrow: 1,
-
+                        background: "#f4f4f4",
+                        color: "#000",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                     }}
                 >
-                    <animated.div style={fade}>
-                        <Typography
-                            variant="h4"
-                            component="h1"
-                            gutterBottom
-                            textAlign="center"
+                    <Toolbar>
+                        <IconButton
+                            onClick={() => {
+                                navigate(-1);
+                            }}
+                            aria-label="Regresar"
                         >
-                            Acerca de Mí
-                        </Typography>
-                    </animated.div>
-                    <Grid
-                        container
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center"
+                            <ArrowBack fontSize="32px" />
+                        </IconButton>
+                        <Typography>{`Acerca del  ${" "} ${personalInfo.name}`}</Typography>
+                    </Toolbar>
+                </AppBar>
 
+                <Container>
+                    <Box
+                        maxWidth="sm"
+                        sx={{
+                            overflowY: "auto",
+                            padding: "10px",
+                            marginTop: 8,
+                            marginBottom: 4,
+                            maxWidth: "100%",
+                            flexGrow: 1,
+                        }}
                     >
-                        <Grid item xs={12} sm={6} md={4}>
-
-                            <animated.div style={slide}>
-                                <Card raised sx={{
-                                    background: "#f4f4f4",
-                                    mx: "auto"
-                                }}>
-                                    <CardContent>
-
-                                        {isEditing ? (
-                                            <IconButton onClick={saveInfo} aria-label="Guardar">
-                                                <Save sx={{ color: 'rgb(102,21,202);' }} />
-                                            </IconButton>
-                                        ) : isLoggedIn ? (
-                                            <IconButton onClick={toggleEdit} aria-label="Editar">
-                                                <Edit sx={{ color: 'rgb(25,201,202);' }} />
-                                            </IconButton>
-                                        ) : (
-                                            <IconButton onClick={toggleEdit}>
-                                                {starActive ? (
-                                                    <Star style={{ color: colors[colorIndex] }} />
-                                                ) : (
-                                                    <StarBorderOutlined style={{ color: colors[colorIndex] }} />
-                                                )}
-                                            </IconButton>
-                                        )}
-
-                                        {isEditing ? (
-                                            <TextField
-                                                type="text"
-                                                value={personalInfo.name}
-                                                onChange={(e) => handleInputChange(e, "name")}
-                                            />
-                                        ) : (
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {personalInfo.name}
-                                            </Typography>
-                                        )}
-                                        {isEditing ? (
-                                            <TextField
-                                                type="text"
-                                                value={personalInfo.profession}
-                                                onChange={(e) => handleInputChange(e, "profession")}
-                                            />
-                                        ) : (
-                                            <Typography variant="body2" color="text.secondary">
-                                                {personalInfo.profession}
-                                            </Typography>
-                                        )}
-
-                                        <CardActionArea>
+                        <Grid
+                            container
+                            spacing={2}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Grid item xs={12} sm={6} md={4}>
+                                <animated.div style={slide}>
+                                    <Card
+                                        sx={{
+                                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                                            background: "#f4f4f4",
+                                            mx: "auto",
+                                            borderTopLeftRadius: "20px",
+                                            borderTopRightRadius: "20px",
+                                            borderBottomLeftRadius: "20px",
+                                            borderBottomRightRadius: "20px",
+                                        }}
+                                    >
+                                        <CardContent>
                                             {isEditing ? (
-                                                <Box sx={{ padding: '5px' }}>
-                                                    <Input type="file" onChange={handleFileChange} />
-                                                </Box>
+                                                <IconButton onClick={saveInfo} aria-label="Guardar">
+                                                    <Save sx={{ color: "rgb(102,21,202);" }} />
+                                                </IconButton>
+                                            ) : isLoggedIn ? (
+                                                <IconButton onClick={toggleEdit} aria-label="Editar">
+                                                    <Edit sx={{ color: "rgb(25,201,202);" }} />
+                                                </IconButton>
                                             ) : (
-                                                <CardActionArea>
-                                                    <CardMedia
-                                                        component="img"
-                                                        image={personalInfo.image}
-                                                        alt="Imagen de perfil"
-                                                    />
-                                                </CardActionArea>
+                                                <IconButton onClick={toggleEdit}>
+                                                    {starActive ? (
+                                                        <Star style={{ color: colors[colorIndex] }} />
+                                                    ) : (
+                                                        <StarBorderOutlined
+                                                            style={{ color: colors[colorIndex] }}
+                                                        />
+                                                    )}
+                                                </IconButton>
                                             )}
-                                        </CardActionArea>
-                                        {isEditing ? (
-                                            <Box sx={{ padding: '5px' }}>
+
+                                            {isEditing ? (
                                                 <TextField
                                                     type="text"
-                                                    value={personalInfo.description}
-                                                    onChange={(e) => handleInputChange(e, "description")}
+                                                    value={personalInfo.name}
+                                                    onChange={(e) => handleInputChange(e, "name")}
                                                 />
-                                            </Box>
-                                        ) : (
-                                            <Typography variant="body1" marginTop={2}>
-                                                {personalInfo.description}
-                                            </Typography>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                            </animated.div>
+                                            ) : (
+                                                <Typography gutterBottom variant="h5" component="div">
+                                                    {personalInfo.name}
+                                                </Typography>
+                                            )}
+                                            {isEditing ? (
+                                                <TextField
+                                                    type="text"
+                                                    value={personalInfo.profession}
+                                                    onChange={(e) => handleInputChange(e, "profession")}
+                                                />
+                                            ) : (
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {personalInfo.profession}
+                                                </Typography>
+                                            )}
+
+                                            <CardActionArea>
+                                                {isEditing ? (
+                                                    <Box sx={{ padding: "5px" }}>
+                                                        <Input type="file" onChange={handleFileChange} />
+                                                    </Box>
+                                                ) : (
+                                                    <CardActionArea>
+                                                        <CardMedia
+                                                            component="img"
+                                                            image={personalInfo.image}
+                                                            alt="Imagen de perfil"
+                                                        />
+                                                    </CardActionArea>
+                                                )}
+                                            </CardActionArea>
+                                            {isEditing ? (
+                                                <Box sx={{ padding: "5px" }}>
+                                                    <TextField
+                                                        type="text"
+                                                        value={personalInfo.description}
+                                                        onChange={(e) =>
+                                                            handleInputChange(e, "description")
+                                                        }
+                                                    />
+                                                </Box>
+                                            ) : (
+                                                <Typography variant="body1" marginTop={2}>
+                                                    {personalInfo.description}
+                                                </Typography>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                </animated.div>
+                            </Grid>
+                            {/* Agregar más contenido aquí si es necesario */}
                         </Grid>
-                        {/* Agregar más contenido aquí si es necesario */}
-                    </Grid>
-                </Box>
-                <RenderImage />
-            </Container >
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+                    </Box>
+                    <RenderImage />
+                </Container>
+
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                >
+                    <Alert
+                        onClose={handleCloseSnackbar}
+                        severity={snackbarSeverity}
+                        sx={{ width: "100%" }}
+                    >
+                        {snackbarMessage}
+                    </Alert>
+                </Snackbar>
+            </animated.div>
         </>
     );
 };

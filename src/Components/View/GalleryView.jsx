@@ -4,8 +4,6 @@ import { useSpring, animated } from "@react-spring/web";
 import {
     Alert,
     Box,
-    Card,
-    CardContent,
     CardActionArea,
     Grid,
     IconButton,
@@ -14,7 +12,7 @@ import {
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Directions, Edit, Save, Share } from "@mui/icons-material";
+import { Edit, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
