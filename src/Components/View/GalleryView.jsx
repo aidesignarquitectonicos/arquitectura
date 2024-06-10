@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Edit, Save, Share } from "@mui/icons-material";
+import { Directions, Edit, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
@@ -240,23 +240,16 @@ function GalleryView({ project, index, image }) {
                         )}
                         {filteredProjects.map((project) => (
                             <Grid xs={12}>
-                                <Box item key={project.uuid} sx={{ paddingBottom: "0px", marginBottom: 5 }}>
+                                <Box item key={project.uuid} sx={{ marginBottom: 5 }}>
                                     <animated.div style={fadeIn}>
-                                        <Card
-                                            raised
-                                            style={{
-                                                cursor: "pointer",
-                                                backgroundColor: "transparent",
-                                                borderTopLeftRadius: '20px',
-                                                borderTopRightRadius: '20px',
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                flexDirection: 'row',
                                             }}
                                         >
-                                            <CardContent
-                                                sx={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            >
+                                            <div>
                                                 {editMode[project.uuid] ? (
                                                     <TextField
                                                         variant="outlined"
@@ -271,12 +264,15 @@ function GalleryView({ project, index, image }) {
                                                         fullWidth
                                                     />
                                                 ) : (
-                                                    <Typography variant="h8" component="h2" style={{}}>
+                                                    <Typography variant="h8" component="h3" style={{}}>
                                                         Proyecto:{" "}
                                                         {editedProjects[project.uuid]?.field1 ||
                                                             project.field1}
                                                     </Typography>
                                                 )}
+                                            </div>
+
+                                            <div>
                                                 {isUserLoggedIn ? (
                                                     <IconButton
                                                         onClick={() => toggleEditMode(project.uuid)}
@@ -292,19 +288,24 @@ function GalleryView({ project, index, image }) {
                                                         <Share fontSize="32px" />
                                                     </IconButton>
                                                 )}
-                                            </CardContent>
-                                        </Card>
-                                        <AutoPlaySwipeableViews
-                                            onClick={() => handleClick(project)}
-                                        >
-                                            {project.images?.map((image, index) => (
-                                                <>
-                                                    <CardActionArea sx={{ borderRadius: 2 }}>
+                                            </div>
+                                        </Box>
+                                        <div style={{}}>
+                                            <AutoPlaySwipeableViews
+                                                onClick={() => handleClick(project)}
+                                            >
+                                                {project.images?.map((image, index) => (
+                                                    <CardActionArea
+                                                        key={index}
+                                                        sx={{
+                                                            borderRadius: 2,
+
+                                                        }}
+                                                    >
                                                         <Box
-                                                            key={index}
                                                             sx={{
-                                                                height: "100%",
-                                                                maxWidth: "100%",
+                                                                height: { xs: 250, md: '100%' },
+                                                                width: "100%",
                                                                 display: "flex",
                                                                 position: "relative",
                                                                 justifyContent: "center",
@@ -313,23 +314,26 @@ function GalleryView({ project, index, image }) {
                                                             }}
                                                         >
                                                             <img
+                                                                key={index}
                                                                 loading="lazy"
                                                                 src={image}
                                                                 alt={`Imagen ${index + 1}`}
                                                                 style={{
-                                                                    borderBottomLeftRadius: '20px',
-                                                                    borderBottomRightRadius: '20px',
+                                                                    borderTopLeftRadius: "20px",
+                                                                    borderTopRightRadius: "20px",
+                                                                    borderBottomLeftRadius: "20px",
+                                                                    borderBottomRightRadius: "20px",
                                                                     width: "100%",
-                                                                    objectFit: "cover",
-
+                                                                    height: "100%", // Mantiene la relación de aspecto
+                                                                    objectFit: "cover", // Cubre el contenedor sin distorsión
                                                                     cursor: "pointer",
                                                                 }}
                                                             />
                                                         </Box>
                                                     </CardActionArea>
-                                                </>
-                                            ))}
-                                        </AutoPlaySwipeableViews>
+                                                ))}
+                                            </AutoPlaySwipeableViews>
+                                        </div>
                                     </animated.div>
                                 </Box>
                             </Grid>
