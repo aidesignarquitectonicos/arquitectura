@@ -105,11 +105,16 @@ function Quilted_image({ project }) {
                                 {randomProject.images.map((image, index) => (
                                     <>
                                         <Card
+                                            elevation='1'
                                             raised
                                             style={{
                                                 cursor: "pointer",
                                                 background: "transparent",
                                                 width: "100%",
+                                                borderTopLeftRadius: "20px",
+                                                borderTopRightRadius: "20px",
+                                                borderBottomLeftRadius: "20px",
+                                                borderBottomRightRadius: "20px",
                                             }}
                                         >
                                             <CardActionArea
