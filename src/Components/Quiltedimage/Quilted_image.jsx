@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 import {
     Box,
-    useMediaQuery,
-    useTheme,
     Card,
     CardActionArea,
     CardContent,
@@ -18,10 +16,7 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 function Quilted_image({ project }) {
     const [projects, setProjects] = useState([]);
-    const theme = useTheme(); // Usa el tema de MUI
-    const matchesXS = useMediaQuery(theme.breakpoints.down("sm")); // Mobile
-    const matchesSM = useMediaQuery(theme.breakpoints.up("sm")); // Tablets
-    const matchesMD = useMediaQuery(theme.breakpoints.up("md")); // Small desktop
+
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -52,12 +47,6 @@ function Quilted_image({ project }) {
         fetchProjects();
     }, []);
 
-    const getColsForBreakpoints = () => {
-        if (matchesXS) return 1;
-        if (matchesSM) return 2;
-        if (matchesMD) return 3;
-        return 4; // Por defecto para pantallas grandes
-    };
 
     const randomProject = sample(projects);
 

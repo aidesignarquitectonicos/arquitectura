@@ -12,15 +12,13 @@ import {
     CssBaseline,
     Dialog,
     IconButton,
-    Menu,
-    MenuItem,
     Toolbar,
     Typography,
 } from "@mui/material";
 import theme from "../../Themes/theme";
 import logo from "../../Assets/icono.png";
 import Footer from "../../Pages/Footer/Footer";
-import { useNavigate, Link, NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 //import Content from "../../Components/Content/Content";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig"; // Asegúrate de que este es el camino correcto a tu configuración de Firebase donde inicializas `auth`
@@ -37,35 +35,9 @@ const Home = () => {
     const [openQr, setOpenQr] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    // Estado para controlar la apertura del menú
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [open, setOpen] = useState(false);
-
     //Constante para navegar
     const [user, setUser] = useState(null);
     const navegationrender = useNavigate();
-
-    // Maneja el clic en el avatar para abrir el menú
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    // Cierra el menú
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleGallery = () => {
-        navegationrender("/Gallery");
-    };
-
-    const handleUpload = () => {
-        navegationrender("/Upload");
-    };
-
-    const handleSignIn = () => {
-        navegationrender("/SignIn");
-    };
 
     const handleSignOut = () => {
         signOut(auth)
@@ -78,14 +50,6 @@ const Home = () => {
                 // Ocurrió un error al cerrar sesión
                 console.error("Error al cerrar sesión", error);
             });
-    };
-
-    const handleQrOpen = () => {
-        setOpenQr(true);
-    };
-
-    const handleQrClose = () => {
-        setOpenQr(false);
     };
 
     const isAuthenticated = !!user;
@@ -185,7 +149,7 @@ const Home = () => {
                                         {isAuthenticated && (
                                             <li
                                                 style={{
-                                                    borderBottom: "1px solid #000",
+                                                    borderBottom: "1px solid #8887875E",
                                                     padding: "20px",
                                                 }}
                                             >
@@ -194,7 +158,7 @@ const Home = () => {
                                         )}
                                         <li
                                             style={{
-                                                borderBottom: "1px solid #000",
+                                                borderBottom: "1px solid #8887875E",
                                                 padding: "20px",
                                             }}
                                         >
@@ -204,7 +168,7 @@ const Home = () => {
                                         </li>
                                         <li
                                             style={{
-                                                borderBottom: "1px solid #000",
+                                                borderBottom: "1px solid #8887875E",
                                                 padding: "20px",
                                             }}
                                         >
@@ -214,7 +178,7 @@ const Home = () => {
                                         </li>
                                         <li
                                             style={{
-                                                borderBottom: "1px solid #000",
+                                                borderBottom: "1px solid #8887875E",
                                                 padding: "20px",
                                             }}
                                         >
@@ -230,7 +194,7 @@ const Home = () => {
                                         {isAuthenticated && (
                                             <li
                                                 style={{
-                                                    borderBottom: "1px solid #000",
+                                                    borderBottom: "1px solid #8887875E",
                                                     padding: "20px",
                                                 }}
                                             >
@@ -245,7 +209,7 @@ const Home = () => {
                                         {isAuthenticated ? (
                                             <li
                                                 style={{
-                                                    borderBottom: "1px solid #000",
+                                                    borderBottom: "1px solid #8887875E",
                                                     padding: "20px",
                                                 }}
                                             >
@@ -254,7 +218,7 @@ const Home = () => {
                                         ) : (
                                             <li
                                                 style={{
-                                                    borderBottom: "1px solid #000",
+                                                    borderBottom: "1px solid #8887875E",
                                                     padding: "20px",
                                                 }}
                                             >
