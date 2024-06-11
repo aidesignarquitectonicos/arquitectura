@@ -17,6 +17,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig";
 import { ArrowBack } from "@mui/icons-material";
 import { useSpring, animated } from "@react-spring/web";
+
 function SignIn() {
     //Constante para navegar
     const navegationrender = useNavigate();
@@ -65,7 +66,7 @@ function SignIn() {
     };
 
     const handleBack = () => {
-        navegationrender(-1);
+        navegationrender("/");
     };
 
     const fadeIn = useSpring({
@@ -82,8 +83,8 @@ function SignIn() {
                     background: "#f4f4f4",
                     color: "#000",
                     zIndex: (theme) => theme.zIndex.drawer + 1,
-                    borderBottomLeftRadius: '20px',
-                    borderBottomRightRadius: '20px'
+                    borderBottomLeftRadius: "20px",
+                    borderBottomRightRadius: "20px",
                 }}
             >
                 <Toolbar>
@@ -93,19 +94,21 @@ function SignIn() {
                     <Typography>Gallery</Typography>
                 </Toolbar>
             </AppBar>
-            <Container maxWidth="sm" sx={{
-                overflowY: 'auto',
-                padding: '20px',
-                marginTop: 8,
-                marginBottom: 4
-            }}>
+            <Container
+                maxWidth="sm"
+                sx={{
+                    overflowY: "auto",
+                    padding: "20px",
+                    marginTop: 8,
+                    marginBottom: 4,
+                }}
+            >
                 <Box
                     sx={{
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-
                     }}
                 >
                     <Box
@@ -115,9 +118,13 @@ function SignIn() {
                         sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
                     >
                         <animated.div style={fadeIn}>
-                            <Card sx={{
-                                background: "#f4f4f4",
-                            }}>
+                            <Card
+                                raised
+                                sx={{
+                                    background: "#f4f4f4",
+                                    borderRadius: 6,
+                                }}
+                            >
                                 <CardContent>
                                     <Grid
                                         container
@@ -127,6 +134,7 @@ function SignIn() {
                                         justify="center"
                                     >
                                         <Grid item xs={12}>
+                                            <Typography>Correo Electrónico:</Typography>
                                             <TextField
                                                 label="Email"
                                                 variant="outlined"
@@ -137,6 +145,7 @@ function SignIn() {
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
+                                            <Typography>Contraseña:</Typography>
                                             <TextField
                                                 label="Password"
                                                 variant="outlined"
@@ -151,19 +160,20 @@ function SignIn() {
                                             <Button
                                                 onClick={handleSignIn}
                                                 variant="contained"
-                                                sx={{ mt: 2 }}
+                                                sx={{ mt: 2, background: "black" }}
                                             >
-                                                Sign In
+                                                Iniciar Sesión
                                             </Button>
                                             {loginError && (
-                                                <Box sx={{ color: "red", mt: 2 }}>{loginError}</Box>
+                                                <Box sx={{ color: "red", mt: 2 }}>
+                                                    {loginError}
+                                                </Box>
                                             )}
                                         </Grid>
                                     </Grid>
                                 </CardContent>
                             </Card>
                         </animated.div>
-
                     </Box>
                 </Box>
             </Container>

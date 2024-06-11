@@ -178,7 +178,7 @@ const AboutPage = () => {
 
     return (
         <>
-            <animated.div style={fade}>
+            <animated.div style={{ fade, background: "rgba(255, 255, 255, 0.2)", }}>
                 <AppBar
                     position="fixed"
                     sx={{
@@ -202,7 +202,7 @@ const AboutPage = () => {
                     </Toolbar>
                 </AppBar>
 
-                <Container>
+                <Container >
                     <Box
                         maxWidth="sm"
                         sx={{
@@ -223,9 +223,11 @@ const AboutPage = () => {
                             <Grid item xs={12} sm={6} md={4}>
                                 <animated.div style={slide}>
                                     <Card
+                                        raised
                                         sx={{
+                                            marginTop: 5,
                                             zIndex: (theme) => theme.zIndex.drawer + 1,
-                                            background: "#f4f4f4",
+                                            background: "rgba(255, 255, 255, 0.9)",
                                             mx: "auto",
                                             borderTopLeftRadius: "20px",
                                             borderTopRightRadius: "20px",
