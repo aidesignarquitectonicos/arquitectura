@@ -68,7 +68,7 @@ const RenderImage = () => {
                     let distance = Math.sqrt(dx * dx + dy * dy);
                     if (distance < 100) {
                         ctx2.beginPath();
-                        ctx2.strokeStyle = 'yellow';
+                        ctx2.strokeStyle = 'rgba(255,25,225, 0.8)';
                         ctx2.lineWidth = 0.8;
                         ctx2.moveTo(particleArray[a].x, particleArray[a].y);
                         ctx2.lineTo(particleArray[b].x, particleArray[b].y);

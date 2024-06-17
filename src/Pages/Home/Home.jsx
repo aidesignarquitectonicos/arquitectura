@@ -28,6 +28,9 @@ import { MenuOutlined } from "@mui/icons-material";
 import { useSpring, animated } from "react-spring";
 import Quilted_image from "../../Components/Quiltedimage/Quilted_image";
 import "./Home.css";
+import HouseRender from "../../Components/HouseRender/HouseRender";
+import ParticleCanvas from "../../Components/HouseRender/Particles";
+import render_video from '../../Assets/Video/rendervideo.mp4';
 
 const Home = () => {
     //Constante URL
@@ -289,8 +292,64 @@ const Home = () => {
                             </Dialog>
                         </Toolbar>
                     </AppBar>
-                    <Box sx={{ marginTop: 8, marginBottom: 4, width: "100%" }}>
-                        <Quilted_image />
+                    <Box
+                        sx={{
+                            width: "100%",
+                            height: "100vh",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: 'relative',
+                        }}
+                    >
+
+                        <video
+                            width="100%"
+                            height="100%"
+                            autoPlay
+                            loop
+                            muted
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'cover',
+                                borderRadius: 20,
+                            }}
+                        >
+                            <source src={render_video} type="video/mp4" />
+                        </video>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                padding: 5,
+                                borderRadius: 10,
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Box sx={{
+                                backgroundColor: 'rgba(255, 2550, 255, 0.3)',
+                                width: '100%',
+                                borderRadius: 10,
+                                padding: 7,
+                            }}>
+                                <Typography variant="h4" component="div" color="white">
+                                    Con AIDesign, ¡Todo es Posible!
+                                </Typography>
+                                <Typography sx={{ marginTop: 8 }} variant="h8" component="div" color="textPrimary">
+                                    El diseñar es la forma de organizar y adaptar responsablemente un espacio en la naturaleza
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box className="App" sx={{ width: "100%" }}>
+                        <ParticleCanvas />
+
+                        <header style={{ width: "100%" }} className="App-header">
+                            <div style={{ width: "100%" }} className="house-container">
+                                <Quilted_image />
+                            </div>
+                        </header>
                     </Box>
                 </ThemeProvider>
                 <Footer />
