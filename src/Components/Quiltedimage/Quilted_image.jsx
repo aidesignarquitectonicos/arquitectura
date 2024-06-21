@@ -11,6 +11,7 @@ import { sample } from "lodash";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
 import { useNavigate } from "react-router-dom";
+import ParticleCanvas from "../HouseRender/Particles";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -62,8 +63,8 @@ function Quilted_image({ project }) {
                 sx={{
                     overflowY: "auto",
                     padding: "20px",
-                    marginTop: 8,
-                    marginBottom: 4,
+                    marginTop: 20,
+                    marginBottom: -90,
                     width: "100%",
                     height: { xs: "100%", md: "100%" },
                     borderTopLeftRadius: "20px",
