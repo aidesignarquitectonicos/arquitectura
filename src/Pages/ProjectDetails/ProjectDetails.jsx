@@ -22,6 +22,7 @@ import {
     Menu,
     MenuItem,
     Divider,
+    Alert,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import InfoIcon from "@mui/icons-material/Info";
@@ -105,7 +106,7 @@ function ProjectDetails() {
                             videos: updatedVideos,
                         });
                     } else {
-                        console.log("No se encontraron imágenes en el proyecto.");
+                        console.log("No se encontraron videos en el proyecto.");
                         setProjectVideo({
                             uuid: uuid,
                             ...projectData,
@@ -140,29 +141,17 @@ function ProjectDetails() {
     });
 
     //Compartir Projecto
-    const shareProject = async (project) => {
+    const shareProject_uidd = async (project) => {
         // Construye la URL del proyecto usando el UUID del proyecto
         const projectUrl = `${window.location.href}`;
+        console.log("Compartiendo el proyecto con la URL:", projectUrl);
         if (navigator.share) {
             try {
                 await navigator.share({
-                    // Ajusta según el tipo de media (image o video)
-                    ...(project.images[0].type === "images"
-                        ? {
-                            image: project.images[0].url,
-                        }
-                        : {
-                            files: [
-                                new File(
-                                    [await (await fetch(project.images[0].url)).blob()],
-                                    "movie.mp4",
-                                    { type: "video/mp4" }
-                                ),
-                            ],
-                        }),
-                    title: `Proyecto: ${project.field3} - ${project.role}`, // Título del contenido a compartir
-                    text: `Descripción: ${project.field1}`, // Texto descriptivo
-                    url: projectUrl, // Puedes personalizar esta URL si cada proyecto tiene su propia página
+                    image: [project.images],
+                    title: `Proyecto: ${project.field3} - ${project.role}`,
+                    text: `Descripción: ${project.field1}`,
+                    url: projectUrl,
                 });
                 setAlertInfo({
                     showAlert: true,
@@ -208,12 +197,21 @@ function ProjectDetails() {
                         >
                             Detalles del Proyecto
                         </Typography>
-                        <IconButton onClick={() => shareProject(project)}>
+                        <IconButton onClick={() => shareProject_uidd(project)}>
                             <Share fontSize="32px" />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Container sx={{ marginTop: 12, marginBottom: 4 }}>
+                    {alertInfo.showAlert && (
+                        <Alert
+                            severity={alertInfo.type}
+                            onClose={() => setAlertInfo({ ...alertInfo, showAlert: false })}
+                            sx={{ width: "100%", mb: 2, }}
+                        >
+                            {alertInfo.message}
+                        </Alert>
+                    )}
                     {project ? (
                         <Box
                             sx={{
@@ -237,16 +235,7 @@ function ProjectDetails() {
                                                 alt={`${project.field1}`}
                                                 loading="lazy"
                                             />
-                                        ) : media.type === "video" ? (
-                                            <video
-                                                controls
-                                                style={{ borderRadius: 10, maxWidth: "100%" }}
-                                            >
-                                                <source src={media.url} type="video/mp4" />
-                                                Tu navegador no soporta el elemento de video.
-                                            </video>
                                         ) : null}
-
                                         <ImageListItemBar
                                             sx={{ borderRadius: 2 }}
                                             title={`${project.field1}`}

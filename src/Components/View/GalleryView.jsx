@@ -140,7 +140,7 @@ function GalleryView({ project, index, image }) {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    image: project.image,
+                    image: [project.image],
                     title: `Proyecto: ${project.field3} - ${project.role}`, // Título del contenido a compartir
                     text: `Descripción: ${project.field1}`, // Texto descriptivo
                     url: projectUrl, // Puedes personalizar esta URL si cada proyecto tiene su propia página
