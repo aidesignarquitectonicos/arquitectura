@@ -6,6 +6,7 @@ import Gallery from "./Pages/Gallery/Gallery";
 import Upload from "./Pages/Upload/Upload";
 import AboutPage from "./Pages/About/AboutPage";
 import ProjectDetails from "./Pages/ProjectDetails/ProjectDetails";
+import Developer from "./Pages/Developer/Developer";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/Upload" element={<Upload />} />
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/project/:uuid" element={<ProjectDetails />} />
+          <Route path="/Developer" element={<Developer />} />
         </Routes>
       </Router>
     </>

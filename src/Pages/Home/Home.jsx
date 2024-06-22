@@ -217,6 +217,15 @@ const Home = () => {
                                             Codigo Qr
                                         </NavLink>
                                     </li>
+                                    <li
+                                        style={{
+                                            borderBottom: "1px solid #8887875E",
+                                            padding: "20px",
+                                        }}
+                                    ><NavLink to="/Developer" onClick={() => setMenuOpen(false)}>
+                                            Desarrollador de Software
+                                        </NavLink>
+                                    </li>
                                     {isAuthenticated && (
                                         <li
                                             style={{
@@ -352,7 +361,7 @@ const Home = () => {
                                 padding: 7,
                             }}
                         >
-                            <Typography  sx={{   color: "#1A2437", fontWeight: 'bold' }} variant="h4" component="div" color="white">
+                            <Typography sx={{ color: "#1A2437", fontWeight: 'bold' }} variant="h4" component="div" color="white">
                                 Con AIDesign, ¡Todo es Posible!
                             </Typography>
                             <Typography
