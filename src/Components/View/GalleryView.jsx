@@ -321,7 +321,7 @@ function GalleryView({ project, index, image }) {
                                                             <MenuItem onClick={() => shareProject(project)} sx={{ color: "black" }} fontSize="32px">
                                                                 <Typography sx={{ padding: 2 }}>Compartir</Typography> <Share sx={{ marginRight: 1 }} />
                                                             </MenuItem>
-                                                            <MenuItem onClick={() => handleQRCodePopupOpen(`${window.location.origin}/project/${project.uuid}`)}>
+                                                            <MenuItem onClick={() => handleQRCodePopupOpen(`${window.location.origin}/arquitectura/#/project/${project.uuid}`)}>
                                                                 <Typography sx={{ padding: 2 }}>Código QR</Typography>
                                                             </MenuItem>
                                                         </Menu>
