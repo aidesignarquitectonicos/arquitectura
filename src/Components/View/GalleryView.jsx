@@ -296,11 +296,6 @@ function GalleryView({ project, index, image }) {
                                                             {editedProjects[project.uuid]?.field1 ||
                                                                 project.field1}
                                                         </Typography>
-
-                                                        <Typography variant="h8" component="h3" style={{}}>
-                                                            Proyecto:{" "}
-                                                            {project.id}
-                                                        </Typography>
                                                     </>
                                                 )}
                                             </div>
