@@ -7,15 +7,19 @@ import {
     CardActionArea,
     Grid,
     IconButton,
+    MenuItem,
+    Menu,
     TextField,
     Typography,
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Edit, Save, Share } from "@mui/icons-material";
+import { Edit, MenuSharp, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
+import QRCode from "qrcode.react";
+import QRCodePopup from './QRCodePopup';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -24,6 +28,24 @@ function GalleryView({ project, index, image }) {
     const [filter, setFilter] = useState("");
     const [projects, setProjects] = useState([]);
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [qrCodePopup, setQrCodePopup] = useState({ open: false, url: '' });
+
+    const handleQRCodePopupOpen = (url) => {
+        setQrCodePopup({ open: true, url });
+    };
+
+    const handleQRCodePopupClose = () => {
+        setQrCodePopup({ open: false, url: '' });
+    };
+
+    const open = Boolean(anchorEl);
+    const handleClickMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     // Nueva función para manejar cambios en el filtro
     //const handleFilterChange = (category) => {
     //   setFilter(category);
@@ -236,6 +258,7 @@ function GalleryView({ project, index, image }) {
                                 {alertInfo.message}
                             </Alert>
                         )}
+
                         {filteredProjects.map((project) => (
                             <Grid xs={12}>
                                 <Box item key={project.uuid} sx={{ marginBottom: 5 }}>
@@ -282,9 +305,28 @@ function GalleryView({ project, index, image }) {
                                                         )}
                                                     </IconButton>
                                                 ) : (
-                                                    <IconButton onClick={() => shareProject(project)}>
-                                                        <Share fontSize="32px" />
-                                                    </IconButton>
+                                                    <>
+                                                        <IconButton onClick={handleClickMenu}>
+                                                            <MenuSharp sx={{ color: 'black' }} fontSize="32px" />
+                                                        </IconButton>
+                                                        <Menu
+                                                            id="options-menu"
+                                                            anchorEl={anchorEl}
+                                                            open={open}
+                                                            onClose={handleClose}
+                                                            MenuListProps={{
+                                                                'aria-labelledby': 'options-button',
+                                                            }}
+                                                        >
+                                                            <MenuItem onClick={() => shareProject(project)} sx={{ color: "black" }} fontSize="32px">
+                                                                <Typography sx={{ padding: 2 }}>Compartir</Typography> <Share sx={{ marginRight: 1 }} />
+                                                            </MenuItem>
+                                                            <MenuItem onClick={() => handleQRCodePopupOpen(`${window.location.origin}/project/${project.uuid}`)}>
+                                                                <Typography sx={{ padding: 2 }}>Código QR</Typography>
+                                                            </MenuItem>
+                                                        </Menu>
+                                                    </>
+
                                                 )}
                                             </div>
                                         </Box>
@@ -339,6 +381,11 @@ function GalleryView({ project, index, image }) {
                     </Grid>
                 </Grid>
             </animated.div>
+            <QRCodePopup
+                open={qrCodePopup.open}
+                onClose={handleQRCodePopupClose}
+                url={qrCodePopup.url}
+            />
         </>
     );
 }
