@@ -14,11 +14,10 @@ import {
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Edit, MenuSharp, Save, Share } from "@mui/icons-material";
+import { Edit, MenuSharp, QrCode, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-import QRCode from "qrcode.react";
 import QRCodePopup from './QRCodePopup';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -27,25 +26,38 @@ function GalleryView({ project, index, image }) {
     //Sistema de filtrado
     const [filter, setFilter] = useState("");
     const [projects, setProjects] = useState([]);
-
+    const [selectedProject, setSelectedProject] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [qrCodePopup, setQrCodePopup] = useState({ open: false, url: '' });
+    const [qrCodePopup, setQrCodePopup] = useState({ open: false, url: '', project: null });
+    const [anchorEls, setAnchorEls] = useState({});
 
-    const handleQRCodePopupOpen = (url) => {
-        setQrCodePopup({ open: true, url });
+
+    const handleQRCodePopupOpen = (url, project) => {
+        console.log('URL: ', url); // Verifica la URL
+        console.log('Proyecto: ', project); // Verifica el proyecto
+        setQrCodePopup({ open: true, url, project });
     };
 
+
     const handleQRCodePopupClose = () => {
-        setQrCodePopup({ open: false, url: '' });
+        setQrCodePopup({ open: false, url: '', project: null });
     };
 
     const open = Boolean(anchorEl);
-    const handleClickMenu = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleClickMenu = (event, projectId) => {
+        setAnchorEls((prev) => ({
+            ...prev,
+            [projectId]: event.currentTarget, // Se almacena la referencia del botón en cada proyecto
+        }));
     };
-    const handleClose = () => {
-        setAnchorEl(null);
+
+    const handleClose = (projectId) => {
+        setAnchorEls((prev) => ({
+            ...prev,
+            [projectId]: null, // Se cierra solo el menú del proyecto específico
+        }));
     };
+
     // Nueva función para manejar cambios en el filtro
     //const handleFilterChange = (category) => {
     //   setFilter(category);
@@ -127,17 +139,7 @@ function GalleryView({ project, index, image }) {
             [uuid]: {
                 ...prevState[uuid],
                 [field]: value,
-            },
-        }));
-    };
 
-    const handleRoleChange = (event, uuid) => {
-        // Actualizar el proyecto específico con el nuevo rol en el estado editedProjects
-        setEditedProjects((prevState) => ({
-            ...prevState,
-            [uuid]: {
-                ...prevState[uuid],
-                role: event.target.value,
             },
         }));
     };
@@ -155,10 +157,13 @@ function GalleryView({ project, index, image }) {
         }));
     };
 
+    const URLs = "https://aidesignarquitectonicos.github.io/arquitectura/#/project";
+
     //Compartir Projecto
     const shareProject = async (project) => {
         // Construye la URL del proyecto usando el UUID del proyecto
-        const projectUrl = `${window.location.href}#/project/${project.uuid}`;
+        const projectUrl = `${URLs}/${project.uuid}`;
+
         if (navigator.share) {
             try {
                 await navigator.share({
@@ -176,7 +181,7 @@ function GalleryView({ project, index, image }) {
                 setAlertInfo({
                     showAlert: true,
                     type: "error",
-                    message: "Error al compartir.",
+                    message: "No se pudo compartir el contenido.",
                 });
             }
         } else {
@@ -285,11 +290,18 @@ function GalleryView({ project, index, image }) {
                                                         fullWidth
                                                     />
                                                 ) : (
-                                                    <Typography variant="h8" component="h3" style={{}}>
-                                                        Proyecto:{" "}
-                                                        {editedProjects[project.uuid]?.field1 ||
-                                                            project.field1}
-                                                    </Typography>
+                                                    <>
+                                                        <Typography variant="h8" component="h3" style={{}}>
+                                                            Proyecto:{" "}
+                                                            {editedProjects[project.uuid]?.field1 ||
+                                                                project.field1}
+                                                        </Typography>
+
+                                                        <Typography variant="h8" component="h3" style={{}}>
+                                                            Proyecto:{" "}
+                                                            {project.id}
+                                                        </Typography>
+                                                    </>
                                                 )}
                                             </div>
 
@@ -306,23 +318,32 @@ function GalleryView({ project, index, image }) {
                                                     </IconButton>
                                                 ) : (
                                                     <>
-                                                        <IconButton onClick={handleClickMenu}>
+                                                        <IconButton onClick={(event) => handleClickMenu(event, project.id)}>
                                                             <MenuSharp sx={{ color: 'black' }} fontSize="32px" />
                                                         </IconButton>
                                                         <Menu
-                                                            id="options-menu"
-                                                            anchorEl={anchorEl}
-                                                            open={open}
-                                                            onClose={handleClose}
+                                                            key={project.id}
+                                                            id={`options-menu-${project.id}`}
+                                                            anchorEl={anchorEls[project.id] || null} // Cada menú se abre solo si su anchorEl es válido
+                                                            open={Boolean(anchorEls[project.id])}
+                                                            onClose={() => handleClose(project.id)}
                                                             MenuListProps={{
                                                                 'aria-labelledby': 'options-button',
                                                             }}
                                                         >
-                                                            <MenuItem onClick={() => shareProject(project)} sx={{ color: "black" }} fontSize="32px">
-                                                                <Typography sx={{ padding: 2 }}>Compartir</Typography> <Share sx={{ marginRight: 1 }} />
+
+                                                            <MenuItem
+                                                                onClick={() => shareProject(project)}
+                                                                sx={{ color: "black" }}
+                                                                fontSize="32px"
+                                                            >
+                                                                <Typography sx={{ padding: 2 }}>Compartir </Typography> <Share sx={{ marginRight: 1 }} />
                                                             </MenuItem>
-                                                            <MenuItem onClick={() => handleQRCodePopupOpen(`${window.location.origin}/arquitectura/#/project/${project.uuid}`)}>
+                                                            <MenuItem
+                                                                onClick={() => handleQRCodePopupOpen(`${URLs}/${project.id}`, project)}
+                                                            >
                                                                 <Typography sx={{ padding: 2 }}>Código QR</Typography>
+                                                                <QrCode sx={{ marginRight: 1 }} />
                                                             </MenuItem>
                                                         </Menu>
                                                     </>
@@ -385,6 +406,7 @@ function GalleryView({ project, index, image }) {
                 open={qrCodePopup.open}
                 onClose={handleQRCodePopupClose}
                 url={qrCodePopup.url}
+                project={qrCodePopup.project}
             />
         </>
     );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     AppBar,
     Box,
@@ -7,16 +7,16 @@ import {
     Typography,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import GalleryView from "../../Components/View/GalleryView";
 
 
 function Gallery() {
-    const navigate = useNavigate();
+
 
     const handleBack = () => {
-        navigate(-1);
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
     };
+
 
     return (
         <>
