@@ -45,7 +45,6 @@ function ProjectDetails() {
 
     //constantes de encriptado
     const { uuid } = useParams();
-    const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [project_video, setProjectVideo] = useState(null);
 
@@ -124,7 +123,7 @@ function ProjectDetails() {
     }, [uuid]);
 
     const handleBack = () => {
-        navigate(-1);
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/#/Gallery';
     };
 
     const fade = useSpring({
