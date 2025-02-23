@@ -3016,6 +3016,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mediapipe/tasks-vision@npm:^0.10.21":
+  version: 0.10.21
+  resolution: "@mediapipe/tasks-vision@npm:0.10.21"
+  checksum: 10c0/11b2bdf98b8cb6e044f2a954e7c8393169e62c86ff49b3d0b61c3b327d18e1ccd47a187999b023bad48380c9da41bfa66eb165301c80da07746390482cb18a19
+  languageName: node
+  linkType: hard
+
 "@monogrid/gainmap-js@npm:^3.0.6":
   version: 3.1.0
   resolution: "@monogrid/gainmap-js@npm:3.1.0"
@@ -5553,6 +5560,7 @@ __metadata:
     "@emotion/styled": "npm:^11.11.0"
     "@google-cloud/storage": "npm:^7.8.0"
     "@gsap/react": "npm:^2.1.1"
+    "@mediapipe/tasks-vision": "npm:^0.10.21"
     "@mui/base": "npm:^5.0.0-beta.40"
     "@mui/icons-material": "npm:^5.15.13"
     "@mui/joy": "npm:^5.0.0-beta.36"

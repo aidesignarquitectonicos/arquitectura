@@ -14,7 +14,7 @@ import {
     Avatar,
 } from "@mui/material";
 import { ArrowBack, LinkedIn, Share } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/Anth.png";
 import { Facebook, Instagram, WhatsApp } from "@mui/icons-material";
 import ParticleBackground from "./ParticleBackground";
@@ -31,7 +31,6 @@ const Developer = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarSeverity, setSnackbarSeverity] = useState("info");
-    const navigate = useNavigate();
 
     const [personalInfo, setPersonalInfo] = useState({
         name: "Anthony Cordova",
@@ -99,6 +98,10 @@ Imagen: https://aidesignarquitectonicos.github.io/arquitectura/static/media/Anth
         }
     };
 
+    const handleBack = () => {
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
+    };
+
     return (
         <animated.div style={{ opacity }}>
 
@@ -116,7 +119,7 @@ Imagen: https://aidesignarquitectonicos.github.io/arquitectura/static/media/Anth
             >
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                     <IconButton
-                        onClick={() => navigate("https://aidesignarquitectonicos.github.io/arquitectura/")}
+                        onClick={handleBack}
                         aria-label="Regresar" sx={{ color: "#000000FF" }}>
                         <ArrowBack fontSize="32px" />
                     </IconButton>
