@@ -11,16 +11,20 @@ import {
     Grid,
     Card,
     CardContent,
+    Snackbar, Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Login } from "@mui/icons-material";
 import { useSpring, animated } from "@react-spring/web";
+import { EmailOutlined, LockOutlined } from "@mui/icons-material";
+import ParticleBackground from "../Developer/ParticleBackground";
 
 function SignIn() {
     //Constante para navegar
     const navegationrender = useNavigate();
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const [credentials, setCredentials] = useState({
         email: "",
@@ -45,7 +49,8 @@ function SignIn() {
         signInWithEmailAndPassword(auth, credentials.email, credentials.password)
             .then((userCredential) => {
                 // Inicio de sesión exitoso
-
+                setLoginError("");
+                setOpenSnackbar(true); // Mostrar Snackbar
                 navegationrender("/");
             })
             .catch((error) => {
@@ -89,19 +94,39 @@ function SignIn() {
             >
                 <Toolbar>
                     <IconButton onClick={handleBack} aria-label="Regresar">
-                        <ArrowBack fontSize="32px" />
+                        <ArrowBack sx={{ color: 'black' }} fontSize="32px" />
                     </IconButton>
-                    <Typography>Gallery</Typography>
+                    <Typography sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        color: '#000',
+                        fontWeight: "bold",
+                        fontSize: "1.3rem",
+                        alignItems: "center",
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
+                    }}>Iniciar Sesión</Typography>
                 </Toolbar>
             </AppBar>
-            <Container
-                maxWidth="sm"
+            <Box
                 sx={{
-                    overflowY: "auto",
-                    padding: "20px",
-                    marginTop: 8,
-                    marginBottom: 4,
+                    width: "100vw",
+                    height: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    overflow: "hidden",
+                    position: "relative",
+                    zIndex: 0,
+                    background: "#f4f4f4",
                 }}
+            >
+                <ParticleBackground />
+            </Box>
+            <Container
+                sx={{ mt: -80, position: "relative", zIndex: 1, }}
+                maxWidth="50%"
+
             >
                 <Box
                     sx={{
@@ -115,60 +140,108 @@ function SignIn() {
                         component="form"
                         noValidate
                         autoComplete="off"
-                        sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
+                        sx={{ "& > :not(style)": { m: 1, width: "300px" } }}
                     >
                         <animated.div style={fadeIn}>
                             <Card
+
                                 raised
                                 sx={{
                                     background: "#f4f4f4",
                                     borderRadius: 6,
+                                    width: "100%",
+                                    display: "flex",
                                 }}
                             >
-                                <CardContent>
+                                <CardContent sx={{ width: "100%" }}>
                                     <Grid
                                         container
                                         spacing={2}
                                         direction="column"
-                                        alignItems="center"
-                                        justify="center"
+                                        sx={{ width: "100%" }}
                                     >
                                         <Grid item xs={12}>
-                                            <Typography>Correo Electrónico:</Typography>
+                                            <Typography sx={{
+                                                fontFamily: "'Poppins', sans-serif",
+                                                color: '#000',
+                                                fontWeight: "bold",
+                                                fontSize: "1.3rem",
+                                                display: "flex",
+                                                width: "100%",
+                                            }}>Correo Electrónico:</Typography>
                                             <TextField
-                                                label="Email"
-                                                variant="outlined"
+                                                variant="standard"
                                                 name="email"
                                                 value={credentials.email}
                                                 onChange={handleInputChange}
                                                 margin="normal"
+                                                fullWidth
+                                                InputProps={{
+                                                    startAdornment: <EmailOutlined sx={{ color: "black", mr: 1 }} />,
+                                                    disableUnderline: false,
+                                                }}
+                                                sx={{
+                                                    "& .MuiInput-underline:before": { borderBottomColor: "black" }, // Borde normal
+                                                    "& .MuiInput-underline:hover:before": { borderBottomColor: "black" }, // Hover
+                                                    "& .MuiInput-underline:after": { borderBottomColor: "black", borderWidth: 2 }, // Focus
+                                                }}
                                             />
                                         </Grid>
-                                        <Grid item xs={12}>
-                                            <Typography>Contraseña:</Typography>
+                                        <Grid item xs={12} sx={{ width: "100%" }}>
+                                            <Typography sx={{
+                                                fontFamily: "'Poppins', sans-serif",
+                                                color: '#000',
+                                                fontWeight: "bold",
+                                                fontSize: "1.3rem",
+
+                                                display: "flex",
+
+                                                width: "100%",
+                                            }}>Contraseña:</Typography>
                                             <TextField
-                                                label="Password"
-                                                variant="outlined"
+                                                variant="standard"
                                                 type="password"
                                                 name="password"
                                                 value={credentials.password}
                                                 onChange={handleInputChange}
                                                 margin="normal"
+                                                fullWidth
+                                                InputProps={{
+                                                    startAdornment: <LockOutlined sx={{ color: "black", mr: 1 }} />,
+                                                    disableUnderline: false,
+                                                }}
+                                                sx={{
+                                                    "& .MuiInput-underline:before": { borderBottomColor: "black" },
+                                                    "& .MuiInput-underline:hover:before": { borderBottomColor: "black" },
+                                                    "& .MuiInput-underline:after": { borderBottomColor: "black", borderWidth: 2 },
+                                                }}
                                             />
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid item xs={12} sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
                                             <Button
                                                 onClick={handleSignIn}
                                                 variant="contained"
-                                                sx={{ mt: 2, background: "black" }}
+                                                sx={{ mt: 2, background: "black", justifyContent: "space-between" }}
                                             >
-                                                Iniciar Sesión
+                                                Iniciar Sesión  <Login />
                                             </Button>
+
                                             {loginError && (
                                                 <Box sx={{ color: "red", mt: 2 }}>
                                                     {loginError}
                                                 </Box>
                                             )}
+                                            {/* Snackbar para mostrar "Bienvenido" */}
+                                            <Snackbar
+                                                open={openSnackbar}
+                                                autoHideDuration={3000}
+                                                onClose={() => setOpenSnackbar(false)}
+                                                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                                            >
+                                                <Alert severity="success" onClose={() => setOpenSnackbar(false)}>
+                                                    ¡Bienvenido!
+                                                </Alert>
+                                            </Snackbar>
                                         </Grid>
                                     </Grid>
                                 </CardContent>
