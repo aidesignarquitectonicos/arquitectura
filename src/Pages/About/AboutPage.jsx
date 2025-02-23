@@ -31,8 +31,6 @@ import {
     Edit,
     Save,
     Share,
-
-    StarBorderOutlined,
     Cottage,
     CottageRounded,
 } from "@mui/icons-material";
@@ -240,7 +238,7 @@ const AboutPage = () => {
                             }}
                             aria-label="Compartir"
                         >
-                            <Share sx={{ color: 'green' }} />
+                            <Share fontSize="32px" sx={{ color: 'green' }} />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
@@ -301,7 +299,7 @@ const AboutPage = () => {
                                                                 image={personalInfo.image}
                                                                 alt="Imagen de perfil"
                                                                 sx={{
-                                                                    padding: "0px",
+                                                                    padding: "0px !important",
                                                                     width: "100%",
                                                                     height: "100%",
                                                                     borderRadius: "20px",

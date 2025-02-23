@@ -30,6 +30,7 @@ import "./Home.css";
 import ParticleCanvas from "../../Components/HouseRender/Particles";
 import { getDatabase, ref, get } from "firebase/database";
 import { sample, shuffle } from "lodash";
+ 
 
 const Home = () => {
     const url = "https://aidesignarquitectonicos.github.io/arquitectura/";
@@ -189,7 +190,7 @@ const Home = () => {
                                         }}
                                     >
                                         <NavLink to="/Gallery" onClick={() => setMenuOpen(false)}>
-                                            Galeria
+                                            Proyectos
                                         </NavLink>
                                     </li>
                                     <li
@@ -294,15 +295,12 @@ const Home = () => {
                                     <IconButton
                                         onClick={() => setOpenQr(false)}
                                         sx={{
-                                            background: "rgba(0,5,0, 0.5)",
+                                            background: "transparent",
                                         }}
                                     >
                                         <CloseIcon sx={{ color: "#000" }} />
                                     </IconButton>
                                 </Box>
-                                <Typography variant="" component="div">
-                                    Comparte con tu circulo social
-                                </Typography>
                                 <Card>
                                     <CardActionArea>
                                         <CardContent>

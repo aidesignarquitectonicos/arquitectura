@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Edit, MenuSharp, QrCode, Save, Share } from "@mui/icons-material";
+import { Edit, MenuSharp, MoreVert, QrCode, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
@@ -292,7 +292,7 @@ function GalleryView({ project, index, image }) {
                                                 ) : (
                                                     <>
                                                         <Typography variant="h8" component="h3" style={{}}>
-                                                            Proyecto:{" "}
+                                                            
                                                             {editedProjects[project.uuid]?.field1 ||
                                                                 project.field1}
                                                         </Typography>
@@ -314,7 +314,7 @@ function GalleryView({ project, index, image }) {
                                                 ) : (
                                                     <>
                                                         <IconButton onClick={(event) => handleClickMenu(event, project.id)}>
-                                                            <MenuSharp sx={{ color: 'black' }} fontSize="32px" />
+                                                            <MoreVert sx={{ color: 'black' }} fontSize="32px" />
                                                         </IconButton>
                                                         <Menu
                                                             key={project.id}

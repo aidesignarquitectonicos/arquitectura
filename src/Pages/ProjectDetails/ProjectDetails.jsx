@@ -187,7 +187,7 @@ function ProjectDetails() {
                 >
                     <Toolbar>
                         <IconButton onClick={handleBack} aria-label="Regresar" edge="start">
-                            <ArrowBack fontSize="32px" />
+                            <ArrowBack fontSize="32px" sx={{color:'black'}} />
                         </IconButton>
                         <Typography
                             variant="h6"
@@ -197,7 +197,7 @@ function ProjectDetails() {
                             Detalles del Proyecto
                         </Typography>
                         <IconButton onClick={() => shareProject_uidd(project)}>
-                            <Share fontSize="32px" />
+                            <Share fontSize="32px" sx={{color:'green'}} />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
@@ -221,7 +221,7 @@ function ProjectDetails() {
                             }}
                         >
                             <Typography variant="h5" gutterBottom>
-                                Detalles del Proyecto:
+
                                 {project.field1}
                             </Typography>
                             <ImageList sx={{ width: "auto", height: "auto" }}>

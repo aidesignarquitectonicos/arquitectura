@@ -123,12 +123,17 @@ Imagen: https://aidesignarquitectonicos.github.io/arquitectura/static/media/Anth
                         aria-label="Regresar" sx={{ color: "#000000FF" }}>
                         <ArrowBack fontSize="32px" />
                     </IconButton>
-                    <Typography>Software Developer</Typography>
+                    <Typography sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        color: '#000',
+                        fontWeight: "bold",
+                        fontSize: "1.3rem",
+                    }}>Software Developer</Typography>
                     <IconButton
                         onClick={handleShare}
                         aria-label="Compartir"
                         sx={{ color: "#000000FF" }}>
-                        <Share fontSize="32px" />
+                        <Share fontSize="32px" sx={{ color: 'green' }} />
                     </IconButton>
                 </Toolbar>
             </AppBar>
