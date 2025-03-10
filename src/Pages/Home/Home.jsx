@@ -25,9 +25,9 @@ import QRCode from "qrcode.react";
 import CloseIcon from "@mui/icons-material/Close";
 import { MenuOutlined } from "@mui/icons-material";
 import { useSpring, animated } from "react-spring";
-import Quilted_image from "../../Components/Quiltedimage/Quilted_image";
+// import Quilted_image from "../../Components/Quiltedimage/Quilted_image";
 import "./Home.css";
-import ParticleCanvas from "../../Components/HouseRender/Particles";
+// import ParticleCanvas from "../../Components/HouseRender/Particles";
 import { getDatabase, ref, get } from "firebase/database";
 import { sample, shuffle } from "lodash";
  
@@ -41,7 +41,6 @@ const Home = () => {
 
     const [projects, setProjects] = useState([]);
     const [currentVideo, setCurrentVideo] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     const handleSignOut = () => {
         signOut(auth)
@@ -372,25 +371,7 @@ const Home = () => {
                         </Box>
                     </Box>
                 </Box>
-                <Box className="App" sx={{ width: "100%", position: 'relative' }}>
-                    <header style={{ width: "100%" }} className="App-header">
-                        <div style={{ width: "100%", position: 'relative' }} className="house-container">
-                            <Quilted_image
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    zIndex: 1,
-                                }}
-                            />
-                            <ParticleCanvas
-                                style={{ position: 'relative', zIndex: 0 }}
-                            />
-                        </div>
-                    </header>
 
-                </Box>
             </ThemeProvider>
             <Footer />
         </animated.div>

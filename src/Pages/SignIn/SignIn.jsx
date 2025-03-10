@@ -19,7 +19,7 @@ import { auth } from "../../Data/FirebaseConfig";
 import { ArrowBack, Login } from "@mui/icons-material";
 import { useSpring, animated } from "@react-spring/web";
 import { EmailOutlined, LockOutlined } from "@mui/icons-material";
-import ParticleBackground from "../Developer/ParticleBackground";
+ 
 
 function SignIn() {
     //Constante para navegar
@@ -121,7 +121,6 @@ function SignIn() {
                     background: "#f4f4f4",
                 }}
             >
-                <ParticleBackground />
             </Box>
             <Container
                 sx={{ mt: -80, position: "relative", zIndex: 1, }}

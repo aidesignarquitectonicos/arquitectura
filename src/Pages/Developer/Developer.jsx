@@ -17,7 +17,6 @@ import { ArrowBack, LinkedIn, Share } from "@mui/icons-material";
 // import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/Anth.png";
 import { Facebook, Instagram, WhatsApp } from "@mui/icons-material";
-import ParticleBackground from "./ParticleBackground";
 
 
 const pastelColors = {
@@ -150,7 +149,7 @@ Imagen: https://aidesignarquitectonicos.github.io/arquitectura/static/media/Anth
                     background: "#f4f4f4",
                 }}
             >
-                <ParticleBackground />
+
             </Box>
             <Container sx={{ mt: -80, position: "relative", zIndex: 1 }}>
                 {/* Card animada */}

@@ -186,6 +186,10 @@ const AboutPage = () => {
         }
     }, [personalInfo.image]);
 
+    const handleBack = () => {
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
+    };
+
     return (
         <>
             <animated.div style={{ fade, background: "rgba(255, 255, 255, 0.2)", }}>
@@ -203,9 +207,7 @@ const AboutPage = () => {
                 >
                     <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                         <IconButton
-                            onClick={() => {
-                                navigate(-1);
-                            }}
+                            onClick={handleBack}
                             aria-label="Regresar"
                         >
                             <ArrowBack sx={{ color: 'black' }} fontSize="32px" />
