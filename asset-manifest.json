@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/arquitectura/static/css/main.a365d157.css",
-    "main.js": "/arquitectura/static/js/main.d23f6363.js",
+    "main.js": "/arquitectura/static/js/main.523163a3.js",
     "static/js/453.feb77398.chunk.js": "/arquitectura/static/js/453.feb77398.chunk.js",
     "static/media/icono.png": "/arquitectura/static/media/icono.3ea4b846a3f8053782fc.png",
     "static/media/Anth.png": "/arquitectura/static/media/Anth.87f9a465889eeaa9e533.png",
     "index.html": "/arquitectura/index.html",
     "main.a365d157.css.map": "/arquitectura/static/css/main.a365d157.css.map",
-    "main.d23f6363.js.map": "/arquitectura/static/js/main.d23f6363.js.map",
+    "main.523163a3.js.map": "/arquitectura/static/js/main.523163a3.js.map",
     "453.feb77398.chunk.js.map": "/arquitectura/static/js/453.feb77398.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a365d157.css",
-    "static/js/main.d23f6363.js"
+    "static/js/main.523163a3.js"
   ]
 }
