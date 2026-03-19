@@ -4,10 +4,10 @@ import { useSpring, animated } from "@react-spring/web";
 import { useParams } from "react-router-dom";
 //import { getAuth, onAuthStateChanged } from "firebase/auth";
 //import { update } from "firebase/database";
-import { useNavigate } from "react-router-dom";
 //import GalleryView from "../../Components/View/GalleryView";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
+import icono from "../../Assets/icono.png";
 
 import {
     AppBar,
@@ -187,7 +187,7 @@ function ProjectDetails() {
                 >
                     <Toolbar>
                         <IconButton onClick={handleBack} aria-label="Regresar" edge="start">
-                            <ArrowBack fontSize="32px" sx={{color:'black'}} />
+                            <ArrowBack fontSize="32px" sx={{ color: 'black' }} />
                         </IconButton>
                         <Typography
                             variant="h6"
@@ -197,7 +197,7 @@ function ProjectDetails() {
                             Detalles del Proyecto
                         </Typography>
                         <IconButton onClick={() => shareProject_uidd(project)}>
-                            <Share fontSize="32px" sx={{color:'green'}} />
+                            <Share fontSize="32px" sx={{ color: 'green' }} />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
@@ -226,14 +226,31 @@ function ProjectDetails() {
                             </Typography>
                             <ImageList sx={{ width: "auto", height: "auto" }}>
                                 {project.images?.map((media, index) => (
-                                    <ImageListItem key={index} sx={{ borderRadius: 10 }}>
+                                    <ImageListItem key={index} sx={{ borderRadius: 10, position: "relative", overflow: "hidden" }}>
                                         {media.type === "image" ? (
-                                            <img
-                                                style={{ borderRadius: 10 }}
-                                                src={media.url}
-                                                alt={`${project.field1}`}
-                                                loading="lazy"
-                                            />
+                                            <>
+                                                <img
+                                                    style={{ borderRadius: 10 }}
+                                                    src={media.url}
+                                                    alt={`${project.field1}`}
+                                                    loading="lazy"
+                                                />
+                                                <Box
+                                                    component="img"
+                                                    src={icono}
+                                                    alt="Marca de agua"
+                                                    sx={{
+                                                        position: "absolute",
+                                                        bottom: 0,
+                                                        left: -40,
+                                                        width: "50%",
+                                                        height: "50%",
+                                                        objectFit: "contain",
+                                                        opacity: 0.15,
+                                                        pointerEvents: "none",
+                                                    }}
+                                                />
+                                            </>
                                         ) : null}
                                         <ImageListItemBar
                                             sx={{ borderRadius: 2 }}
@@ -357,6 +374,21 @@ function ProjectDetails() {
                                                                 <source src={media.url} type="video/mp4" />
                                                             </video>
                                                         </CardCover>
+                                                        <Box
+                                                            component="img"
+                                                            src={icono}
+                                                            alt="Marca de agua"
+                                                            sx={{
+                                                                position: "absolute",
+                                                                bottom: 0,
+                                                                left: 0,
+                                                                width: "50%",
+                                                                height: "50%",
+                                                                objectFit: "contain",
+                                                                opacity: 0.15,
+                                                                pointerEvents: "none",
+                                                            }}
+                                                        />
                                                         <CardContent>
                                                             <Typography
                                                                 level="body-lg"

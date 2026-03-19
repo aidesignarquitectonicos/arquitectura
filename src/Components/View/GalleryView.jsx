@@ -14,11 +14,12 @@ import {
 } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
-import { Edit, MenuSharp, MoreVert, QrCode, Save, Share } from "@mui/icons-material";
+import { Edit, MoreVert, QrCode, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import QRCodePopup from './QRCodePopup';
+import icono from "../../Assets/icono.png";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -263,137 +264,152 @@ function GalleryView({ project, index, image }) {
                                 {alertInfo.message}
                             </Alert>
                         )}
+                        <Grid container spacing={3}>
 
-                        {filteredProjects.map((project) => (
-                            <Grid xs={12}>
-                                <Box item key={project.uuid} sx={{ marginBottom: 5 }}>
-                                    <animated.div style={fadeIn}>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <div>
-                                                {editMode[project.uuid] ? (
-                                                    <TextField
-                                                        variant="outlined"
-                                                        defaultValue={project.field1}
-                                                        onChange={(e) =>
-                                                            handleEditChange(
-                                                                project.uuid,
-                                                                "field1",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        fullWidth
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        <Typography variant="h8" component="h3" style={{}}>
-                                                            
-                                                            {editedProjects[project.uuid]?.field1 ||
-                                                                project.field1}
-                                                        </Typography>
-                                                    </>
-                                                )}
-                                            </div>
 
-                                            <div>
-                                                {isUserLoggedIn ? (
-                                                    <IconButton
-                                                        onClick={() => toggleEditMode(project.uuid)}
-                                                    >
-                                                        {editMode[project.uuid] ? (
-                                                            <Save sx={{ color: "black" }} />
-                                                        ) : (
-                                                            <Edit sx={{ color: "black" }} />
-                                                        )}
-                                                    </IconButton>
-                                                ) : (
-                                                    <>
-                                                        <IconButton onClick={(event) => handleClickMenu(event, project.id)}>
-                                                            <MoreVert sx={{ color: 'black' }} fontSize="32px" />
-                                                        </IconButton>
-                                                        <Menu
-                                                            key={project.id}
-                                                            id={`options-menu-${project.id}`}
-                                                            anchorEl={anchorEls[project.id] || null} // Cada menú se abre solo si su anchorEl es válido
-                                                            open={Boolean(anchorEls[project.id])}
-                                                            onClose={() => handleClose(project.id)}
-                                                            MenuListProps={{
-                                                                'aria-labelledby': 'options-button',
-                                                            }}
-                                                        >
-
-                                                            <MenuItem
-                                                                onClick={() => shareProject(project)}
-                                                                sx={{ color: "black" }}
-                                                                fontSize="32px"
-                                                            >
-                                                                <Typography sx={{ padding: 2 }}>Compartir </Typography> <Share sx={{ marginRight: 1 }} />
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                onClick={() => handleQRCodePopupOpen(`${URLs}/${project.id}`, project)}
-                                                            >
-                                                                <Typography sx={{ padding: 2 }}>Código QR</Typography>
-                                                                <QrCode sx={{ marginRight: 1 }} />
-                                                            </MenuItem>
-                                                        </Menu>
-                                                    </>
-
-                                                )}
-                                            </div>
-                                        </Box>
-                                        <div style={{}}>
-                                            <AutoPlaySwipeableViews
-                                                onClick={() => handleClick(project)}
+                            {filteredProjects.map((project) => (
+                                <Grid item xs={12} sm={6} key={project.uuid}>
+                                    <Box item key={project.uuid} sx={{ marginBottom: 5 }}>
+                                        <animated.div style={fadeIn}>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    flexDirection: 'row',
+                                                }}
                                             >
-                                                {project.images?.map((image, index) => (
-                                                    <CardActionArea
-                                                        key={index}
-                                                        sx={{
-                                                            borderRadius: 2,
+                                                <div>
+                                                    {editMode[project.uuid] ? (
+                                                        <TextField
+                                                            variant="outlined"
+                                                            defaultValue={project.field1}
+                                                            onChange={(e) =>
+                                                                handleEditChange(
+                                                                    project.uuid,
+                                                                    "field1",
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <Typography variant="h8" component="h3" style={{}}>
 
-                                                        }}
-                                                    >
-                                                        <Box
+                                                                {editedProjects[project.uuid]?.field1 ||
+                                                                    project.field1}
+                                                            </Typography>
+                                                        </>
+                                                    )}
+                                                </div>
+
+                                                <div>
+                                                    {isUserLoggedIn ? (
+                                                        <IconButton
+                                                            onClick={() => toggleEditMode(project.uuid)}
+                                                        >
+                                                            {editMode[project.uuid] ? (
+                                                                <Save sx={{ color: "black" }} />
+                                                            ) : (
+                                                                <Edit sx={{ color: "black" }} />
+                                                            )}
+                                                        </IconButton>
+                                                    ) : (
+                                                        <>
+                                                            <IconButton onClick={(event) => handleClickMenu(event, project.id)}>
+                                                                <MoreVert sx={{ color: 'black' }} fontSize="32px" />
+                                                            </IconButton>
+                                                            <Menu
+                                                                key={project.id}
+                                                                id={`options-menu-${project.id}`}
+                                                                anchorEl={anchorEls[project.id] || null} // Cada menú se abre solo si su anchorEl es válido
+                                                                open={Boolean(anchorEls[project.id])}
+                                                                onClose={() => handleClose(project.id)}
+                                                                MenuListProps={{
+                                                                    'aria-labelledby': 'options-button',
+                                                                }}
+                                                            >
+
+                                                                <MenuItem
+                                                                    onClick={() => shareProject(project)}
+                                                                    sx={{ color: "black" }}
+                                                                    fontSize="32px"
+                                                                >
+                                                                    <Typography sx={{ padding: 2 }}>Compartir </Typography> <Share sx={{ marginRight: 1 }} />
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                    onClick={() => handleQRCodePopupOpen(`${URLs}/${project.id}`, project)}
+                                                                >
+                                                                    <Typography sx={{ padding: 2 }}>Código QR</Typography>
+                                                                    <QrCode sx={{ marginRight: 1 }} />
+                                                                </MenuItem>
+                                                            </Menu>
+                                                        </>
+
+                                                    )}
+                                                </div>
+                                            </Box>
+                                            <div style={{}}>
+                                                <AutoPlaySwipeableViews
+                                                    onClick={() => handleClick(project)}
+                                                >
+                                                    {project.images?.map((image, index) => (
+                                                        <CardActionArea
+                                                            key={index}
                                                             sx={{
-                                                                height: { xs: 250, md: '100%' },
-                                                                width: "100%",
-                                                                display: "flex",
-                                                                position: "relative",
-                                                                justifyContent: "center",
-                                                                alignItems: "center",
-                                                                overflow: "hidden",
+                                                                borderRadius: 2,
                                                             }}
                                                         >
-                                                            <img
-                                                                key={index}
-                                                                loading="lazy"
-                                                                src={image}
-                                                                alt={`Imagen ${index + 1}`}
-                                                                style={{
-                                                                    borderTopLeftRadius: "20px",
-                                                                    borderTopRightRadius: "20px",
-                                                                    borderBottomLeftRadius: "20px",
-                                                                    borderBottomRightRadius: "20px",
+                                                            <Box
+                                                                sx={{
+                                                                    height: { xs: 250, md: '100%' },
                                                                     width: "100%",
-                                                                    height: "100%", // Mantiene la relación de aspecto
-                                                                    objectFit: "cover", // Cubre el contenedor sin distorsión
-                                                                    cursor: "pointer",
+                                                                    display: "flex",
+                                                                    position: "relative",
+                                                                    justifyContent: "center",
+                                                                    alignItems: "center",
+                                                                    overflow: "hidden",
                                                                 }}
-                                                            />
-                                                        </Box>
-                                                    </CardActionArea>
-                                                ))}
-                                            </AutoPlaySwipeableViews>
-                                        </div>
-                                    </animated.div>
-                                </Box>
-                            </Grid>
-                        ))}
+                                                            >
+                                                                <img
+                                                                    key={index}
+                                                                    loading="lazy"
+                                                                    src={image}
+                                                                    alt={`Imagen ${index + 1}`}
+                                                                    style={{
+                                                                        borderTopLeftRadius: "20px",
+                                                                        borderTopRightRadius: "20px",
+                                                                        borderBottomLeftRadius: "20px",
+                                                                        borderBottomRightRadius: "20px",
+                                                                        width: "100%",
+                                                                        height: "100%",
+                                                                        objectFit: "cover",
+                                                                        cursor: "pointer",
+                                                                    }}
+                                                                />
+                                                                {/* Overlay de marca de agua */}
+                                                                <Box
+                                                                    sx={{
+                                                                        position: "absolute",
+                                                                        inset: 0,
+                                                                        backgroundImage: `url(${icono})`,
+                                                                        backgroundRepeat: "no-repeat",
+                                                                        backgroundPosition: "center",
+                                                                        backgroundSize: "contain",
+                                                                        opacity: 0.22,
+                                                                        pointerEvents: "none",
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                        </CardActionArea>
+                                                    ))}
+                                                </AutoPlaySwipeableViews>
+                                            </div>
+                                        </animated.div>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
                     </Grid>
                 </Grid>
             </animated.div>
