@@ -13,7 +13,7 @@ import {
     CardContent,
     Snackbar, Alert,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../Data/FirebaseConfig";
 import { ArrowBack, Login } from "@mui/icons-material";
@@ -24,6 +24,8 @@ import { EmailOutlined, LockOutlined } from "@mui/icons-material";
 function SignIn() {
     //Constante para navegar
     const navegationrender = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const [credentials, setCredentials] = useState({
@@ -51,7 +53,7 @@ function SignIn() {
                 // Inicio de sesión exitoso
                 setLoginError("");
                 setOpenSnackbar(true); // Mostrar Snackbar
-                navegationrender("/");
+                navegationrender(from, { replace: true });
             })
             .catch((error) => {
                 const errorCode = error.code;

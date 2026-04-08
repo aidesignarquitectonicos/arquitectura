@@ -18,8 +18,9 @@ import {
     CircularProgress,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { storage, database } from "../../Data/FirebaseConfig";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { database } from "../../Data/FirebaseConfig";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../Data/FirebaseConfig";
 import {
     set,
     ref as dbRef,
@@ -30,6 +31,7 @@ import {
 import { Add, Delete, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TextareaAutosize from "react-textarea-autosize";
+import { uploadImagesToDrive } from "../../Data/googleDriveService";
 
 const blue = {
     100: "#DAECFF",
@@ -100,7 +102,7 @@ function Upload() {
                 }
 
                 console.log("Intentando obtener datos de la base de datos...");
-                const rolesRef = ref(database, "Role");
+                const rolesRef = dbRef(database, "Role");
                 const snapshot = await get(rolesRef);
 
                 if (snapshot.exists()) {
@@ -205,7 +207,6 @@ function Upload() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validación para asegurar que hay texto en los campos y al menos una imagen y un video seleccionados
         if (
             !fields.field1 ||
             !fields.field2 ||
@@ -223,58 +224,75 @@ function Upload() {
             return;
         }
 
-        // Lógica para enviar archivos al almacenamiento y guardar datos en la base de datos
-        const folderUuid = uuidv4();
-        const imageRefs = await uploadFiles(
-            imageFiles,
-            `images/Dataimg/${folderUuid}`
-        );
-        const videoRefs = await uploadFiles(
-            videoFiles,
-            `images/Datavideo/${folderUuid}`
-        );
+        try {
+            const folderUuid = uuidv4();
 
-        // Guardar información en la base de datos
-        const projectRef = dbRef(database, `Projects/${folderUuid}`);
-        set(projectRef, {
-            field1: fields.field1,
-            field2: fields.field2,
-            field3: fields.field3,
-            roles: selectedRoles,
-            images: imageRefs,
-            videos: videoRefs,
-        });
+            // Upload images to Google Drive → get CDN URLs → save in Firebase DB
+            setAlertInfo({
+                showAlert: true,
+                type: "info",
+                message: "Subiendo imágenes a Google Drive…",
+            });
+            const imageCdnUrls = await uploadImagesToDrive(imageFiles, folderUuid);
 
-        // Mostrar alerta de éxito
-        setAlertInfo({
-            showAlert: true,
-            type: "success",
-            message: "Imágenes, Video y datos enviados correctamente.",
-        });
-        // Limpiar los campos y estados después de la subida exitosa
-        setFields({
-            field1: "",
-            field2: "",
-            field3: "",
-        });
-        setSelectedRoles([]);
-        setImageFiles([]);
-        setVideoFiles([]);
-        setPreviewImages([]);
-        setPreviewVideos([]);
-    };
+            // Videos still go to Firebase Storage
+            setAlertInfo({
+                showAlert: true,
+                type: "info",
+                message: "Subiendo videos…",
+            });
+            const videoUrls = await uploadVideoFiles(
+                videoFiles,
+                `images/Datavideo/${folderUuid}`
+            );
 
-    const uploadFiles = async (files, storagePath) => {
-        const fileRefs = [];
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const fileRef = ref(storage, `${storagePath}/${file.name}`);
-            await uploadBytes(fileRef, file).then(async (snapshot) => {
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                fileRefs.push(downloadURL);
+            // Save project to Firebase Realtime Database
+            // Images array contains Google Drive CDN URLs; videos contain Firebase Storage URLs
+            const projectRef = dbRef(database, `Projects/${folderUuid}`);
+            await set(projectRef, {
+                field1: fields.field1,
+                field2: fields.field2,
+                field3: fields.field3,
+                roles: selectedRoles,
+                images: imageCdnUrls,
+                videos: videoUrls,
+            });
+
+            // Invalidate gallery cache so new project appears immediately
+            localStorage.removeItem('projects');
+
+            setAlertInfo({
+                showAlert: true,
+                type: "success",
+                message: "Imágenes, Video y datos enviados correctamente.",
+            });
+
+            setFields({ field1: "", field2: "", field3: "" });
+            setSelectedRoles([]);
+            setImageFiles([]);
+            setVideoFiles([]);
+            setPreviewImages([]);
+            setPreviewVideos([]);
+        } catch (error) {
+            console.error("Error al subir archivos:", error);
+            setAlertInfo({
+                showAlert: true,
+                type: "error",
+                message: `Error al subir: ${error.message}`,
             });
         }
-        return fileRefs;
+    };
+
+    // Videos: Firebase Storage (unchanged)
+    const uploadVideoFiles = async (files, storagePath) => {
+        const urls = [];
+        for (const file of files) {
+            const fileRef = storageRef(storage, `${storagePath}/${file.name}`);
+            const snapshot = await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+            urls.push(url);
+        }
+        return urls;
     };
 
     const handleBack = () => {

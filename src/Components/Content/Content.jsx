@@ -35,9 +35,9 @@ function Content() {
         setFilter(category);
     };
 
-    // Filtrar proyectos basados en la selección
+    // Filtrar proyectos basados en la selección (roles es un array)
     const filteredProjects = projects.filter((project) => {
-        return filter === "" || project.role === filter; // Asegúrate de que 'role' es la propiedad correcta para filtrar
+        return filter === "" || (project.roles && project.roles.includes(filter));
     });
 
     //Constantes para el Alert
@@ -301,9 +301,7 @@ function Content() {
                     </Alert>
                 )}
                 {filteredProjects.map((project) => (
-                    <Grid xs={12}>
-                        {projects.map((project) => (
-                            <Grid item xs={12} sm={6} md={4} key={project.uuid}>
+                    <Grid item xs={12} sm={6} md={4} key={project.uuid}>
                                 <animated.div style={fadeIn}>
                                     <Card
                                         raised
@@ -399,7 +397,7 @@ function Content() {
                                                         <Select
                                                             labelId="role-select-label"
                                                             id="role-select"
-                                                            value={editedProjects[project.uuid]?.role || project.role}
+                                                            value={editedProjects[project.uuid]?.roles?.[0] || project.roles?.[0] || ""}
                                                             label="Rol"
                                                             onChange={(event) => handleRoleChange(event, project.uuid)}
                                                         >
@@ -416,8 +414,8 @@ function Content() {
                                                     component="p"
                                                     style={{ margin: "20px" }}
                                                 >
-                                                    Descripción:{" "}
-                                                    {editedProjects[project.uuid]?.role || project.role}
+                                                    Categoría:{" "}
+                                                    {editedProjects[project.uuid]?.roles?.join(", ") || project.roles?.join(", ")}
                                                 </Typography>
                                             )}
                                         </CardContent>
@@ -425,10 +423,8 @@ function Content() {
                                 </animated.div>
                             </Grid>
                         ))}
-                    </Grid>
-                ))}
 
-            </Grid>
+                    </Grid>
         </Grid>
     );
 }
