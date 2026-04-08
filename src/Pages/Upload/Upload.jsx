@@ -27,6 +27,7 @@ import {
     get,
     getDatabase,
 } from "firebase/database";
+import { uploadFilesToOneDrive } from "../../Data/OneDriveService";
 import { Add, Delete, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TextareaAutosize from "react-textarea-autosize";
@@ -223,45 +224,55 @@ function Upload() {
             return;
         }
 
-        // Lógica para enviar archivos al almacenamiento y guardar datos en la base de datos
         const folderUuid = uuidv4();
-        const imageRefs = await uploadFiles(
-            imageFiles,
-            `images/Dataimg/${folderUuid}`
-        );
-        const videoRefs = await uploadFiles(
-            videoFiles,
-            `images/Datavideo/${folderUuid}`
-        );
 
-        // Guardar información en la base de datos
-        const projectRef = dbRef(database, `Projects/${folderUuid}`);
-        set(projectRef, {
-            field1: fields.field1,
-            field2: fields.field2,
-            field3: fields.field3,
-            roles: selectedRoles,
-            images: imageRefs,
-            videos: videoRefs,
-        });
+        try {
+            // Subir imágenes a OneDrive y obtener URLs CDN (Graph API shares: u!{base64url})
+            const imageRefs = await uploadFilesToOneDrive(imageFiles);
 
-        // Mostrar alerta de éxito
-        setAlertInfo({
-            showAlert: true,
-            type: "success",
-            message: "Imágenes, Video y datos enviados correctamente.",
-        });
-        // Limpiar los campos y estados después de la subida exitosa
-        setFields({
-            field1: "",
-            field2: "",
-            field3: "",
-        });
-        setSelectedRoles([]);
-        setImageFiles([]);
-        setVideoFiles([]);
-        setPreviewImages([]);
-        setPreviewVideos([]);
+            // Subir videos a Firebase Storage
+            const videoRefs = await uploadFiles(
+                videoFiles,
+                `images/Datavideo/${folderUuid}`
+            );
+
+            // Guardar información en la base de datos (incluyendo URLs CDN de OneDrive)
+            const projectRef = dbRef(database, `Projects/${folderUuid}`);
+            await set(projectRef, {
+                field1: fields.field1,
+                field2: fields.field2,
+                field3: fields.field3,
+                roles: selectedRoles,
+                images: imageRefs,
+                videos: videoRefs,
+            });
+
+            // Mostrar alerta de éxito
+            setAlertInfo({
+                showAlert: true,
+                type: "success",
+                message: "Imágenes, Video y datos enviados correctamente.",
+            });
+
+            // Limpiar los campos y estados después de la subida exitosa
+            setFields({
+                field1: "",
+                field2: "",
+                field3: "",
+            });
+            setSelectedRoles([]);
+            setImageFiles([]);
+            setVideoFiles([]);
+            setPreviewImages([]);
+            setPreviewVideos([]);
+        } catch (error) {
+            console.error("Error al subir los archivos:", error);
+            setAlertInfo({
+                showAlert: true,
+                type: "error",
+                message: "Error al subir los archivos. Por favor, intenta de nuevo.",
+            });
+        }
     };
 
     const uploadFiles = async (files, storagePath) => {
@@ -276,6 +287,7 @@ function Upload() {
         }
         return fileRefs;
     };
+
 
     const handleBack = () => {
         window.location.href =
