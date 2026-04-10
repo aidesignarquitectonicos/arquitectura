@@ -270,11 +270,22 @@ function ProjectDetails() {
                                                         height: "100%",
                                                         objectFit: "cover"
                                                     }}
-                                                    src={convertGoogleDriveUrl(media.url)}
+                                                    src={convertGoogleDriveUrl(media.url, false)}
                                                     alt={`${project.field1}`}
                                                     loading="lazy"
                                                     onLoad={() => console.log('✅ Imagen cargada:', media.url)}
-                                                    onError={() => console.error('❌ Error cargando imagen:', media.url)}
+                                                    onError={(e) => {
+                                                        // Reintentar una vez antes de mostrar placeholder
+                                                        // (React StrictMode en dev causa doble render que aborta la primera carga)
+                                                        const img = e.target;
+                                                        if (!img.dataset.retried) {
+                                                            img.dataset.retried = 'true';
+                                                            img.src = convertGoogleDriveUrl(media.url, false);
+                                                        } else {
+                                                            console.error('❌ Error cargando imagen:', media.url);
+                                                            img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%23999"%3EError cargando imagen%3C/text%3E%3C/svg%3E';
+                                                        }
+                                                    }}
                                                 />
                                                 <Box
                                                     component="img"

@@ -15,7 +15,7 @@
 
 const DRIVE_API = "https://www.googleapis.com/drive/v3/files";
 const DRIVE_UPLOAD_API = "https://www.googleapis.com/upload/drive/v3/files";
-const DRIVE_VIEW_URL = "https://drive.google.com/uc?export=view&id=";
+const DRIVE_VIEW_URL = "https://drive.usercontent.google.com/download?id=";
 
 let accessToken = null;
 
@@ -192,7 +192,8 @@ export async function uploadImageToDrive(file, projectFolderId) {
 
     // URL pública que funciona directamente en <img> y <video>
     // Esta URL no requiere API Key y funciona para archivos públicos
-    return `${DRIVE_VIEW_URL}${fileId}`;
+    // Usa el endpoint drive.usercontent.google.com que no requiere redirecciones
+    return `${DRIVE_VIEW_URL}${fileId}&export=view`;
 }
 
 /**
@@ -273,7 +274,8 @@ export async function uploadVideoToDrive(file, projectFolderId) {
 
     // URL pública que funciona directamente en <video>
     // Esta URL no requiere API Key y funciona para archivos públicos
-    return `${DRIVE_VIEW_URL}${fileId}`;
+    // Usa el endpoint drive.usercontent.google.com que no requiere redirecciones
+    return `${DRIVE_VIEW_URL}${fileId}&export=view`;
 }
 
 /**
@@ -299,28 +301,39 @@ export function clearDriveToken() {
 }
 
 /**
- * Convierte URLs viejas de Google Drive a las nuevas que funcionan.
- * URLs viejas: https://www.googleapis.com/drive/v3/files/{ID}?alt=media&key={API_KEY}
- * URLs nuevas: https://drive.google.com/uc?export=view&id={ID}
+ * Convierte URLs viejas de Google Drive a un proxy CORS seguro.
+ * El proxy resuelve el problema de CORS bloqueado por Google Drive.
+ * 
+ * URLs soportadas:
+ *   - https://drive.usercontent.google.com/download?id=...
+ *   - https://drive.google.com/uc?export=view&id=...
+ *   - https://www.googleapis.com/drive/v3/files/{ID}?alt=media&key=...
  * 
  * @param {string} url - URL a convertir
- * @returns {string} URL convertida o original si no es una URL de Drive
+ * @param {boolean} isVideo - Si es un video (usa proxy diferente)
+ * @returns {string} URL del proxy CORS o URL original si no es Drive
  */
-export function convertGoogleDriveUrl(url) {
+export function convertGoogleDriveUrl(url, isVideo = false) {
     if (!url) return url;
 
-    // Si ya es la URL nueva, devolver como está
-    if (url.includes("drive.google.com/uc?export=view&id=")) {
-        return url;
+    let fileId = null;
+
+    // Extraer fileId de cualquier formato de URL de Drive
+    if (url.includes("drive.usercontent.google.com")) {
+        fileId = url.match(/[?&]id=([a-zA-Z0-9-_]+)/)?.[1];
+    } else if (url.includes("drive.google.com/uc")) {
+        fileId = url.match(/[?&]id=([a-zA-Z0-9-_]+)/)?.[1];
+    } else if (url.includes("lh3.googleusercontent.com/d/")) {
+        return url; // Ya es el formato correcto para embeds
+    } else if (url.includes("/files/")) {
+        fileId = url.match(/\/files\/([a-zA-Z0-9-_]+)/)?.[1];
     }
 
-    // Extraer ID de URL vieja: https://www.googleapis.com/drive/v3/files/{ID}?alt=media&key=...
-    const oldDriveMatch = url.match(/\/files\/([a-zA-Z0-9-_]+)/);
-    if (oldDriveMatch && oldDriveMatch[1]) {
-        const fileId = oldDriveMatch[1];
-        return `${DRIVE_VIEW_URL}${fileId}`;
+    // Usar lh3.googleusercontent.com que sirve contenido directamente
+    // sin páginas de confirmación de descarga/escaneo de virus
+    if (fileId) {
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
     }
 
-    // Si no coincide con URL de Drive antigua, devolver URL original
     return url;
 }
