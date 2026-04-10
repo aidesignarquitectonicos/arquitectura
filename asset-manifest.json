@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/arquitectura/static/css/main.a365d157.css",
-    "main.js": "/arquitectura/static/js/main.360ff50c.js",
+    "main.css": "/arquitectura/static/css/main.06db0b06.css",
+    "main.js": "/arquitectura/static/js/main.8f952210.js",
     "static/js/453.6828a8c1.chunk.js": "/arquitectura/static/js/453.6828a8c1.chunk.js",
     "static/media/icono.png": "/arquitectura/static/media/icono.d23872117abcef43afcf.png",
     "static/media/Anth.png": "/arquitectura/static/media/Anth.87f9a465889eeaa9e533.png",
     "index.html": "/arquitectura/index.html",
-    "main.a365d157.css.map": "/arquitectura/static/css/main.a365d157.css.map",
-    "main.360ff50c.js.map": "/arquitectura/static/js/main.360ff50c.js.map",
+    "main.06db0b06.css.map": "/arquitectura/static/css/main.06db0b06.css.map",
+    "main.8f952210.js.map": "/arquitectura/static/js/main.8f952210.js.map",
     "453.6828a8c1.chunk.js.map": "/arquitectura/static/js/453.6828a8c1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a365d157.css",
-    "static/js/main.360ff50c.js"
+    "static/css/main.06db0b06.css",
+    "static/js/main.8f952210.js"
   ]
 }
