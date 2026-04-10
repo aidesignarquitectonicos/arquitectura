@@ -21,6 +21,7 @@ import { autoPlay } from "react-swipeable-views-utils";
 import { Edit, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
+import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -52,6 +53,18 @@ function Content() {
     const [editedProjects, setEditedProjects] = useState({});
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
+    // Helper: Convertir Firebase object indexado a array
+    const convertToArray = (data) => {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        if (typeof data === "object") {
+            return Object.keys(data)
+                .sort((a, b) => parseInt(a) - parseInt(b))
+                .map((key) => data[key]);
+        }
+        return [];
+    };
+
     useEffect(() => {
         const fetchProjects = async () => {
             // Intenta recuperar los proyectos desde localStorage
@@ -68,6 +81,8 @@ function Content() {
                     const projectsArray = Object.keys(projectsData).map((key) => ({
                         uuid: key,
                         ...projectsData[key],
+                        images: convertToArray(projectsData[key].images),
+                        videos: convertToArray(projectsData[key].videos),
                     }));
                     setProjects(projectsArray);
                     // Actualiza localStorage con los nuevos proyectos
@@ -362,7 +377,7 @@ function Content() {
                                                         }}
                                                     >
                                                         <img
-                                                            src={image}
+                                                            src={convertGoogleDriveUrl(image)}
                                                             alt={`Imagen ${index + 1}`}
                                                             style={{ height: "100%", width: "98%" }}
                                                         />

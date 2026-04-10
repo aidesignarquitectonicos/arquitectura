@@ -20,6 +20,7 @@ import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import QRCodePopup from './QRCodePopup';
 import icono from "../../Assets/icono.png";
+import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -81,6 +82,18 @@ function GalleryView({ project, index, image }) {
     const [editedProjects, setEditedProjects] = useState({});
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
+    // Helper: Convertir Firebase object indexado a array
+    const convertToArray = (data) => {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        if (typeof data === "object") {
+            return Object.keys(data)
+                .sort((a, b) => parseInt(a) - parseInt(b))
+                .map((key) => data[key]);
+        }
+        return [];
+    };
+
     useEffect(() => {
         const fetchProjects = async () => {
             // Intenta recuperar los proyectos desde localStorage
@@ -97,6 +110,8 @@ function GalleryView({ project, index, image }) {
                     const projectsArray = Object.keys(projectsData).map((key) => ({
                         uuid: key,
                         ...projectsData[key],
+                        images: convertToArray(projectsData[key].images),
+                        videos: convertToArray(projectsData[key].videos),
                     }));
                     setProjects(projectsArray);
                     // Actualiza localStorage con los nuevos proyectos
@@ -374,7 +389,7 @@ function GalleryView({ project, index, image }) {
                                                                 <img
                                                                     key={index}
                                                                     loading="lazy"
-                                                                    src={image}
+                                                                    src={convertGoogleDriveUrl(image)}
                                                                     alt={`Imagen ${index + 1}`}
                                                                     style={{
                                                                         borderTopLeftRadius: "20px",

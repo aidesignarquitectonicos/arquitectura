@@ -148,6 +148,26 @@ const HomeView = ({
                                             padding: "20px",
                                         }}
                                     >
+                                        <NavLink to="/PrivacyPolicy" onClick={() => setMenuOpen(false)}>
+                                            Política de Privacidad
+                                        </NavLink>
+                                    </li>
+                                    <li
+                                        style={{
+                                            borderBottom: "1px solid #8887875E",
+                                            padding: "20px",
+                                        }}
+                                    >
+                                        <NavLink to="/TermsOfService" onClick={() => setMenuOpen(false)}>
+                                            Términos de Servicio
+                                        </NavLink>
+                                    </li>
+                                    <li
+                                        style={{
+                                            borderBottom: "1px solid #8887875E",
+                                            padding: "20px",
+                                        }}
+                                    >
                                         <NavLink
                                             onClick={() => {
                                                 setOpenQr(true);

@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import icono from "../../Assets/icono.png";
+import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 import {
     AppBar,
@@ -48,6 +49,18 @@ function ProjectDetails() {
     const [project, setProject] = useState(null);
     const [project_video, setProjectVideo] = useState(null);
 
+    // Helper: Convertir Firebase object indexado a array
+    const convertToArray = (data) => {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        if (typeof data === "object") {
+            return Object.keys(data)
+                .sort((a, b) => parseInt(a) - parseInt(b))
+                .map((key) => data[key]);
+        }
+        return [];
+    };
+
     useEffect(() => {
         const fetchProject = async () => {
             try {
@@ -57,8 +70,13 @@ function ProjectDetails() {
 
                 if (snapshot.exists()) {
                     const projectData = snapshot.val();
-                    if (projectData.images && Array.isArray(projectData.images)) {
-                        const updatedImages = projectData.images.map((url) => ({
+                    console.log('📸 Datos del proyecto cargados:', projectData);
+                    const imagesArray = convertToArray(projectData.images);
+                    console.log('📸 Array de imágenes:', imagesArray);
+
+                    if (imagesArray && imagesArray.length > 0) {
+                        console.log(`📸 Se encontraron ${imagesArray.length} imágenes en el proyecto`);
+                        const updatedImages = imagesArray.map((url) => ({
                             url,
                             type: url.toLowerCase().endsWith(".mp4") ? "video" : "image",
                         }));
@@ -94,8 +112,13 @@ function ProjectDetails() {
                 const snapshot = await get(projectRefVideo);
                 if (snapshot.exists()) {
                     const projectData = snapshot.val();
-                    if (projectData.videos && Array.isArray(projectData.videos)) {
-                        const updatedVideos = projectData.videos.map((url) => ({
+                    console.log('🎬 Datos del proyecto (videos) cargados:', projectData);
+                    const videosArray = convertToArray(projectData.videos);
+                    console.log('🎬 Array de videos:', videosArray);
+
+                    if (videosArray && videosArray.length > 0) {
+                        console.log(`🎬 Se encontraron ${videosArray.length} videos en el proyecto`);
+                        const updatedVideos = videosArray.map((url) => ({
                             url,
                             type: url.toLowerCase().endsWith(".mp4") ? "video" : "image",
                         }));
@@ -224,16 +247,34 @@ function ProjectDetails() {
 
                                 {project.field1}
                             </Typography>
-                            <ImageList sx={{ width: "auto", height: "auto" }}>
-                                {project.images?.map((media, index) => (
-                                    <ImageListItem key={index} sx={{ borderRadius: 10, position: "relative", overflow: "hidden" }}>
-                                        {media.type === "image" ? (
+                            <ImageList sx={{
+                                width: "100%",
+                                height: "auto",
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                                gap: 2
+                            }}>
+                                {project.images && project.images.length > 0 && project.images.map((media, index) => (
+                                    <ImageListItem key={index} sx={{
+                                        borderRadius: 2,
+                                        position: "relative",
+                                        overflow: "hidden",
+                                        height: 250
+                                    }}>
+                                        {media && media.type === "image" ? (
                                             <>
                                                 <img
-                                                    style={{ borderRadius: 10 }}
-                                                    src={media.url}
+                                                    style={{
+                                                        borderRadius: 10,
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        objectFit: "cover"
+                                                    }}
+                                                    src={convertGoogleDriveUrl(media.url)}
                                                     alt={`${project.field1}`}
                                                     loading="lazy"
+                                                    onLoad={() => console.log('✅ Imagen cargada:', media.url)}
+                                                    onError={() => console.error('❌ Error cargando imagen:', media.url)}
                                                 />
                                                 <Box
                                                     component="img"
@@ -331,21 +372,20 @@ function ProjectDetails() {
                     {project_video ? (
                         <>
                             <Box>
-                                {project_video.videos ? (
+                                {project_video.videos && project_video.videos.length > 0 ? (
                                     <>
-                                        {project_video.videos?.map((media, index) => (
-                                            <>
+                                        {project_video.videos.map((media, index) => (
+                                            <React.Fragment key={index}>
                                                 <Typography variant="h6" gutterBottom>
                                                     {`Video 3D ${project.field1} ${index + 1}`}
                                                 </Typography>
                                                 <Card
-                                                    raised
-                                                    key={index}
                                                     component="li"
                                                     sx={{
                                                         display: "flex",
                                                         flexGrow: 1,
                                                         marginBottom: 2,
+                                                        boxShadow: 3,
                                                     }}
                                                 >
                                                     <Box
@@ -358,12 +398,13 @@ function ProjectDetails() {
                                                             overflow: "hidden",
                                                         }}
                                                     >
-                                                        <CardCover key={index}>
+                                                        <CardCover>
                                                             <video
-                                                                key={index}
                                                                 autoPlay
                                                                 loop
                                                                 muted
+                                                                onLoadedData={() => console.log('✅ Video cargado:', media.url)}
+                                                                onError={() => console.error('❌ Error cargando video:', media.url)}
                                                                 style={{
                                                                     maxHeight: "100%",
                                                                     width: "100%",
@@ -371,7 +412,7 @@ function ProjectDetails() {
                                                                     borderRadius: 10,
                                                                 }}
                                                             >
-                                                                <source src={media.url} type="video/mp4" />
+                                                                <source src={convertGoogleDriveUrl(media.url)} type="video/mp4" />
                                                             </video>
                                                         </CardCover>
                                                         <Box
@@ -412,7 +453,7 @@ function ProjectDetails() {
                                                         </CardContent>
                                                     </Box>
                                                 </Card>
-                                            </>
+                                            </React.Fragment>
                                         ))}
                                     </>
                                 ) : (

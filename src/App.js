@@ -7,6 +7,8 @@ import Upload from "./Pages/Upload/Upload";
 import AboutPage from "./Pages/About/AboutPage";
 import ProjectDetails from "./Pages/ProjectDetails/ProjectDetails";
 import Developer from "./Pages/Developer/Developer";
+import PrivacyPolicy from "./Pages/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "./Pages/TermsOfService/TermsOfService";
 import { AuthProvider } from "./Data/AuthContext";
 import PrivateRoute from "./Components/PrivateRoute";
 
@@ -19,6 +21,8 @@ function App() {
           <Route path="/About" element={<AboutPage />} />
           <Route path="/Gallery" element={<Gallery />} />
           <Route path="/SignIn" element={<SignIn />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/TermsOfService" element={<TermsOfService />} />
           <Route path="/project/:uuid" element={<ProjectDetails />} />
           {/* Rutas protegidas — requieren autenticación */}
           <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />

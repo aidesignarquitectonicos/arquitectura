@@ -3,19 +3,19 @@
  *
  * Flujo:
  *  1. Autenticar al usuario con Google Identity Services (OAuth2 → scope drive.file)
- *  2. Subir imagen con multipart upload a Drive API v3
+ *  2. Subir imagen/video con multipart upload a Drive API v3
  *  3. Dar permiso público (anyone → reader) al archivo
- *  4. Devolver URL CDN:
- *       https://www.googleapis.com/drive/v3/files/{FILE_ID}?alt=media&key={API_KEY}
+ *  4. Devolver URL CDN pública que funciona directamente en <img> y <video>:
+ *       https://drive.google.com/uc?export=view&id={FILE_ID}
  *
  * Variables de entorno requeridas (.env):
  *   REACT_APP_GOOGLE_CLIENT_ID       → OAuth 2.0 Client ID (Web application)
- *   REACT_APP_GOOGLE_API_KEY         → API Key habilitada para Drive API v3
  *   REACT_APP_GOOGLE_DRIVE_FOLDER_ID → ID de la carpeta pública en Google Drive
  */
 
 const DRIVE_API = "https://www.googleapis.com/drive/v3/files";
 const DRIVE_UPLOAD_API = "https://www.googleapis.com/upload/drive/v3/files";
+const DRIVE_VIEW_URL = "https://drive.google.com/uc?export=view&id=";
 
 let accessToken = null;
 
@@ -69,28 +69,85 @@ async function getToken() {
     return accessToken;
 }
 
-// ---------- Subida a Drive ----------
+// ---------- Crear carpeta para proyecto ----------
 
 /**
- * Sube un archivo de imagen a Google Drive.
- * @param {File} file - Archivo a subir
- * @param {string} folderName - Prefijo/nombre de la carpeta del proyecto
- * @returns {string} URL pública CDN con alt=media
+ * Crea una carpeta en Google Drive para un proyecto.
+ * @param {string} projectUuid - UUID del proyecto (será el nombre de la carpeta)
+ * @returns {string} ID de la carpeta creada
  */
-export async function uploadImageToDrive(file, folderName) {
+export async function createProjectFolder(projectUuid) {
     const token = await getToken();
-    const folderId = process.env.REACT_APP_GOOGLE_DRIVE_FOLDER_ID;
+    const parentFolderId = process.env.REACT_APP_GOOGLE_DRIVE_FOLDER_ID;
 
-    if (!folderId) {
+    if (!parentFolderId) {
         throw new Error(
             "REACT_APP_GOOGLE_DRIVE_FOLDER_ID no está configurado en .env"
         );
     }
 
+    // Crear metadata de la carpeta
+    const folderMetadata = {
+        name: projectUuid,
+        mimeType: "application/vnd.google-apps.folder",
+        parents: [parentFolderId],
+    };
+
+    const response = await fetch(DRIVE_API, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(folderMetadata),
+    });
+
+    if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`Error al crear carpeta en Drive (${response.status}): ${err}`);
+    }
+
+    const folderData = await response.json();
+
+    // Dar acceso público a la carpeta
+    const permResponse = await fetch(`${DRIVE_API}/${folderData.id}/permissions`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ type: "anyone", role: "reader" }),
+    });
+
+    if (!permResponse.ok) {
+        const err = await permResponse.text();
+        throw new Error(`Error al dar permiso público a la carpeta: ${err}`);
+    }
+
+    return folderData.id;
+}
+
+// ---------- Subida a Drive ----------
+
+/**
+ * Sube un archivo de imagen a Google Drive.
+ * @param {File} file - Archivo a subir
+ * @param {string} projectFolderId - ID de la carpeta del proyecto en Drive
+ * @returns {string} URL pública CDN
+ */
+export async function uploadImageToDrive(file, projectFolderId) {
+    const token = await getToken();
+
+    if (!projectFolderId) {
+        throw new Error(
+            "El ID de la carpeta del proyecto no se proporcionó"
+        );
+    }
+
     // Metadata del archivo en Drive
     const metadata = {
-        name: `${folderName}_${file.name}`,
-        parents: [folderId],
+        name: file.name,
+        parents: [projectFolderId],
         mimeType: file.type,
     };
 
@@ -133,21 +190,102 @@ export async function uploadImageToDrive(file, folderName) {
         throw new Error(`Error al dar permiso público: ${err}`);
     }
 
-    // URL CDN pública usando alt=media + API Key
-    const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
-    return `${DRIVE_API}/${fileId}?alt=media&key=${apiKey}`;
+    // URL pública que funciona directamente en <img> y <video>
+    // Esta URL no requiere API Key y funciona para archivos públicos
+    return `${DRIVE_VIEW_URL}${fileId}`;
 }
 
 /**
  * Sube múltiples imágenes a Google Drive en secuencia.
  * @param {File[]} files - Array de archivos a subir
- * @param {string} folderName - Prefijo del proyecto
+ * @param {string} projectFolderId - ID de la carpeta del proyecto en Drive
  * @returns {string[]} Array de URLs CDN públicas
  */
-export async function uploadImagesToDrive(files, folderName) {
+export async function uploadImagesToDrive(files, projectFolderId) {
     const urls = [];
     for (const file of files) {
-        const url = await uploadImageToDrive(file, folderName);
+        const url = await uploadImageToDrive(file, projectFolderId);
+        urls.push(url);
+    }
+    return urls;
+}
+
+/**
+ * Sube un archivo de video a Google Drive.
+ * @param {File} file - Archivo de video a subir
+ * @param {string} projectFolderId - ID de la carpeta del proyecto en Drive
+ * @returns {string} URL pública CDN que funciona en <video>
+ */
+export async function uploadVideoToDrive(file, projectFolderId) {
+    const token = await getToken();
+
+    if (!projectFolderId) {
+        throw new Error(
+            "El ID de la carpeta del proyecto no se proporcionó"
+        );
+    }
+
+    // Metadata del archivo en Drive
+    const metadata = {
+        name: file.name,
+        parents: [projectFolderId],
+        mimeType: file.type || "video/mp4",
+    };
+
+    // Multipart upload: metadata + binario
+    const formData = new FormData();
+    formData.append(
+        "metadata",
+        new Blob([JSON.stringify(metadata)], { type: "application/json" })
+    );
+    formData.append("file", file);
+
+    const uploadResponse = await fetch(
+        `${DRIVE_UPLOAD_API}?uploadType=multipart&fields=id`,
+        {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+        }
+    );
+
+    if (!uploadResponse.ok) {
+        const err = await uploadResponse.text();
+        throw new Error(`Drive upload falló (${uploadResponse.status}): ${err}`);
+    }
+
+    const { id: fileId } = await uploadResponse.json();
+
+    // Dar acceso público (anyone → reader)
+    const permResponse = await fetch(`${DRIVE_API}/${fileId}/permissions`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ type: "anyone", role: "reader" }),
+    });
+
+    if (!permResponse.ok) {
+        const err = await permResponse.text();
+        throw new Error(`Error al dar permiso público: ${err}`);
+    }
+
+    // URL pública que funciona directamente en <video>
+    // Esta URL no requiere API Key y funciona para archivos públicos
+    return `${DRIVE_VIEW_URL}${fileId}`;
+}
+
+/**
+ * Sube múltiples videos a Google Drive en secuencia.
+ * @param {File[]} files - Array de archivos de video a subir
+ * @param {string} projectFolderId - ID de la carpeta del proyecto en Drive
+ * @returns {string[]} Array de URLs CDN públicas
+ */
+export async function uploadVideosToDrive(files, projectFolderId) {
+    const urls = [];
+    for (const file of files) {
+        const url = await uploadVideoToDrive(file, projectFolderId);
         urls.push(url);
     }
     return urls;
@@ -158,4 +296,31 @@ export async function uploadImagesToDrive(files, folderName) {
  */
 export function clearDriveToken() {
     accessToken = null;
+}
+
+/**
+ * Convierte URLs viejas de Google Drive a las nuevas que funcionan.
+ * URLs viejas: https://www.googleapis.com/drive/v3/files/{ID}?alt=media&key={API_KEY}
+ * URLs nuevas: https://drive.google.com/uc?export=view&id={ID}
+ * 
+ * @param {string} url - URL a convertir
+ * @returns {string} URL convertida o original si no es una URL de Drive
+ */
+export function convertGoogleDriveUrl(url) {
+    if (!url) return url;
+
+    // Si ya es la URL nueva, devolver como está
+    if (url.includes("drive.google.com/uc?export=view&id=")) {
+        return url;
+    }
+
+    // Extraer ID de URL vieja: https://www.googleapis.com/drive/v3/files/{ID}?alt=media&key=...
+    const oldDriveMatch = url.match(/\/files\/([a-zA-Z0-9-_]+)/);
+    if (oldDriveMatch && oldDriveMatch[1]) {
+        const fileId = oldDriveMatch[1];
+        return `${DRIVE_VIEW_URL}${fileId}`;
+    }
+
+    // Si no coincide con URL de Drive antigua, devolver URL original
+    return url;
 }

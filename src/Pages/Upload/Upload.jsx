@@ -19,8 +19,6 @@ import {
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { database } from "../../Data/FirebaseConfig";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../Data/FirebaseConfig";
 import {
     set,
     ref as dbRef,
@@ -31,7 +29,7 @@ import {
 import { Add, Delete, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TextareaAutosize from "react-textarea-autosize";
-import { uploadImagesToDrive } from "../../Data/googleDriveService";
+import { uploadImagesToDrive, uploadVideosToDrive, createProjectFolder } from "../../Data/googleDriveService";
 
 const blue = {
     100: "#DAECFF",
@@ -227,27 +225,35 @@ function Upload() {
         try {
             const folderUuid = uuidv4();
 
-            // Upload images to Google Drive → get CDN URLs → save in Firebase DB
+            // Step 1: Create project folder in Google Drive
+            setAlertInfo({
+                showAlert: true,
+                type: "info",
+                message: "Creando carpeta del proyecto en Google Drive…",
+            });
+            const projectFolderId = await createProjectFolder(folderUuid);
+
+            // Step 2: Upload images to Google Drive → get CDN URLs → save in Firebase DB
             setAlertInfo({
                 showAlert: true,
                 type: "info",
                 message: "Subiendo imágenes a Google Drive…",
             });
-            const imageCdnUrls = await uploadImagesToDrive(imageFiles, folderUuid);
+            const imageCdnUrls = await uploadImagesToDrive(imageFiles, projectFolderId);
 
-            // Videos still go to Firebase Storage
+            // Step 3: Upload videos to Google Drive
             setAlertInfo({
                 showAlert: true,
                 type: "info",
-                message: "Subiendo videos…",
+                message: "Subiendo videos a Google Drive…",
             });
-            const videoUrls = await uploadVideoFiles(
+            const videoCdnUrls = await uploadVideosToDrive(
                 videoFiles,
-                `images/Datavideo/${folderUuid}`
+                projectFolderId
             );
 
-            // Save project to Firebase Realtime Database
-            // Images array contains Google Drive CDN URLs; videos contain Firebase Storage URLs
+            // Step 4: Save project to Firebase Realtime Database
+            // Images and videos arrays contain Google Drive CDN URLs
             const projectRef = dbRef(database, `Projects/${folderUuid}`);
             await set(projectRef, {
                 field1: fields.field1,
@@ -255,7 +261,7 @@ function Upload() {
                 field3: fields.field3,
                 roles: selectedRoles,
                 images: imageCdnUrls,
-                videos: videoUrls,
+                videos: videoCdnUrls,
             });
 
             // Invalidate gallery cache so new project appears immediately
@@ -283,17 +289,7 @@ function Upload() {
         }
     };
 
-    // Videos: Firebase Storage (unchanged)
-    const uploadVideoFiles = async (files, storagePath) => {
-        const urls = [];
-        for (const file of files) {
-            const fileRef = storageRef(storage, `${storagePath}/${file.name}`);
-            const snapshot = await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(snapshot.ref);
-            urls.push(url);
-        }
-        return urls;
-    };
+
 
     const handleBack = () => {
         window.location.href =
