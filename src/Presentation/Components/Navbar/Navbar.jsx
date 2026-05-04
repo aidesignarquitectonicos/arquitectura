@@ -108,8 +108,14 @@ function Navbar({
         <>
             <AppBar position="fixed" sx={appBarSx}>
                 <Toolbar sx={{ justifyContent: "space-between" }}>
-                    <Typography variant="h6">AIDesign</Typography>
-
+                    <Typography variant="h6" sx={{ display: "flex", alignItems: "center", lineHeight: 1 }}>
+                        <span style={{ fontWeight: "bold", color: "#000" }}>AID</span>esign
+                    </Typography>
+                    <Typography variant="h6" >
+                        <NavLink to="/maquinaria" style={{ fontWeight: "bold", color: "#000", textDecoration: "none" }} onClick={() => setInternalMenuOpen(false)}>
+                            Maquinaria
+                        </NavLink>
+                    </Typography>
                     {/* Botón menú: avatar si está autenticado, hamburguesa si no */}
                     {isAuthenticated ? (
                         <IconButton onClick={() => setInternalMenuOpen(!internalMenuOpen)}>
@@ -187,6 +193,12 @@ function Navbar({
                                 </li>
 
                                 <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
+                                    <NavLink to="/maquinaria" onClick={() => setInternalMenuOpen(false)}>
+                                        Alquiler de Maquinaria
+                                    </NavLink>
+                                </li>
+
+                                <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
                                     <NavLink to="/About" onClick={() => setInternalMenuOpen(false)}>
                                         Acerca de
                                     </NavLink>
@@ -236,6 +248,22 @@ function Navbar({
                                             Upload
                                         </NavLink>
                                     </li>
+                                )}
+
+                                {/* Admin Maquinaria (solo auth) */}
+                                {!simpleMenu && isAuthenticated && (
+                                    <>
+                                        <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
+                                            <NavLink to="/admin/maquinaria" onClick={() => setInternalMenuOpen(false)}>
+                                                Admin Maquinaria
+                                            </NavLink>
+                                        </li>
+                                        <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
+                                            <NavLink to="/ordenes" onClick={() => setInternalMenuOpen(false)}>
+                                                Historial de Órdenes
+                                            </NavLink>
+                                        </li>
+                                    </>
                                 )}
 
                                 {/* SignIn / SignOut (solo menú completo) */}

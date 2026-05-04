@@ -8,6 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import CloseIcon from "@mui/icons-material/Close";
+import PaymentIcon from "@mui/icons-material/Payment";
+import { useNavigate } from "react-router-dom";
 import { useCotizacion, calcularItem } from "../context/CotizacionContext";
 import { saveCotizacion } from "../model/MaquinariaModel";
 import { generatePDF } from "../utils/pdfGenerator";
@@ -15,6 +17,7 @@ import { generatePDF } from "../utils/pdfGenerator";
 const WHATSAPP_NUMBER = "593999999999";
 
 export default function CarritoFab() {
+    const navigate = useNavigate();
     const { items, removeItem, clearCart, totales } = useCotizacion();
     const [open, setOpen] = useState(false);
     const [clienteNombre, setClienteNombre] = useState("");
@@ -151,6 +154,15 @@ export default function CarritoFab() {
                             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                 <Button
                                     variant="contained"
+                                    color="success"
+                                    startIcon={<PaymentIcon />}
+                                    onClick={() => { setOpen(false); navigate("/checkout"); }}
+                                    sx={{ borderRadius: 2, textTransform: "none", fontWeight: 700, py: 1.5 }}
+                                >
+                                    Ir al checkout
+                                </Button>
+                                <Button
+                                    variant="outlined"
                                     onClick={handleGuardar}
                                     sx={{ borderRadius: 2, textTransform: "none" }}
                                 >

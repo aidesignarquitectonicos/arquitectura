@@ -16,14 +16,19 @@ import PrivateRoute from "./Presentation/Components/PrivateRoute";
 import CatalogoMaquinaria from "./Maquinaria/pages/CatalogoMaquinaria";
 import DetalleMaquina from "./Maquinaria/pages/DetalleMaquina";
 import AdminMaquinaria from "./Maquinaria/pages/AdminMaquinaria";
+import CheckoutPage from "./Maquinaria/pages/CheckoutPage";
+import ConfirmacionOrden from "./Maquinaria/pages/ConfirmacionOrden";
+import HistorialOrdenes from "./Maquinaria/pages/HistorialOrdenes";
 import { MaquinariaProvider } from "./Maquinaria/context/MaquinariaContext";
 import { CotizacionProvider } from "./Maquinaria/context/CotizacionContext";
+import { CheckoutProvider } from "./Maquinaria/context/CheckoutContext";
 
 function App() {
   return (
     <AuthProvider>
       <MaquinariaProvider>
         <CotizacionProvider>
+          <CheckoutProvider>
           <Router>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -36,12 +41,16 @@ function App() {
               {/* Módulo Maquinaria */}
               <Route path="/maquinaria" element={<CatalogoMaquinaria />} />
               <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/ordenes/:id" element={<ConfirmacionOrden />} />
               {/* Rutas protegidas — requieren autenticación */}
               <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
               <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
               <Route path="/admin/maquinaria" element={<PrivateRoute><AdminMaquinaria /></PrivateRoute>} />
+              <Route path="/ordenes" element={<PrivateRoute><HistorialOrdenes /></PrivateRoute>} />
             </Routes>
           </Router>
+          </CheckoutProvider>
         </CotizacionProvider>
       </MaquinariaProvider>
     </AuthProvider>

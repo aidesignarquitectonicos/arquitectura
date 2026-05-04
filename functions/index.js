@@ -1,115 +1,151 @@
 const functions = require("firebase-functions");
-const axios = require("axios");
-const cors = require("cors");
+const admin = require("firebase-admin");
+const cors = require("cors")({ origin: true });
 
-// Middleware CORS
-const corsHandler = cors({ origin: true });
+admin.initializeApp();
 
-/**
- * Proxy para descargar imágenes de Google Drive sin problemas de CORS
- * Uso: GET /driveImageProxy?id={fileId}
- */
+// ─── Variables de entorno (definir con: firebase functions:config:set) ─────────
+// stripe.secret_key, sendgrid.api_key, app.admin_email, app.fcm_topic
+
+// ─── Proxy para imágenes de Google Drive ──────────────────────────────────────
 exports.driveImageProxy = functions.https.onRequest((req, res) => {
-    corsHandler(req, res, async () => {
-        try {
-            const { id } = req.query;
-
-            if (!id) {
-                return res.status(400).json({ error: "Missing file ID parameter" });
-            }
-
-            // URL de Google Drive para descargar el archivo
-            const driveUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download`;
-
-            // Descargar la imagen
-            const response = await axios.get(driveUrl, {
-                responseType: "arraybuffer",
-                timeout: 30000,
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                },
-            });
-
-            // Detectar el tipo de contenido
-            const contentType = response.headers["content-type"] || "image/jpeg";
-
-            // Configurar headers CORS
-            res.set("Access-Control-Allow-Origin", "*");
-            res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-            res.set("Access-Control-Allow-Headers", "Content-Type");
-            res.set("Content-Type", contentType);
-            res.set("Cache-Control", "public, max-age=31536000");
-            res.set("Content-Length", response.data.length);
-
-            // Enviar la imagen
-            res.send(response.data);
-        } catch (error) {
-            console.error("Error al descargar imagen de Drive:", error.message);
-
-            res.set("Access-Control-Allow-Origin", "*");
-            res.status(500).json({
-                error: "Failed to download image from Drive",
-                message: error.message,
-            });
-        }
+    cors(req, res, async () => {
+        const axios = require("axios");
+        const fileId = req.query.id;
+        if (!fileId) return res.status(400).send("Missing id");
+        const url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+        const response = await axios.get(url, { responseType: "stream" });
+        res.setHeader("Content-Type", response.headers["content-type"]);
+        response.data.pipe(res);
     });
 });
 
-/**
- * Proxy para descargar videos de Google Drive sin problemas de CORS
- * Uso: GET /driveVideoProxy?id={fileId}
- */
+// ─── Proxy para videos de Google Drive ────────────────────────────────────────
 exports.driveVideoProxy = functions.https.onRequest((req, res) => {
-    corsHandler(req, res, async () => {
+    cors(req, res, async () => {
+        const axios = require("axios");
+        const fileId = req.query.id;
+        if (!fileId) return res.status(400).send("Missing id");
+        const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        const response = await axios.get(url, { responseType: "stream" });
+        res.setHeader("Content-Type", response.headers["content-type"] || "video/mp4");
+        response.data.pipe(res);
+    });
+});
+
+// ─── Crear PaymentIntent de Stripe ────────────────────────────────────────────
+exports.crearPaymentIntent = functions.https.onRequest((req, res) => {
+    cors(req, res, async () => {
+        if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
+
+        const stripeSecretKey = functions.config().stripe?.secret_key;
+        if (!stripeSecretKey) {
+            return res.status(500).json({ error: "Stripe secret key no configurada." });
+        }
+
+        const Stripe = require("stripe");
+        const stripe = Stripe(stripeSecretKey);
+
+        const { amount, currency = "usd" } = req.body;
+        if (!amount || isNaN(amount) || amount <= 0) {
+            return res.status(400).json({ error: "Monto inválido." });
+        }
+
         try {
-            const { id } = req.query;
-
-            if (!id) {
-                return res.status(400).json({ error: "Missing file ID parameter" });
-            }
-
-            // URL de Google Drive para descargar el archivo
-            const driveUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download`;
-
-            // Descargar el video con stream para videos grandes
-            const response = await axios.get(driveUrl, {
-                responseType: "stream",
-                timeout: 60000,
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                },
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: Math.round(amount),
+                currency,
+                automatic_payment_methods: { enabled: true },
             });
-
-            // Detectar el tipo de contenido
-            const contentType = response.headers["content-type"] || "video/mp4";
-
-            // Configurar headers CORS
-            res.set("Access-Control-Allow-Origin", "*");
-            res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-            res.set("Access-Control-Allow-Headers", "Content-Type, Range");
-            res.set("Content-Type", contentType);
-            res.set("Cache-Control", "public, max-age=31536000");
-
-            // Si hay información de tamaño, enviarla
-            if (response.data.headers["content-length"]) {
-                res.set(
-                    "Content-Length",
-                    response.data.headers["content-length"]
-                );
-            }
-
-            // Hacer pipe del stream
-            response.data.pipe(res);
-        } catch (error) {
-            console.error("Error al descargar video de Drive:", error.message);
-
-            res.set("Access-Control-Allow-Origin", "*");
-            res.status(500).json({
-                error: "Failed to download video from Drive",
-                message: error.message,
-            });
+            return res.json({ clientSecret: paymentIntent.client_secret });
+        } catch (err) {
+            console.error("Stripe error:", err.message);
+            return res.status(500).json({ error: "Error al crear el PaymentIntent." });
         }
     });
 });
+
+// ─── Enviar correo + notificación FCM al confirmar una orden ──────────────────
+exports.onOrdenCreada = functions.database
+    .ref("/ordenes/{ordenId}")
+    .onCreate(async (snapshot, context) => {
+        const orden = snapshot.val();
+        const { ordenId } = context.params;
+
+        const adminEmail = functions.config().app?.admin_email;
+        const sgApiKey   = functions.config().sendgrid?.api_key;
+        const fcmTopic   = functions.config().app?.fcm_topic || "maquinaria_admin";
+
+        // ── 1. Enviar correos con SendGrid ───────────────────────────────────
+        if (sgApiKey && adminEmail) {
+            try {
+                const sgMail = require("@sendgrid/mail");
+                sgMail.setApiKey(sgApiKey);
+
+                const itemsHtml = (orden.items || [])
+                    .map((i) =>
+                        `<tr>
+                            <td>${i.nombre}</td>
+                            <td>${i.cantidad} ${i.unidad}</td>
+                            <td>$${Number(i.total ?? 0).toFixed(2)}</td>
+                        </tr>`
+                    )
+                    .join("");
+
+                const bodyHtml = `
+                    <h2>✅ Confirmación de pago — AIDesign Maquinaria</h2>
+                    <p><strong>Orden:</strong> ${ordenId}</p>
+                    <p><strong>Cliente:</strong> ${orden.cliente?.nombre}</p>
+                    <p><strong>Fecha:</strong> ${new Date(orden.fecha).toLocaleString("es-EC")}</p>
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead><tr><th>Máquina</th><th>Cantidad</th><th>Total</th></tr></thead>
+                        <tbody>${itemsHtml}</tbody>
+                    </table>
+                    <p><strong>Subtotal:</strong> $${Number(orden.subtotal).toFixed(2)}</p>
+                    <p><strong>IVA (12%):</strong> $${Number(orden.iva).toFixed(2)}</p>
+                    <h3>TOTAL PAGADO: $${Number(orden.total).toFixed(2)}</h3>
+                `;
+
+                // Correo al cliente
+                if (orden.cliente?.email) {
+                    await sgMail.send({
+                        to: orden.cliente.email,
+                        from: adminEmail,
+                        subject: `✅ Confirmación de tu orden #${ordenId} — AIDesign`,
+                        html: bodyHtml,
+                    });
+                }
+
+                // Correo al administrador
+                await sgMail.send({
+                    to: adminEmail,
+                    from: adminEmail,
+                    subject: `🔔 Nueva orden #${ordenId} — ${orden.cliente?.nombre}`,
+                    html: bodyHtml,
+                });
+            } catch (mailErr) {
+                console.error("SendGrid error:", mailErr.message);
+            }
+        }
+
+        // ── 2. Enviar notificación push FCM al topic de admin ────────────────
+        try {
+            const message = {
+                topic: fcmTopic,
+                notification: {
+                    title: "🔔 Nueva orden confirmada",
+                    body: `${orden.cliente?.nombre} — $${Number(orden.total).toFixed(2)}`,
+                },
+                data: {
+                    ordenId,
+                    tipo: "nueva_orden",
+                },
+            };
+            await admin.messaging().send(message);
+        } catch (fcmErr) {
+            console.error("FCM error:", fcmErr.message);
+        }
+
+        console.log(`onOrdenCreada procesada: ${ordenId}`);
+        return null;
+    });
