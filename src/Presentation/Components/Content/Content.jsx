@@ -317,129 +317,129 @@ function Content() {
                 )}
                 {filteredProjects.map((project) => (
                     <Grid item xs={12} sm={6} md={4} key={project.uuid}>
-                                <animated.div style={fadeIn}>
-                                    <Card
-                                        raised
-                                        style={{ cursor: "pointer", background: "#f4f4f4" }}
+                        <animated.div style={fadeIn}>
+                            <Card
+                                raised
+                                style={{ cursor: "pointer", background: "#f4f4f4" }}
+                            >
+                                <CardContent sx={{ padding: "0px" }}>
+                                    <CardContent
+                                        sx={{
+                                            padding: "0px",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                        }}
                                     >
-                                        <CardContent sx={{ padding: "0px" }}>
-                                            <CardContent
-                                                sx={{
-                                                    padding: "0px",
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            >
-                                                {editMode[project.uuid] ? (
-                                                    <TextField
-                                                        variant="outlined"
-                                                        defaultValue={project.field1}
-                                                        onChange={(e) =>
-                                                            handleEditChange(
-                                                                project.uuid,
-                                                                "field1",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        fullWidth
-                                                    />
-                                                ) : (
-                                                    <Typography
-                                                        variant="h5"
-                                                        component="h2"
-                                                        style={{ margin: "20px" }}
-                                                    >
-                                                        Proyecto:{" "}
-                                                        {editedProjects[project.uuid]?.field1 ||
-                                                            project.field1}
-                                                    </Typography>
-                                                )}
-                                                {isUserLoggedIn ? (
-                                                    <IconButton onClick={() => toggleEditMode(project.uuid)}>
-                                                        {editMode[project.uuid] ? <Save sx={{ color: "black" }} /> : <Edit sx={{ color: "black" }} />}
-                                                    </IconButton>
-                                                ) : (
-                                                    <IconButton onClick={() => shareProject(project)}>
-                                                        <Share sx={{ color: "green" }} />
-                                                    </IconButton>
-                                                )}
-                                            </CardContent>
-
-                                            <AutoPlaySwipeableViews>
-                                                {project.images?.map((image, index) => (
-                                                    <Box
-                                                        key={index}
-                                                        sx={{
-                                                            height: 140,
-                                                            display: "flex",
-                                                            justifyContent: "center",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src={convertGoogleDriveUrl(image)}
-                                                            alt={`Imagen ${index + 1}`}
-                                                            style={{ height: "100%", width: "98%" }}
-                                                        />
-                                                    </Box>
-                                                ))}
-                                            </AutoPlaySwipeableViews>
-                                        </CardContent>
                                         {editMode[project.uuid] ? (
                                             <TextField
                                                 variant="outlined"
-                                                defaultValue={project.field2}
+                                                defaultValue={project.field1}
                                                 onChange={(e) =>
-                                                    handleEditChange(project.uuid, "field2", e.target.value)
+                                                    handleEditChange(
+                                                        project.uuid,
+                                                        "field1",
+                                                        e.target.value
+                                                    )
                                                 }
                                                 fullWidth
                                             />
                                         ) : (
                                             <Typography
-                                                variant="body2"
-                                                component="p"
+                                                variant="h5"
+                                                component="h2"
                                                 style={{ margin: "20px" }}
                                             >
-                                                Descripción:{" "}
-                                                {editedProjects[project.uuid]?.field2 || project.field2}
+                                                Proyecto:{" "}
+                                                {editedProjects[project.uuid]?.field1 ||
+                                                    project.field1}
                                             </Typography>
                                         )}
-                                        <CardContent sx={{ padding: "0px" }}>
-                                            {editMode[project.uuid] ? (
-                                                <Grid item xs={12}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel id="role-select-label">Rol</InputLabel>
-                                                        <Select
-                                                            labelId="role-select-label"
-                                                            id="role-select"
-                                                            value={editedProjects[project.uuid]?.roles?.[0] || project.roles?.[0] || ""}
-                                                            label="Rol"
-                                                            onChange={(event) => handleRoleChange(event, project.uuid)}
-                                                        >
-                                                            <MenuItem value={"Fachada"}>Fachada</MenuItem>
-                                                            <MenuItem value={"Diseño de Interiores"}>Diseño de Interiores</MenuItem>
-                                                            <MenuItem value={"Remodelación"}>Remodelación</MenuItem>
-                                                        </Select>
+                                        {isUserLoggedIn ? (
+                                            <IconButton onClick={() => toggleEditMode(project.uuid)}>
+                                                {editMode[project.uuid] ? <Save sx={{ color: "black" }} /> : <Edit sx={{ color: "black" }} />}
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton onClick={() => shareProject(project)}>
+                                                <Share sx={{ color: "green" }} />
+                                            </IconButton>
+                                        )}
+                                    </CardContent>
 
-                                                    </FormControl>
-                                                </Grid>
-                                            ) : (
-                                                <Typography
-                                                    variant="body2"
-                                                    component="p"
-                                                    style={{ margin: "20px" }}
+                                    <AutoPlaySwipeableViews>
+                                        {project.images?.map((image, index) => (
+                                            <Box
+                                                key={index}
+                                                sx={{
+                                                    height: 140,
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <img
+                                                    src={convertGoogleDriveUrl(image)}
+                                                    alt={`Imagen ${index + 1}`}
+                                                    style={{ height: "100%", width: "98%" }}
+                                                />
+                                            </Box>
+                                        ))}
+                                    </AutoPlaySwipeableViews>
+                                </CardContent>
+                                {editMode[project.uuid] ? (
+                                    <TextField
+                                        variant="outlined"
+                                        defaultValue={project.field2}
+                                        onChange={(e) =>
+                                            handleEditChange(project.uuid, "field2", e.target.value)
+                                        }
+                                        fullWidth
+                                    />
+                                ) : (
+                                    <Typography
+                                        variant="body2"
+                                        component="p"
+                                        style={{ margin: "20px" }}
+                                    >
+                                        Descripción:{" "}
+                                        {editedProjects[project.uuid]?.field2 || project.field2}
+                                    </Typography>
+                                )}
+                                <CardContent sx={{ padding: "0px" }}>
+                                    {editMode[project.uuid] ? (
+                                        <Grid item xs={12}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="role-select-label">Rol</InputLabel>
+                                                <Select
+                                                    labelId="role-select-label"
+                                                    id="role-select"
+                                                    value={editedProjects[project.uuid]?.roles?.[0] || project.roles?.[0] || ""}
+                                                    label="Rol"
+                                                    onChange={(event) => handleRoleChange(event, project.uuid)}
                                                 >
-                                                    Categoría:{" "}
-                                                    {editedProjects[project.uuid]?.roles?.join(", ") || project.roles?.join(", ")}
-                                                </Typography>
-                                            )}
-                                        </CardContent>
-                                    </Card>
-                                </animated.div>
-                            </Grid>
-                        ))}
+                                                    <MenuItem value={"Fachada"}>Fachada</MenuItem>
+                                                    <MenuItem value={"Diseño de Interiores"}>Diseño de Interiores</MenuItem>
+                                                    <MenuItem value={"Remodelación"}>Remodelación</MenuItem>
+                                                </Select>
 
+                                            </FormControl>
+                                        </Grid>
+                                    ) : (
+                                        <Typography
+                                            variant="body2"
+                                            component="p"
+                                            style={{ margin: "20px" }}
+                                        >
+                                            Categoría:{" "}
+                                            {editedProjects[project.uuid]?.roles?.join(", ") || project.roles?.join(", ")}
+                                        </Typography>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </animated.div>
                     </Grid>
+                ))}
+
+            </Grid>
         </Grid>
     );
 }

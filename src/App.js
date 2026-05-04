@@ -1,16 +1,16 @@
 import React from "react";
-import Home from "./Pages/Home/Home";
+import Home from "./Presentation/Pages/Home/Home";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import SignIn from "./Pages/SignIn/SignIn";
-import Gallery from "./Pages/Gallery/Gallery";
-import Upload from "./Pages/Upload/Upload";
-import AboutPage from "./Pages/About/AboutPage";
-import ProjectDetails from "./Pages/ProjectDetails/ProjectDetails";
-import Developer from "./Pages/Developer/Developer";
-import PrivacyPolicy from "./Pages/PrivacyPolicy/PrivacyPolicy";
-import TermsOfService from "./Pages/TermsOfService/TermsOfService";
-import { AuthProvider } from "./Data/AuthContext";
-import PrivateRoute from "./Components/PrivateRoute";
+import SignIn from "./Presentation/Pages/SignIn/SignIn";
+import Gallery from "./Presentation/Pages/Gallery/Gallery";
+import Upload from "./Presentation/Pages/Upload/Upload";
+import AboutPage from "./Presentation/Pages/About/AboutPage";
+import ProjectDetails from "./Presentation/Pages/ProjectDetails/ProjectDetails";
+import Developer from "./Presentation/Pages/Developer/Developer";
+import PrivacyPolicy from "./Presentation/Pages/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "./Presentation/Pages/TermsOfService/TermsOfService";
+import { AuthProvider } from "./Presentation/Data/AuthContext";
+import PrivateRoute from "./Presentation/Components/PrivateRoute";
 
 function App() {
   return (

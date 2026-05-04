@@ -34,7 +34,7 @@ const Viewer = () => {
                 fill="transparent"
                 animate={partAnimation}
             />
-            
+
         </div>
 
     );

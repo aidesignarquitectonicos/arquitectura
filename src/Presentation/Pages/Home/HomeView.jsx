@@ -17,13 +17,14 @@ import {
 } from "@mui/material";
 import theme from "../../Themes/theme";
 import logo from "../../Assets/icono.png";
-import Footer from "../../Pages/Footer/Footer";
+import Footer from "../Footer/Footer";
 import { NavLink } from "react-router-dom";
 import QRCode from "qrcode.react";
 import CloseIcon from "@mui/icons-material/Close";
-import { MenuOutlined, PhotoLibrary } from "@mui/icons-material";
+import { MenuOutlined, PhotoLibrary, ArrowForward } from "@mui/icons-material";
 import { useSpring, animated } from "react-spring";
 import "../../styles/Home.css";
+import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 const HomeView = ({
     url,
@@ -392,21 +393,36 @@ const HomeView = ({
                                             >
                                                 {project.images && project.images.length > 0 ? (
                                                     <img
-                                                        src={
+                                                        loading="lazy"
+                                                        src={convertGoogleDriveUrl(
                                                             typeof project.images[0] === 'string'
                                                                 ? project.images[0]
-                                                                : project.images[0].url || project.images[0]
-                                                        }
-                                                        alt={project.field1 || "Proyecto"}
+                                                                : project.images[0].url || project.images[0],
+                                                            false
+                                                        )}
+                                                        alt={project.field1 || `Proyecto ${index + 1}`}
                                                         style={{
+                                                            borderTopLeftRadius: "20px",
+                                                            borderTopRightRadius: "20px",
+                                                            borderBottomLeftRadius: "20px",
+                                                            borderBottomRightRadius: "20px",
                                                             width: "100%",
                                                             height: "100%",
                                                             objectFit: "cover",
+                                                            cursor: "pointer",
                                                         }}
                                                         onError={(e) => {
-                                                            console.log("Error cargando imagen:", project.images[0]);
-                                                            console.log("Tipo de imagen:", typeof project.images[0]);
-                                                            console.log("Proyecto completo:", project);
+                                                            const img = e.target;
+                                                            const imageUrl = typeof project.images[0] === 'string'
+                                                                ? project.images[0]
+                                                                : project.images[0].url || project.images[0];
+                                                            if (!img.dataset.retried) {
+                                                                img.dataset.retried = 'true';
+                                                                img.src = convertGoogleDriveUrl(imageUrl, false);
+                                                            } else {
+                                                                console.error('❌ Error cargando imagen en Home:', imageUrl);
+                                                                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%23999"%3EError cargando imagen%3C/text%3E%3C/svg%3E';
+                                                            }
                                                         }}
                                                     />
                                                 ) : (
@@ -527,36 +543,51 @@ const HomeView = ({
                             <Card
                                 sx={{
                                     display: "inline-block",
-                                    background: "#f0f0f0",
-                                    borderRadius: "20px",
-                                    boxShadow: "8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff",
+                                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                                    borderRadius: "50px",
+                                    boxShadow: "0 8px 20px rgba(102, 126, 234, 0.3)",
                                     border: "none",
                                     cursor: "pointer",
                                     transition: "all 0.3s ease",
+                                    overflow: "visible",
                                     "&:hover": {
-                                        boxShadow: "4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff",
-                                        transform: "translateY(-2px)",
+                                        boxShadow: "0 12px 30px rgba(102, 126, 234, 0.4)",
+                                        transform: "translateY(-3px) scale(1.02)",
                                     },
                                     "&:active": {
-                                        boxShadow: "inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff",
-                                        transform: "translateY(0px)",
+                                        transform: "translateY(-1px) scale(0.98)",
                                     },
                                 }}
                                 onClick={() => onNavigate("/Gallery")}
                             >
-                                <CardContent sx={{ padding: "16px 32px" }}>
+                                <CardContent sx={{
+                                    padding: "16px 40px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1.5,
+                                    "&:last-child": { paddingBottom: "16px" }
+                                }}>
                                     <Typography
                                         variant="body1"
                                         fontWeight="bold"
                                         sx={{
-                                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                                            WebkitBackgroundClip: "text",
-                                            WebkitTextFillColor: "transparent",
-                                            backgroundClip: "text",
+                                            color: "white",
+                                            fontSize: "1.1rem",
+                                            letterSpacing: "0.5px",
                                         }}
                                     >
                                         Ver Todos los Proyectos
                                     </Typography>
+                                    <ArrowForward
+                                        sx={{
+                                            color: "white",
+                                            fontSize: "1.4rem",
+                                            transition: "transform 0.3s ease",
+                                            ".MuiCard-root:hover &": {
+                                                transform: "translateX(5px)",
+                                            }
+                                        }}
+                                    />
                                 </CardContent>
                             </Card>
                         </Box>

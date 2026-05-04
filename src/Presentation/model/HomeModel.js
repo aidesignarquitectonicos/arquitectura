@@ -3,6 +3,16 @@ import { sample } from "lodash";
 
 const PROJECTS_STORAGE_KEY = "projects";
 
+// Helper: Convertir Firebase object indexado a array
+const convertToArray = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (typeof data === "object") {
+        return Object.values(data);
+    }
+    return [];
+};
+
 /**
  * Loads the projects list from localStorage if present, otherwise fetches from Firebase Realtime Database.
  * @returns {Promise<Array>} Array of project objects.
@@ -30,6 +40,8 @@ export async function loadProjects() {
     const updatedProjects = Object.keys(projectData).map((key) => ({
         uuid: key,
         ...projectData[key],
+        images: convertToArray(projectData[key].images),
+        videos: convertToArray(projectData[key].videos),
     }));
 
     localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(updatedProjects));

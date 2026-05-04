@@ -19,7 +19,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import QRCodePopup from './QRCodePopup';
-import icono from "../../Assets/icono.png";
+import icono from "../../Assets/iconot.png";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -331,15 +331,15 @@ function GalleryView({ project, index, image }) {
                                                         </IconButton>
                                                     ) : (
                                                         <>
-                                                            <IconButton onClick={(event) => handleClickMenu(event, project.id)}>
+                                                            <IconButton onClick={(event) => handleClickMenu(event, project.uuid)}>
                                                                 <MoreVert sx={{ color: 'black' }} fontSize="32px" />
                                                             </IconButton>
                                                             <Menu
-                                                                key={project.id}
-                                                                id={`options-menu-${project.id}`}
-                                                                anchorEl={anchorEls[project.id] || null} // Cada menú se abre solo si su anchorEl es válido
-                                                                open={Boolean(anchorEls[project.id])}
-                                                                onClose={() => handleClose(project.id)}
+                                                                key={project.uuid}
+                                                                id={`options-menu-${project.uuid}`}
+                                                                anchorEl={anchorEls[project.uuid] || null} // Cada menú se abre solo si su anchorEl es válido
+                                                                open={Boolean(anchorEls[project.uuid])}
+                                                                onClose={() => handleClose(project.uuid)}
                                                                 MenuListProps={{
                                                                     'aria-labelledby': 'options-button',
                                                                 }}
@@ -353,7 +353,7 @@ function GalleryView({ project, index, image }) {
                                                                     <Typography sx={{ padding: 2 }}>Compartir </Typography> <Share sx={{ marginRight: 1 }} />
                                                                 </MenuItem>
                                                                 <MenuItem
-                                                                    onClick={() => handleQRCodePopupOpen(`${URLs}/${project.id}`, project)}
+                                                                    onClick={() => handleQRCodePopupOpen(`${URLs}/${project.uuid}`, project)}
                                                                 >
                                                                     <Typography sx={{ padding: 2 }}>Código QR</Typography>
                                                                     <QrCode sx={{ marginRight: 1 }} />
