@@ -1,37 +1,27 @@
 import React from "react";
 import { ThemeProvider } from "@emotion/react";
 import {
-    AppBar,
     Avatar,
     Box,
     Card,
-    CardActionArea,
     CardContent,
     CssBaseline,
-    Dialog,
-    IconButton,
-    Toolbar,
     Typography,
     Grid,
     Container,
 } from "@mui/material";
 import theme from "../../Themes/theme";
-import logo from "../../Assets/icono.png";
 import Footer from "../Footer/Footer";
-import { NavLink } from "react-router-dom";
-import QRCode from "qrcode.react";
-import CloseIcon from "@mui/icons-material/Close";
-import { MenuOutlined, PhotoLibrary, ArrowForward } from "@mui/icons-material";
+import { PhotoLibrary, ArrowForward } from "@mui/icons-material";
 import { useSpring, animated } from "react-spring";
 import "../../styles/Home.css";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const HomeView = ({
     url,
     openQr,
     setOpenQr,
-    menuOpen,
-    setMenuOpen,
     isAuthenticated,
     user,
     currentVideo,
@@ -41,242 +31,20 @@ const HomeView = ({
     onNavigateProject,
 }) => {
     const fade = useSpring({ from: { opacity: 0 }, opacity: 1, delay: 500 });
-    const menuAnimation = useSpring({
-        transform: menuOpen ? "translateX(0%)" : "translateX(-100%)",
-    });
 
     return (
         <animated.div style={fade}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        background: "#f4f4f4",
-                        color: "#000",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                        borderBottomLeftRadius: "20px",
-                        borderBottomRightRadius: "20px",
-                    }}
-                >
-                    <Toolbar sx={{ justifyContent: "space-between" }}>
-                        <Typography variant="h6">AIDesign</Typography>
-                        {isAuthenticated ? (
-                            <IconButton onClick={() => setMenuOpen(!menuOpen)}>
-                                <Avatar src={logo} />
-                            </IconButton>
-                        ) : (
-                            <IconButton onClick={() => setMenuOpen(!menuOpen)}>
-                                <MenuOutlined />
-                            </IconButton>
-                        )}
-                        <animated.div
-                            style={{
-                                ...menuAnimation,
-                                position: "fixed",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                backgroundColor: "rgba(0, 0, 5, 0.8)",
-                                zIndex: theme.zIndex.drawer + 1,
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                padding: "20px",
-                            }}
-                            onClick={() => setMenuOpen(!menuOpen)}
-                        >
-                            <nav
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    textAlign: "center",
-                                    width: "auto",
-                                    borderRadius: "20px",
-                                }}
-                            >
-                                <ul
-                                    className={menuOpen ? "open" : ""}
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        textAlign: "center",
-                                        padding: "20px",
-                                        listStyleType: "none",
-                                        margin: 0,
-                                    }}
-                                >
-                                    {isAuthenticated && (
-                                        <li
-                                            style={{
-                                                borderBottom: "1px solid #8887875E",
-                                                padding: "20px",
-                                            }}
-                                        >
-                                            <span>{user.email || "Usuario"}</span>
-                                        </li>
-                                    )}
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/Gallery" onClick={() => setMenuOpen(false)}>
-                                            Proyectos
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/About" onClick={() => setMenuOpen(false)}>
-                                            Acerca de
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/PrivacyPolicy" onClick={() => setMenuOpen(false)}>
-                                            Política de Privacidad
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/TermsOfService" onClick={() => setMenuOpen(false)}>
-                                            Términos de Servicio
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink
-                                            onClick={() => {
-                                                setOpenQr(true);
-                                                setMenuOpen(false);
-                                            }}
-                                        >
-                                            Codigo Qr
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/Developer" onClick={() => setMenuOpen(false)}>
-                                            Desarrollador de Software
-                                        </NavLink>
-                                    </li>
-                                    {isAuthenticated && (
-                                        <li
-                                            style={{
-                                                borderBottom: "1px solid #8887875E",
-                                                padding: "20px",
-                                            }}
-                                        >
-                                            <NavLink to="/Upload" onClick={() => setMenuOpen(false)}>
-                                                Upload
-                                            </NavLink>
-                                        </li>
-                                    )}
-                                    {isAuthenticated ? (
-                                        <li
-                                            style={{
-                                                borderBottom: "1px solid #8887875E",
-                                                padding: "20px",
-                                            }}
-                                        >
-                                            <span onClick={onSignOut}>Cerrar sesión</span>
-                                        </li>
-                                    ) : (
-                                        <li
-                                            style={{
-                                                borderBottom: "1px solid #8887875E",
-                                                padding: "20px",
-                                            }}
-                                        >
-                                            <NavLink to="/SignIn" onClick={() => setMenuOpen(false)}>
-                                                Sign In
-                                            </NavLink>
-                                        </li>
-                                    )}
-                                </ul>
-                            </nav>
-                        </animated.div>
-                        <Dialog
-                            open={openQr}
-                            onClose={() => setOpenQr(false)}
-                            aria-labelledby="qr-code-dialog-title"
-                            fullWidth={true}
-                            maxWidth="sm"
-                            sx={{
-                                background: "rgba(255,255,255, 0.5)",
-                                borderBottomLeftRadius: "20px",
-                                borderBottomRightRadius: "20px",
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    background: "#f4f4f4",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    paddingBottom: "20px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: "100%",
-                                        background: "transparent",
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                    }}
-                                >
-                                    <IconButton
-                                        onClick={() => setOpenQr(false)}
-                                        sx={{
-                                            background: "transparent",
-                                        }}
-                                    >
-                                        <CloseIcon sx={{ color: "#000" }} />
-                                    </IconButton>
-                                </Box>
-                                <Card>
-                                    <CardActionArea>
-                                        <CardContent>
-                                            <QRCode
-                                                value={url}
-                                                size={Math.min(window.innerWidth * 0.6, 156)}
-                                                level={"L"}
-                                            />
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Box>
-                        </Dialog>
-                    </Toolbar>
-                </AppBar>
+                <Navbar
+                    variant="home"
+                    isAuthenticated={isAuthenticated}
+                    user={user}
+                    onSignOut={onSignOut}
+                    openQr={openQr}
+                    setOpenQr={setOpenQr}
+                    url={url}
+                />
                 <Box
                     sx={{
                         width: "100vw",
@@ -404,8 +172,6 @@ const HomeView = ({
                                                         style={{
                                                             borderTopLeftRadius: "20px",
                                                             borderTopRightRadius: "20px",
-                                                            borderBottomLeftRadius: "20px",
-                                                            borderBottomRightRadius: "20px",
                                                             width: "100%",
                                                             height: "100%",
                                                             objectFit: "cover",

@@ -6,8 +6,6 @@ import {
     Typography,
     Container,
     Alert,
-    AppBar,
-    Toolbar,
     IconButton,
     Chip,
     Dialog,
@@ -30,6 +28,7 @@ import { Add, Delete, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TextareaAutosize from "react-textarea-autosize";
 import { uploadImagesToDrive, uploadVideosToDrive, createProjectFolder } from "../../Data/googleDriveService";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const blue = {
     100: "#DAECFF",
@@ -52,6 +51,7 @@ const grey = {
     800: "#303740",
     900: "#1C2025",
 };
+
 
 function Upload() {
     const navigate = useNavigate();
@@ -298,37 +298,11 @@ function Upload() {
 
     return (
         <>
-            <AppBar
-                position="fixed"
-                sx={{
-                    background: "#f4f4f4",
-                    color: "#000",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                    borderBottomLeftRadius: "20px",
-                    borderBottomRightRadius: "20px",
-                    textAlign: "center",
-                    justifyContent: "space-between",
-                }}
-            >
-                <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <IconButton onClick={handleBack} aria-label="Regresar">
-                        <ArrowBack sx={{ color: "black" }} fontSize="32px" />
-                    </IconButton>
-                    <Typography
-                        sx={{
-                            fontFamily: "'Poppins', sans-serif",
-                            color: "#000",
-                            fontWeight: "bold",
-                            fontSize: "1.3rem",
-                        }}
-                        variant="h6"
-                        component="div"
-                    >
-                        Upload
-                    </Typography>
-                    <Typography variant="h6" component="div"></Typography>
-                </Toolbar>
-            </AppBar>
+            <Navbar
+                variant="back"
+                title="Upload"
+                onBack={handleBack}
+            />
             <Container maxWidth="sm" sx={{ marginTop: 8, marginBottom: 4 }}>
                 <Box
                     sx={{

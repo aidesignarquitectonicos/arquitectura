@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {
-    AppBar,
     TextField,
     IconButton,
-    Toolbar,
     Typography,
     Button,
     Box,
@@ -19,7 +17,7 @@ import { auth } from "../../Data/FirebaseConfig";
 import { ArrowBack, Login } from "@mui/icons-material";
 import { useSpring, animated } from "@react-spring/web";
 import { EmailOutlined, LockOutlined } from "@mui/icons-material";
- 
+import Navbar from "../../Components/Navbar/Navbar";
 
 function SignIn() {
     //Constante para navegar
@@ -84,32 +82,11 @@ function SignIn() {
 
     return (
         <>
-            <AppBar
-                position="fixed"
-                sx={{
-                    background: "#f4f4f4",
-                    color: "#000",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                    borderBottomLeftRadius: "20px",
-                    borderBottomRightRadius: "20px",
-                }}
-            >
-                <Toolbar>
-                    <IconButton onClick={handleBack} aria-label="Regresar">
-                        <ArrowBack sx={{ color: 'black' }} fontSize="32px" />
-                    </IconButton>
-                    <Typography sx={{
-                        fontFamily: "'Poppins', sans-serif",
-                        color: '#000',
-                        fontWeight: "bold",
-                        fontSize: "1.3rem",
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "100%",
-                    }}>Iniciar Sesión</Typography>
-                </Toolbar>
-            </AppBar>
+            <Navbar
+                variant="back"
+                title="Iniciar Sesión"
+                onBack={handleBack}
+            />
             <Box
                 sx={{
                     width: "100vw",

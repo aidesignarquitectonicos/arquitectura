@@ -6,8 +6,6 @@ import {
     Typography,
     Box,
     Grid,
-    AppBar,
-    Toolbar,
     IconButton,
     CardActionArea,
     CardMedia,
@@ -39,6 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { database } from "../../Data/FirebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import './About.css';
+import Navbar from "../../Components/Navbar/Navbar";
 
 const AboutPage = () => {
     // Arreglo de colores por los que se ciclará
@@ -193,57 +192,27 @@ const AboutPage = () => {
     return (
         <>
             <animated.div style={{ fade, background: "rgba(255, 255, 255, 0.2)", }}>
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        background: "#f4f4f4",
-                        color: "#000",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                        borderBottomLeftRadius: "20px",
-                        borderBottomRightRadius: "20px",
-                        textAlign: "center",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <IconButton
-                            onClick={handleBack}
-                            aria-label="Regresar"
-                        >
-                            <ArrowBack sx={{ color: 'black' }} fontSize="32px" />
-                        </IconButton>
-                        <Typography sx={{
-                            fontFamily: "'Poppins', sans-serif",
-                            color: '#000',
-                            fontWeight: "bold",
-                            fontSize: "1.3rem",
-                        }}>{personalInfo.name}</Typography>
-                        <IconButton
+                <Navbar
+                    variant="back"
+                    title={personalInfo.name}
+                    onBack={handleBack}
+                rightAction={<IconButton
                             onClick={() => {
-                                // Lógica para compartir
                                 if (navigator.share) {
-                                    navigator
-                                        .share({
-                                            title: "Acerca de",
-                                            text: "Conoce más sobre mi",
-                                            url: window.location.href,
-                                            image: personalInfo.image,
-                                        })
-                                        .then(() => console.log("Contenido compartido"))    // eslint-disable-line no-console
-                                        .catch((error) => console.error("Error al compartir", error)); // eslint-disable-line no-console
+                                    navigator.share({
+                                        title: "Acerca de",
+                                        text: "Conoce más sobre mi",
+                                        url: window.location.href,
+                                    }).catch((error) => console.error("Error al compartir", error));
                                 } else {
-                                    handleSnackbar(
-                                        "Tu navegador no soporta la funcionalidad de compartir",
-                                        "warning"
-                                    );
+                                    handleSnackbar("Tu navegador no soporta la funcionalidad de compartir", "warning");
                                 }
                             }}
                             aria-label="Compartir"
                         >
                             <Share fontSize="32px" sx={{ color: 'green' }} />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+                        </IconButton>}
+                />
 
                 <Container >
                     <Box

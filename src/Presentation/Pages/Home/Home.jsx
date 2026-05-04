@@ -10,7 +10,6 @@ const Home = () => {
     const url = "https://aidesignarquitectonicos.github.io/arquitectura/";
 
     const [openQr, setOpenQr] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [projects, setProjects] = useState([]);
     const [currentVideo, setCurrentVideo] = useState(null);
@@ -62,8 +61,6 @@ const Home = () => {
             url={url}
             openQr={openQr}
             setOpenQr={setOpenQr}
-            menuOpen={menuOpen}
-            setMenuOpen={setMenuOpen}
             isAuthenticated={isAuthenticated}
             user={user}
             currentVideo={currentVideo}

@@ -1,188 +1,27 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "@emotion/react";
-import {
-    AppBar,
-    Box,
-    CssBaseline,
-    IconButton,
-    Toolbar,
-    Typography,
-    Container,
-} from "@mui/material";
+import { Box, CssBaseline, Container } from "@mui/material";
 import { useSpring, animated } from "react-spring";
-import { NavLink } from "react-router-dom";
 import theme from "../../Themes/theme";
-import Footer from "../../Pages/Footer/Footer";
-import QRCode from "qrcode.react";
-import CloseIcon from "@mui/icons-material/Close";
-import { MenuOutlined } from "@mui/icons-material";
+import Footer from "../Footer/Footer";
+import Navbar from "../../Components/Navbar/Navbar";
 import "./TermsOfService.css";
 
 function TermsOfService() {
     const url = "https://aidesignarquitectonicos.github.io/arquitectura/";
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [openQr, setOpenQr] = useState(false);
 
-    const menuAnimation = useSpring({
-        transform: menuOpen ? "translateX(0%)" : "translateX(-100%)",
-    });
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <animated.div>
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        background: "#f4f4f4",
-                        color: "#000",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                        borderBottomLeftRadius: "20px",
-                        borderBottomRightRadius: "20px",
-                    }}
-                >
-                    <Toolbar sx={{ justifyContent: "space-between" }}>
-                        <Typography variant="h6">AIDesign</Typography>
-                        <IconButton onClick={() => setMenuOpen(!menuOpen)}>
-                            <MenuOutlined />
-                        </IconButton>
-                        <animated.div
-                            style={{
-                                ...menuAnimation,
-                                position: "fixed",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                backgroundColor: "rgba(0, 0, 5, 0.8)",
-                                zIndex: theme.zIndex.drawer + 1,
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center",
-                                padding: "20px",
-                            }}
-                            onClick={() => setMenuOpen(!menuOpen)}
-                        >
-                            <nav
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    textAlign: "center",
-                                    width: "auto",
-                                    borderRadius: "20px",
-                                }}
-                            >
-                                <ul
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        textAlign: "center",
-                                        padding: "20px",
-                                        listStyleType: "none",
-                                        margin: 0,
-                                    }}
-                                >
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/" onClick={() => setMenuOpen(false)}>
-                                            Inicio
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/Gallery" onClick={() => setMenuOpen(false)}>
-                                            Proyectos
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink to="/About" onClick={() => setMenuOpen(false)}>
-                                            Acerca de
-                                        </NavLink>
-                                    </li>
-                                    <li
-                                        style={{
-                                            borderBottom: "1px solid #8887875E",
-                                            padding: "20px",
-                                        }}
-                                    >
-                                        <NavLink
-                                            onClick={() => {
-                                                setOpenQr(true);
-                                                setMenuOpen(false);
-                                            }}
-                                        >
-                                            Codigo Qr
-                                        </NavLink>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </animated.div>
-                    </Toolbar>
-                </AppBar>
+                <Navbar
+                    variant="home"
+                    simpleMenu={true}
+                    url={url}
+                />
 
                 {/* QR Dialog */}
-                {openQr && (
-                    <Box
-                        sx={{
-                            position: "fixed",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: "rgba(0, 0, 0, 0.7)",
-                            zIndex: 1300,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        onClick={() => setOpenQr(false)}
-                    >
-                        <Box
-                            sx={{
-                                background: "#f4f4f4",
-                                borderRadius: "20px",
-                                padding: "20px",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <IconButton
-                                onClick={() => setOpenQr(false)}
-                                sx={{
-                                    alignSelf: "flex-end",
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                            <QRCode
-                                value={url}
-                                size={Math.min(window.innerWidth * 0.6, 256)}
-                                level={"L"}
-                            />
-                        </Box>
-                    </Box>
-                )}
 
                 {/* MainContent */}
                 <Box sx={{ marginTop: "80px", minHeight: "calc(100vh - 80px)" }}>

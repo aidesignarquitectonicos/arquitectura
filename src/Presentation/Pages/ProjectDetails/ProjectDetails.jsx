@@ -11,8 +11,6 @@ import icono from "../../Assets/icono.png";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
 import {
-    AppBar,
-    Toolbar,
     IconButton,
     ImageListItemBar,
     Typography,
@@ -29,6 +27,7 @@ import { ArrowBack } from "@mui/icons-material";
 import InfoIcon from "@mui/icons-material/Info";
 import { Share } from "@mui/icons-material";
 import CardContent from "@mui/joy/CardContent";
+import Navbar from "../../Components/Navbar/Navbar";
 
 function ProjectDetails() {
     //constantes de toogle menu
@@ -199,31 +198,14 @@ function ProjectDetails() {
     return (
         <>
             <animated.div style={fade}>
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        background: "#f4f4f4",
-                        color: "#000",
-                        borderBottomLeftRadius: "20px",
-                        borderBottomRightRadius: "20px",
-                    }}
-                >
-                    <Toolbar>
-                        <IconButton onClick={handleBack} aria-label="Regresar" edge="start">
-                            <ArrowBack fontSize="32px" sx={{ color: 'black' }} />
-                        </IconButton>
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            sx={{ flexGrow: 1, textAlign: "center" }}
-                        >
-                            Detalles del Proyecto
-                        </Typography>
-                        <IconButton onClick={() => shareProject_uidd(project)}>
+                <Navbar
+                    variant="back"
+                    title="Detalles del Proyecto"
+                    onBack={handleBack}
+                rightAction={<IconButton onClick={() => shareProject_uidd(project)}>
                             <Share fontSize="32px" sx={{ color: 'green' }} />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+                        </IconButton>}
+                />
                 <Container sx={{ marginTop: 12, marginBottom: 4 }}>
                     {alertInfo.showAlert && (
                         <Alert
