@@ -12,25 +12,41 @@ import TermsOfService from "./Presentation/Pages/TermsOfService/TermsOfService";
 import { AuthProvider } from "./Presentation/Data/AuthContext";
 import PrivateRoute from "./Presentation/Components/PrivateRoute";
 
+// Módulo Maquinaria
+import CatalogoMaquinaria from "./Maquinaria/pages/CatalogoMaquinaria";
+import DetalleMaquina from "./Maquinaria/pages/DetalleMaquina";
+import AdminMaquinaria from "./Maquinaria/pages/AdminMaquinaria";
+import { MaquinariaProvider } from "./Maquinaria/context/MaquinariaContext";
+import { CotizacionProvider } from "./Maquinaria/context/CotizacionContext";
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/About" element={<AboutPage />} />
-          <Route path="/Gallery" element={<Gallery />} />
-          <Route path="/SignIn" element={<SignIn />} />
-          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-          <Route path="/TermsOfService" element={<TermsOfService />} />
-          <Route path="/project/:uuid" element={<ProjectDetails />} />
-          {/* Rutas protegidas — requieren autenticación */}
-          <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
-          <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
-        </Routes>
-      </Router>
+      <MaquinariaProvider>
+        <CotizacionProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/About" element={<AboutPage />} />
+              <Route path="/Gallery" element={<Gallery />} />
+              <Route path="/SignIn" element={<SignIn />} />
+              <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+              <Route path="/TermsOfService" element={<TermsOfService />} />
+              <Route path="/project/:uuid" element={<ProjectDetails />} />
+              {/* Módulo Maquinaria */}
+              <Route path="/maquinaria" element={<CatalogoMaquinaria />} />
+              <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
+              {/* Rutas protegidas — requieren autenticación */}
+              <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
+              <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
+              <Route path="/admin/maquinaria" element={<PrivateRoute><AdminMaquinaria /></PrivateRoute>} />
+            </Routes>
+          </Router>
+        </CotizacionProvider>
+      </MaquinariaProvider>
     </AuthProvider>
   );
 }
+
 
 export default App;
