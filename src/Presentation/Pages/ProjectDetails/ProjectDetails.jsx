@@ -202,9 +202,9 @@ function ProjectDetails() {
                     variant="back"
                     title="Detalles del Proyecto"
                     onBack={handleBack}
-                rightAction={<IconButton onClick={() => shareProject_uidd(project)}>
-                            <Share fontSize="32px" sx={{ color: 'green' }} />
-                        </IconButton>}
+                    rightAction={<IconButton onClick={() => shareProject_uidd(project)}>
+                        <Share fontSize="32px" sx={{ color: 'green' }} />
+                    </IconButton>}
                 />
                 <Container sx={{ marginTop: 12, marginBottom: 4 }}>
                     {alertInfo.showAlert && (

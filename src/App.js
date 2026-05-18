@@ -12,6 +12,9 @@ import TermsOfService from "./Presentation/Pages/TermsOfService/TermsOfService";
 import { AuthProvider } from "./Presentation/Data/AuthContext";
 import PrivateRoute from "./Presentation/Components/PrivateRoute";
 
+// Módulo Visualizador 3D
+import Viewer3DPage from "./Presentation/Pages/Viewer3D/Viewer3DPage";
+
 // Módulo Maquinaria
 import CatalogoMaquinaria from "./Maquinaria/pages/CatalogoMaquinaria";
 import DetalleMaquina from "./Maquinaria/pages/DetalleMaquina";
@@ -29,27 +32,30 @@ function App() {
       <MaquinariaProvider>
         <CotizacionProvider>
           <CheckoutProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/About" element={<AboutPage />} />
-              <Route path="/Gallery" element={<Gallery />} />
-              <Route path="/SignIn" element={<SignIn />} />
-              <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-              <Route path="/TermsOfService" element={<TermsOfService />} />
-              <Route path="/project/:uuid" element={<ProjectDetails />} />
-              {/* Módulo Maquinaria */}
-              <Route path="/maquinaria" element={<CatalogoMaquinaria />} />
-              <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/ordenes/:id" element={<ConfirmacionOrden />} />
-              {/* Rutas protegidas — requieren autenticación */}
-              <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
-              <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
-              <Route path="/admin/maquinaria" element={<PrivateRoute><AdminMaquinaria /></PrivateRoute>} />
-              <Route path="/ordenes" element={<PrivateRoute><HistorialOrdenes /></PrivateRoute>} />
-            </Routes>
-          </Router>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/About" element={<AboutPage />} />
+                <Route path="/Gallery" element={<Gallery />} />
+                <Route path="/SignIn" element={<SignIn />} />
+                <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+                <Route path="/TermsOfService" element={<TermsOfService />} />
+                <Route path="/project/:uuid" element={<ProjectDetails />} />
+                {/* Módulo Maquinaria */}
+                <Route path="/maquinaria" element={<CatalogoMaquinaria />} />
+                {/* Visualizador 3D Premium */}
+                <Route path="/viewer3d" element={<Viewer3DPage />} />
+                <Route path="/viewer3d/:projectId" element={<Viewer3DPage />} />
+                <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/ordenes/:id" element={<ConfirmacionOrden />} />
+                {/* Rutas protegidas — requieren autenticación */}
+                <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
+                <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
+                <Route path="/admin/maquinaria" element={<PrivateRoute><AdminMaquinaria /></PrivateRoute>} />
+                <Route path="/ordenes" element={<PrivateRoute><HistorialOrdenes /></PrivateRoute>} />
+              </Routes>
+            </Router>
           </CheckoutProvider>
         </CotizacionProvider>
       </MaquinariaProvider>
