@@ -15,6 +15,8 @@ import PrivateRoute from "./Presentation/Components/PrivateRoute";
 // Módulo Visualizador 3D
 import Viewer3DPage from "./Presentation/Pages/Viewer3D/Viewer3DPage";
 
+
+
 // Módulo Maquinaria
 import CatalogoMaquinaria from "./Maquinaria/pages/CatalogoMaquinaria";
 import DetalleMaquina from "./Maquinaria/pages/DetalleMaquina";
@@ -26,7 +28,10 @@ import { MaquinariaProvider } from "./Maquinaria/context/MaquinariaContext";
 import { CotizacionProvider } from "./Maquinaria/context/CotizacionContext";
 import { CheckoutProvider } from "./Maquinaria/context/CheckoutContext";
 
+
 function App() {
+  // El modelo se sirve desde /public para evitar que webpack lo procese
+  const casa1Model = process.env.PUBLIC_URL + '/models/casa1.glb';
   return (
     <AuthProvider>
       <MaquinariaProvider>
@@ -44,8 +49,8 @@ function App() {
                 {/* Módulo Maquinaria */}
                 <Route path="/maquinaria" element={<CatalogoMaquinaria />} />
                 {/* Visualizador 3D Premium */}
-                <Route path="/viewer3d" element={<Viewer3DPage />} />
-                <Route path="/viewer3d/:projectId" element={<Viewer3DPage />} />
+                <Route path="/viewer3d" element={<Viewer3DPage modelUrl={casa1Model} />} />
+                <Route path="/viewer3d/:projectId" element={<Viewer3DPage modelUrl={casa1Model} />} />
                 <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/ordenes/:id" element={<ConfirmacionOrden />} />
