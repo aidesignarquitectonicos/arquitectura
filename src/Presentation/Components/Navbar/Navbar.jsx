@@ -135,11 +135,6 @@ function Navbar({
                     <Typography variant="h6" sx={{ display: "flex", alignItems: "center", lineHeight: 1, color: variant === "home" && !scrolled ? "#fff" : "#000" }}>
                         <span style={{ fontWeight: "bold", color: variant === "home" && !scrolled ? "#fff" : "#000" }}>AID</span>esign
                     </Typography>
-                    <Typography variant="h6" >
-                        <NavLink to="/maquinaria" style={{ fontWeight: "bold", color: variant === "home" && !scrolled ? "#fff" : "#000", textDecoration: "none" }} onClick={() => setInternalMenuOpen(false)}>
-                            Maquinaria
-                        </NavLink>
-                    </Typography>
                     {/* Botón menú: avatar si está autenticado, hamburguesa si no */}
                     {isAuthenticated ? (
                         <IconButton onClick={() => setInternalMenuOpen(!internalMenuOpen)}>
