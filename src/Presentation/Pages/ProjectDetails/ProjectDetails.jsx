@@ -23,7 +23,6 @@ import {
     Divider,
     Alert,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
 import InfoIcon from "@mui/icons-material/Info";
 import { Share } from "@mui/icons-material";
 import CardContent from "@mui/joy/CardContent";

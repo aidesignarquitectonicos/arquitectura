@@ -32,24 +32,67 @@ const HomeView = ({
 }) => {
     const fade = useSpring({ from: { opacity: 0 }, opacity: 1, delay: 500 });
 
+    // Animación para el mensaje flotante
+    const [showMsg, setShowMsg] = React.useState(false);
+    const [clearMode, setClearMode] = React.useState(false);
+    const msgSpring = useSpring({
+        opacity: showMsg ? 1 : 0,
+        transform: showMsg
+            ? 'translate(-50%, -50%) scale(1)'
+            : 'translate(-50%, -40%) scale(0.95)',
+        config: { tension: 120, friction: 18 },
+    });
+
     // Detectar si es móvil
     const isMobile = window.innerWidth <= 768;
     // Placeholder para el poster (puedes cambiar la ruta por una imagen representativa)
     const posterImg = "/logo192.png";
 
+    const handleVideoDoubleClick = () => {
+        setClearMode((prev) => !prev);
+        setShowMsg(true);
+        setTimeout(() => setShowMsg(false), 1600);
+    };
+
     return (
         <animated.div style={fade}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Navbar
-                    variant="home"
-                    isAuthenticated={isAuthenticated}
-                    user={user}
-                    onSignOut={onSignOut}
-                    openQr={openQr}
-                    setOpenQr={setOpenQr}
-                    url={url}
-                />
+
+                {/* Mensaje animado al entrar/salir del modo despejado */}
+                <animated.div
+                    style={{
+                        position: "fixed",
+                        top: "20%",
+                        left: "50%",
+                        background: "rgba(0,0,0,0.7)",
+                        color: "#fff",
+                        padding: "18px 32px",
+                        borderRadius: 16,
+                        fontSize: 20,
+                        zIndex: 2000,
+                        pointerEvents: "none",
+                        opacity: msgSpring.opacity,
+                        transform: msgSpring.transform,
+                        willChange: 'opacity, transform',
+                        display: showMsg ? 'block' : 'none',
+                        transition: 'opacity 0.5s, transform 0.5s',
+                    }}
+                >
+                    {clearMode ? "Modo despejado activado" : "Modo despejado desactivado"}
+                </animated.div>
+
+                {!clearMode && (
+                    <Navbar
+                        variant="home"
+                        isAuthenticated={isAuthenticated}
+                        user={user}
+                        onSignOut={onSignOut}
+                        openQr={openQr}
+                        setOpenQr={setOpenQr}
+                        url={url}
+                    />
+                )}
                 <Box
                     sx={{
                         width: "100vw",
@@ -60,23 +103,27 @@ const HomeView = ({
                         position: "relative",
                     }}
                 >
-                    {currentVideo && !isMobile ? (
+                    {currentVideo ? (
                         <video
                             width="100%"
                             height="100%"
                             autoPlay
                             loop
                             muted
-                            preload="none"
+                            playsInline
+                            preload="auto"
                             poster={posterImg}
                             style={{
                                 maxWidth: "100%",
                                 maxHeight: "100%",
                                 objectFit: "cover",
-                                borderBottomLeftRadius: 20,
-                                borderBottomRightRadius: 20,
+                                borderBottomLeftRadius: 40,
+                                borderBottomRightRadius: 40,
+                                cursor: "pointer",
                             }}
                             src={currentVideo}
+                            controls={isMobile}
+                            onDoubleClick={handleVideoDoubleClick}
                         />
                     ) : (
                         <img
@@ -90,35 +137,50 @@ const HomeView = ({
                             }}
                         />
                     )}
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            width: "100%",
-                            padding: 5,
-                            borderRadius: 10,
-                            textAlign: "center",
-                        }}
-                    >
+                    {!clearMode && (
                         <Box
                             sx={{
-                                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                                position: "absolute",
                                 width: "100%",
+                                padding: 5,
                                 borderRadius: 10,
-                                padding: 7,
+                                textAlign: "center",
                             }}
                         >
-                            <Typography sx={{ color: "#1A2437", fontWeight: 'bold' }} variant="h4" component="div" color="white">
-                                Con AIDesign, ¡Todo es Posible!
-                            </Typography>
-                            <Typography
-                                sx={{ marginTop: 8, color: "#251B1B", fontWeight: 'bold' }}
-                                variant="h8"
-                                component="div"
+                            <Box
+                                sx={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                                    width: "100%",
+                                    borderRadius: 10,
+                                    padding: 7,
+                                }}
                             >
-                                El diseñar es la forma de organizar y adaptar responsablemente un espacio en la naturaleza
-                            </Typography>
-                        </Box>
-                    </Box>
+                                <Typography sx={{
+                                    color: "#f4f4f4",
+                                    fontFamily: 'Canela Deck Web',
+                                    fontStretch: 'normal',
+                                    fontStyle: 'normal',
+                                    fontSize: 'clamp(3.25rem, 5.6vw + 1.8rem, 7.5rem)',
+                                    fontWeight: 400,
+                                    lineHeight: 1,
+                                    letterSpacing: '-.45px',
+                                }} variant="h4" component="div" color="white">
+                                    Con AIDesign, ¡Todo es Posible!
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        marginTop: 8, color: "#f4f4f4",
+                                        fontFamily: 'Canela Deck Web',
+                                        fontStretch: 'normal',
+                                        fontStyle: 'normal', fontWeight: 'bold'
+                                    }}
+                                    variant="h8"
+                                    component="div"
+                                >
+                                    El diseñar es la forma de organizar y adaptar responsablemente un espacio en la naturaleza
+                                </Typography>
+                            </Box>
+                        </Box>)}
                 </Box>
                 <Box
                     sx={{
@@ -761,7 +823,7 @@ const HomeView = ({
                 </Box>
             </ThemeProvider>
             <Footer />
-        </animated.div>
+        </animated.div >
     );
 };
 
