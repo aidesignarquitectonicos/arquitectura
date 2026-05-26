@@ -11,6 +11,7 @@ import {
     Container,
 } from "@mui/material";
 import theme from "../../Themes/theme";
+import { appColors } from "../../Themes/appcolors";
 import Footer from "../Footer/Footer";
 import { PhotoLibrary, ArrowForward } from "@mui/icons-material";
 import { useSpring, animated } from "react-spring";
@@ -42,6 +43,16 @@ const HomeView = ({
             : 'translate(-50%, -40%) scale(0.95)',
         config: { tension: 120, friction: 18 },
     });
+
+    // Estado para detectar scroll y cambiar color de texto
+    const [scrolled, setScrolled] = React.useState(false);
+    React.useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 40);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     // Detectar si es móvil
     const isMobile = window.innerWidth <= 768;
@@ -156,23 +167,26 @@ const HomeView = ({
                                 }}
                             >
                                 <Typography sx={{
-                                    color: "#f4f4f4",
+                                    color: scrolled ? appColors.primary : "#f4f4f4",
                                     fontFamily: 'Canela Deck Web',
                                     fontStretch: 'normal',
                                     fontStyle: 'normal',
                                     fontSize: 'clamp(3.25rem, 5.6vw + 1.8rem, 7.5rem)',
                                     fontWeight: 400,
                                     lineHeight: 1,
-                                    letterSpacing: '-.45px',
-                                }} variant="h4" component="div" color="white">
+                                    transition: 'color 0.3s',
+                                }} variant="h4" component="div">
                                     Con AIDesign, ¡Todo es Posible!
                                 </Typography>
                                 <Typography
                                     sx={{
-                                        marginTop: 8, color: "#f4f4f4",
+                                        marginTop: 8,
+                                        color: scrolled ? appColors.primary : "#f4f4f4",
                                         fontFamily: 'Canela Deck Web',
                                         fontStretch: 'normal',
-                                        fontStyle: 'normal', fontWeight: 'bold'
+                                        fontStyle: 'normal',
+                                        fontWeight: 'bold',
+                                        transition: 'color 0.3s',
                                     }}
                                     variant="h8"
                                     component="div"
