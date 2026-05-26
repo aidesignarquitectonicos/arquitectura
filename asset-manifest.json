@@ -1,18 +1,15 @@
 {
   "files": {
-    "main.css": "/arquitectura/static/css/main.5067a8eb.css",
-    "main.js": "/arquitectura/static/js/main.8aefcb01.js",
-    "static/js/453.1f40314e.chunk.js": "/arquitectura/static/js/453.1f40314e.chunk.js",
+    "main.css": "/arquitectura/static/css/main.b52eb6e1.css",
+    "main.js": "/arquitectura/static/js/main.1b9b0aca.js",
+    "static/js/206.0d6a88b6.chunk.js": "/arquitectura/static/js/206.0d6a88b6.chunk.js",
     "static/media/iconot.png": "/arquitectura/static/media/iconot.b9e24f994837b6048391.png",
     "static/media/icono.png": "/arquitectura/static/media/icono.d23872117abcef43afcf.png",
     "static/media/Anth.png": "/arquitectura/static/media/Anth.87f9a465889eeaa9e533.png",
-    "index.html": "/arquitectura/index.html",
-    "main.5067a8eb.css.map": "/arquitectura/static/css/main.5067a8eb.css.map",
-    "main.8aefcb01.js.map": "/arquitectura/static/js/main.8aefcb01.js.map",
-    "453.1f40314e.chunk.js.map": "/arquitectura/static/js/453.1f40314e.chunk.js.map"
+    "index.html": "/arquitectura/index.html"
   },
   "entrypoints": [
-    "static/css/main.5067a8eb.css",
-    "static/js/main.8aefcb01.js"
+    "static/css/main.b52eb6e1.css",
+    "static/js/main.1b9b0aca.js"
   ]
 }
