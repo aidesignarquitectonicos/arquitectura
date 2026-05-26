@@ -138,7 +138,7 @@ export default function CheckoutPage() {
 
     return (
         <>
-            <Navbar variant="back" title="Checkout" onBack={() => navigate("/maquinaria")} />
+            <Navbar variant="back" title="Checkout"  onBack={() => navigate("/maquinaria")} />
             <Box sx={{ pt: 10, pb: 10, px: { xs: 2, sm: 4 }, maxWidth: 760, mx: "auto" }}>
                 <Stepper activeStep={step} sx={{ mb: 4 }}>
                     {STEPS.map((label) => (

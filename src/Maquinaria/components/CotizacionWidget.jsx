@@ -10,7 +10,7 @@ import { useCotizacion } from "../context/CotizacionContext";
 import { saveCotizacion } from "../model/MaquinariaModel";
 import { generatePDF } from "../utils/pdfGenerator";
 
-const WHATSAPP_NUMBER = "593999999999"; // ← Cambiar por número real
+const WHATSAPP_NUMBER = "+593 96 956 5333"; // ← Cambiar por número real
 const IVA_LABEL = "12%";
 
 export default function CotizacionWidget({ maquina }) {

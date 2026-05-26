@@ -32,6 +32,11 @@ const HomeView = ({
 }) => {
     const fade = useSpring({ from: { opacity: 0 }, opacity: 1, delay: 500 });
 
+    // Detectar si es móvil
+    const isMobile = window.innerWidth <= 768;
+    // Placeholder para el poster (puedes cambiar la ruta por una imagen representativa)
+    const posterImg = "/logo192.png";
+
     return (
         <animated.div style={fade}>
             <ThemeProvider theme={theme}>
@@ -55,20 +60,34 @@ const HomeView = ({
                         position: "relative",
                     }}
                 >
-                    {currentVideo && (
+                    {currentVideo && !isMobile ? (
                         <video
                             width="100%"
                             height="100%"
                             autoPlay
                             loop
                             muted
+                            preload="none"
+                            poster={posterImg}
                             style={{
                                 maxWidth: "100%",
                                 maxHeight: "100%",
                                 objectFit: "cover",
-                                borderRadius: 20,
+                                borderBottomLeftRadius: 20,
+                                borderBottomRightRadius: 20,
                             }}
                             src={currentVideo}
+                        />
+                    ) : (
+                        <img
+                            src={posterImg}
+                            alt="Vista previa"
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                borderRadius: 20,
+                            }}
                         />
                     )}
                     <Box
@@ -82,7 +101,7 @@ const HomeView = ({
                     >
                         <Box
                             sx={{
-                                backgroundColor: "rgba(255, 2550, 255, 0.3)",
+                                backgroundColor: "rgba(255, 255, 255, 0.3)",
                                 width: "100%",
                                 borderRadius: 10,
                                 padding: 7,

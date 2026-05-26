@@ -14,7 +14,7 @@ import { useCotizacion, calcularItem } from "../context/CotizacionContext";
 import { saveCotizacion } from "../model/MaquinariaModel";
 import { generatePDF } from "../utils/pdfGenerator";
 
-const WHATSAPP_NUMBER = "593999999999";
+const WHATSAPP_NUMBER = "+593 969565333";
 
 export default function CarritoFab() {
     const navigate = useNavigate();

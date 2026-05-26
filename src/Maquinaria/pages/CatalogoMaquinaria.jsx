@@ -6,19 +6,23 @@ import FiltrosMaquinaria from "../components/FiltrosMaquinaria";
 import { useMaquinaria } from "../context/MaquinariaContext";
 import CarritoFab from "../components/CarritoFab";
 
-export default function CatalogoMaquinaria() {
+function CatalogoMaquinaria({
+    url,
+}) {
     const { maquinasFiltradas, loading, error, fetchMaquinas } = useMaquinaria();
 
     useEffect(() => {
         fetchMaquinas();
     }, [fetchMaquinas]);
-
+    const handleBack = () => {
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
+    };
     return (
         <>
             <Navbar
                 variant="back"
                 title="Alquiler de Maquinaria"
-                onBack={() => window.history.back()}
+                   onBack={handleBack}
             />
             <Box sx={{ pt: 10, pb: 10, px: { xs: 2, sm: 4 }, maxWidth: 1200, mx: "auto" }}>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -64,3 +68,4 @@ export default function CatalogoMaquinaria() {
         </>
     );
 }
+export default CatalogoMaquinaria;

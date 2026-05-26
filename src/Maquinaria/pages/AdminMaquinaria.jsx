@@ -30,7 +30,7 @@ function TabPanel({ children, value, index }) {
     return value === index ? <Box sx={{ pt: 2 }}>{children}</Box> : null;
 }
 
-export default function AdminMaquinaria() {
+function AdminMaquinaria({ url }) {
     const navigate = useNavigate();
     const [tab, setTab] = useState(0);
     const [maquinas, setMaquinas] = useState([]);
@@ -156,10 +156,14 @@ export default function AdminMaquinaria() {
             setSaving(false);
         }
     };
+    const handleBack = () => {
+        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
+    };
 
     return (
         <>
-            <Navbar variant="back" title="Admin — Maquinaria" onBack={() => navigate("/maquinaria")} />
+            <Navbar variant="back"
+                title="Admin — Maquinaria" onBack={handleBack} />
             <Box sx={{ pt: 10, pb: 10, px: { xs: 2, sm: 4 }, maxWidth: 1100, mx: "auto" }}>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
                     Panel de Administración
@@ -384,3 +388,5 @@ export default function AdminMaquinaria() {
         </>
     );
 }
+
+export default AdminMaquinaria;

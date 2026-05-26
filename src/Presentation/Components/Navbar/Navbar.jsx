@@ -66,13 +66,37 @@ function Navbar({
         transform: internalMenuOpen ? "translateX(0%)" : "translateX(-100%)",
     });
 
-    const appBarSx = {
-        background: "#f4f4f4",
-        color: "#000",
-        zIndex: (t) => t.zIndex.drawer + 1,
-        borderBottomLeftRadius: "20px",
-        borderBottomRightRadius: "20px",
-    };
+    // Estado para scroll
+    const [scrolled, setScrolled] = useState(false);
+
+    React.useEffect(() => {
+        if (variant !== "home") return;
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 40);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [variant]);
+
+    // Estilos dinámicos para el AppBar
+    const appBarSx = variant === "home" && !scrolled
+        ? {
+            background: "transparent",
+            color: "#fff",
+            boxShadow: "none",
+            zIndex: (t) => t.zIndex.drawer + 1,
+            borderBottomLeftRadius: "20px",
+            borderBottomRightRadius: "20px",
+            transition: "background 0.3s, color 0.3s",
+        }
+        : {
+            background: "#f4f4f4",
+            color: "#000",
+            zIndex: (t) => t.zIndex.drawer + 1,
+            borderBottomLeftRadius: "20px",
+            borderBottomRightRadius: "20px",
+            transition: "background 0.3s, color 0.3s",
+        };
 
     if (variant === "back") {
         return (
@@ -108,22 +132,22 @@ function Navbar({
         <>
             <AppBar position="fixed" sx={appBarSx}>
                 <Toolbar sx={{ justifyContent: "space-between" }}>
-                    <Typography variant="h6" sx={{ display: "flex", alignItems: "center", lineHeight: 1 }}>
-                        <span style={{ fontWeight: "bold", color: "#000" }}>AID</span>esign
+                    <Typography variant="h6" sx={{ display: "flex", alignItems: "center", lineHeight: 1, color: variant === "home" && !scrolled ? "#fff" : "#000" }}>
+                        <span style={{ fontWeight: "bold", color: variant === "home" && !scrolled ? "#fff" : "#000" }}>AID</span>esign
                     </Typography>
                     <Typography variant="h6" >
-                        <NavLink to="/maquinaria" style={{ fontWeight: "bold", color: "#000", textDecoration: "none" }} onClick={() => setInternalMenuOpen(false)}>
+                        <NavLink to="/maquinaria" style={{ fontWeight: "bold", color: variant === "home" && !scrolled ? "#fff" : "#000", textDecoration: "none" }} onClick={() => setInternalMenuOpen(false)}>
                             Maquinaria
                         </NavLink>
                     </Typography>
                     {/* Botón menú: avatar si está autenticado, hamburguesa si no */}
                     {isAuthenticated ? (
                         <IconButton onClick={() => setInternalMenuOpen(!internalMenuOpen)}>
-                            <Avatar src={logo} />
+                            <Avatar src={logo} style={{ background: "transparent", color: variant === "home" && !scrolled ? "#fff" : "#000" }} />
                         </IconButton>
                     ) : (
                         <IconButton onClick={() => setInternalMenuOpen(!internalMenuOpen)}>
-                            <MenuOutlined />
+                            <MenuOutlined style={{ color: variant === "home" && !scrolled ? "#fff" : "#000" }} />
                         </IconButton>
                     )}
 
