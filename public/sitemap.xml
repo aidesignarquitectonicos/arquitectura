@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+>
+
   <url>
-    <loc>https://aidesignarquitectonicos.github.io/arquitectura/</loc>
-    <lastmod>2026-04-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.00</priority>
+    <loc>
+      https://aidesignarquitectonicos.github.io/arquitectura/
+    </loc>
+
+    <video:video>
+      <video:thumbnail_loc>
+        https://aidesignarquitectonicos.github.io/arquitectura/thumbnail.jpg
+      </video:thumbnail_loc>
+
+      <video:title>
+        Recorrido Arquitectónico 3D
+      </video:title>
+
+      <video:description>
+        Visualización arquitectónica 3D realizada con Twinmotion y React Three Fiber.
+      </video:description>
+
+      <video:content_loc>
+        https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2Fd12ca586-7284-45b8-b625-5da34a56011b%2FWhatsApp%20Video%202024-06-18%20at%205.52.10%20PM.mp4?alt=media&token=3345c4f2-6968-402a-870d-5642bb90825d
+      </video:content_loc>
+
+      <video:player_loc allow_embed="yes">
+        https://aidesignarquitectonicos.github.io/arquitectura/
+      </video:player_loc>
+
+      <video:duration>120</video:duration>
+
+      <video:publication_date>
+        2026-04-09T12:00:00+00:00
+      </video:publication_date>
+
+    </video:video>
+
   </url>
+
 </urlset>
