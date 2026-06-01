@@ -4,17 +4,18 @@
 
 Se corrigieron **5 problemas críticos** que impedían que Google indexara tus videos:
 
-| Problema | Solución | Archivo |
-|----------|----------|---------|
+| Problema                        | Solución                                                     | Archivo                                         |
+| ------------------------------- | ------------------------------------------------------------ | ----------------------------------------------- |
 | **SPA sin metadatos dinámicos** | Componente VideoMetaTags que inyecta meta tags dinámicamente | `src/Presentation/Components/VideoMetaTags.jsx` |
-| **Solo 1 video en sitemap** | Script que genera sitemap con TODOS tus videos | `scripts/generate-video-sitemap.js` |
-| **Schema incompleto** | VideoObject mejorado con todos los campos requeridos | `public/index.html` |
-| **Falta OpenGraph video** | Agregadas etiquetas og:video, og:video:type, og:video:url | `public/index.html` |
-| **robots.txt no optimizado** | Agregadas referencias a video sitemaps | `public/robots.txt` |
+| **Solo 1 video en sitemap**     | Script que genera sitemap con TODOS tus videos               | `scripts/generate-video-sitemap.js`             |
+| **Schema incompleto**           | VideoObject mejorado con todos los campos requeridos         | `public/index.html`                             |
+| **Falta OpenGraph video**       | Agregadas etiquetas og:video, og:video:type, og:video:url    | `public/index.html`                             |
+| **robots.txt no optimizado**    | Agregadas referencias a video sitemaps                       | `public/robots.txt`                             |
 
 ## 🚀 Acciones Inmediatas (< 5 minutos)
 
 ### 1. Compilar con sitemap de videos
+
 ```bash
 cd /Volumes/SATECHI/GitHub/arquitectura
 npm run build
@@ -23,12 +24,14 @@ npm run build
 **Esto genera**: `build/sitemap-videos.xml` con todos tus videos
 
 ### 2. Verificar que el sitemap fue generado
+
 ```bash
 # Debería mostrar XML con videos
 cat public/sitemap-videos.xml | head -20
 ```
 
 ### 3. Deployar cambios
+
 ```bash
 npm run deploy
 ```
@@ -68,7 +71,8 @@ curl https://aidesignarquitectonicos.github.io/arquitectura/sitemap-videos.xml |
 ## 📊 Qué Cambió
 
 ### Antes
-```
+
+```bash
 ❌ Solo 1 video registrado en sitemap
 ❌ Meta tags genéricos en todas las páginas
 ❌ Schema VideoObject incompleto
@@ -77,7 +81,8 @@ curl https://aidesignarquitectonicos.github.io/arquitectura/sitemap-videos.xml |
 ```
 
 ### Después
-```
+
+```bash
 ✅ TODOS tus videos en sitemap-videos.xml (actualizado automáticamente en cada build)
 ✅ Meta tags únicos por proyecto
 ✅ VideoObject completo con duración, ratings, author, publisher
@@ -90,13 +95,15 @@ curl https://aidesignarquitectonicos.github.io/arquitectura/sitemap-videos.xml |
 Para verificar que los metadatos se inyectaron correctamente:
 
 ### Opción 1: Rich Results Test
-1. Abre https://search.google.com/test/rich-results
+
+1. Abre <https://search.google.com/test/rich-results>
 2. Pega URL: `https://aidesignarquitectonicos.github.io/arquitectura/#/project/{cualquier-uuid}`
 3. Deberías ver:
    - ✅ VideoObject detectado
    - ✅ Thumbnail, duration, author, publisher
 
 ### Opción 2: View Page Source
+
 1. Abre una página de proyecto en tu navegador
 2. Ctrl+U (View Page Source)
 3. Busca: `og:video` y `"@type": "VideoObject"`
@@ -104,7 +111,7 @@ Para verificar que los metadatos se inyectaron correctamente:
 
 ## 📌 Archivos Modificados/Creados
 
-```
+```bash
 ✅ CREADOS:
    • src/Presentation/Components/VideoMetaTags.jsx (nuevo componente)
    • scripts/generate-video-sitemap.js (nuevo script)
@@ -128,7 +135,7 @@ Para verificar que los metadatos se inyectaron correctamente:
 
 Cada vez que agregues nuevos videos/proyectos:
 
-1. Solo tienes que hacer `npm run build` 
+1. Solo tienes que hacer `npm run build`
 2. El script genera automáticamente el nuevo sitemap
 3. Deploy: `npm run deploy`
 4. Google rastreará los cambios automáticamente
@@ -136,6 +143,7 @@ Cada vez que agregues nuevos videos/proyectos:
 ## 📞 Próximo Paso
 
 Ejecuta ahora:
+
 ```bash
 cd /Volumes/SATECHI/GitHub/arquitectura
 npm run build && npm run deploy
