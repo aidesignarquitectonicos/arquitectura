@@ -9,6 +9,7 @@ import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
 import icono from "../../Assets/icono.png";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
+import { VideoMetaTags } from "../../Components/VideoMetaTags";
 
 import {
     IconButton,
@@ -270,6 +271,19 @@ function ProjectDetails() {
 
     return (
         <>
+            {/* Metadatos dinámicos para SEO de videos */}
+            {project_video && project_video.videos && project_video.videos.length > 0 && (
+                <VideoMetaTags
+                    title={`${project?.field1 || 'Proyecto'} - Video Arquitectónico 3D`}
+                    description={project?.field2 || 'Visualización arquitectónica 3D de proyecto'}
+                    videoUrl={convertGoogleDriveUrl(project_video.videos[0]?.url)}
+                    thumbnailUrl={`https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-${uuid}-0.jpg`}
+                    duration={120}
+                    uploadDate={new Date().toISOString()}
+                    siteUrl={`https://aidesignarquitectonicos.github.io/arquitectura/#/project/${uuid}`}
+                />
+            )}
+
             {/* Mensaje animado para rotar pantalla */}
             {showMsg && clearMode && (
                 <div

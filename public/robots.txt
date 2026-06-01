@@ -1,3 +1,32 @@
-# https://www.robotstxt.org/robotstxt.html
+# robots.txt - Configuración de rastreo para Google Search Console
+# Actualizar según sea necesario
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Permitir rastreo de videos
+Allow: /*.mp4
+Allow: /*.webm
+
+# Desallow para archivos internos
+Disallow: /admin/
+Disallow: /private/
+
+# Sitemaps - CRÍTICO PARA INDEXACIÓN DE VIDEOS
+# ================================================
+# Los sitemaps de videos son esenciales para que Google descubra y indexe videos
+Sitemap: https://aidesignarquitectonicos.github.io/arquitectura/sitemap.xml
+Sitemap: https://aidesignarquitectonicos.github.io/arquitectura/sitemap-videos.xml
+
+# Crawl delay para no sobrecargar servidor
+Crawl-delay: 1
+
+# User agent específico para Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Permitir indexación de almacenamiento Firebase (donde están los videos)
+User-agent: *
+Allow: /v0/b/aidesign-9022b.appspot.com/
+

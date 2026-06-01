@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail.jpg</video:thumbnail_loc>
+      <video:title>Recorrido Arquitectónico 3D</video:title>
+      <video:description>Visualización arquitectónica 3D realizada con Twinmotion y React Three Fiber</video:description>
+      <video:content_loc>https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2Fd12ca586-7284-45b8-b625-5da34a56011b%2FWhatsApp%20Video%202024-06-18%20at%205.52.10%20PM.mp4?alt=media&token=3345c4f2-6968-402a-870d-5642bb90825d</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-04-09T12:00:00+00:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura/#/project/15f29d49-e2ec-4347-9999-d056d0d61104</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-15f29d49-e2ec-4347-9999-d056d0d61104-0.jpg</video:thumbnail_loc>
+      <video:title>Finca Rosita - Video 1</video:title>
+      <video:description>Diseño estructural de Casa rosita en una finca</video:description>
+      <video:content_loc>https://drive.usercontent.google.com/download?id=1PGFOYo6lYG-YDayuA0p0LQzwtxReswzB&export=view</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/15f29d49-e2ec-4347-9999-d056d0d61104</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-06-01T16:24:22.051Z</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura/#/project/8ad4ecc0-9768-4939-b064-adf7bc63d95d</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-8ad4ecc0-9768-4939-b064-adf7bc63d95d-0.jpg</video:thumbnail_loc>
+      <video:title>Diseño de Vivienda - Video 1</video:title>
+      <video:description>Vivienda con terreno de forma irregular.</video:description>
+      <video:content_loc>https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2F8ad4ecc0-9768-4939-b064-adf7bc63d95d%2FWhatsApp%20Video%202025-02-21%20at%206.38.02%20PM.mp4?alt=media&token=e8e01992-dc9d-4d18-b52f-f06ec223171e</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/8ad4ecc0-9768-4939-b064-adf7bc63d95d</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-06-01T16:24:22.052Z</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura/#/project/b8688c32-a31c-40b4-ad64-e26b3e8395eb</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-b8688c32-a31c-40b4-ad64-e26b3e8395eb-0.jpg</video:thumbnail_loc>
+      <video:title>Diseño Interior de Baño y Área de Almacenamiento con Acabados en Mármol y Madera - Video 1</video:title>
+      <video:description>Este diseño interior combina mármol, madera y una iluminación cálida para crear un espacio elegante y funcional. La distribución aprovecha al máximo la luz y los materiales para generar un ambiente sofisticado y acogedor.</video:description>
+      <video:content_loc>https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2Fb8688c32-a31c-40b4-ad64-e26b3e8395eb%2FWhatsApp%20Video%202025-02-21%20at%206.38.02%20PM.mp4?alt=media&token=679f779d-0764-4a23-85d6-4781326b6606</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/b8688c32-a31c-40b4-ad64-e26b3e8395eb</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-06-01T16:24:22.052Z</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura/#/project/d12ca586-7284-45b8-b625-5da34a56011b</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-d12ca586-7284-45b8-b625-5da34a56011b-0.jpg</video:thumbnail_loc>
+      <video:title>Urbanización Amazonas - Video 1</video:title>
+      <video:description>Se muestra una casa de estilo moderno con detalles rústicos, caracterizada por una combinación de materiales y un diseño equilibrado que integra áreas exteriores e interiores de manera armoniosa.</video:description>
+      <video:content_loc>https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2Fd12ca586-7284-45b8-b625-5da34a56011b%2FWhatsApp%20Video%202024-06-18%20at%205.52.10%20PM.mp4?alt=media&token=3345c4f2-6968-402a-870d-5642bb90825d</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/d12ca586-7284-45b8-b625-5da34a56011b</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-06-01T16:24:22.052Z</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://aidesignarquitectonicos.github.io/arquitectura/#/project/d12ca586-7284-45b8-b625-5da34a56011b</loc>
+    <video:video>
+      <video:thumbnail_loc>https://aidesignarquitectonicos.github.io/arquitectura/thumbnail-d12ca586-7284-45b8-b625-5da34a56011b-1.jpg</video:thumbnail_loc>
+      <video:title>Urbanización Amazonas - Video 2</video:title>
+      <video:description>Se muestra una casa de estilo moderno con detalles rústicos, caracterizada por una combinación de materiales y un diseño equilibrado que integra áreas exteriores e interiores de manera armoniosa.</video:description>
+      <video:content_loc>https://firebasestorage.googleapis.com/v0/b/aidesign-9022b.appspot.com/o/images%2FDatavideo%2Fd12ca586-7284-45b8-b625-5da34a56011b%2FWhatsApp%20Video%202024-06-18%20at%205.52.14%20PM.mp4?alt=media&token=447b92ce-1555-4fbb-a21f-eea32e6dc0d6</video:content_loc>
+      <video:player_loc allow_embed="yes">https://aidesignarquitectonicos.github.io/arquitectura/#/project/d12ca586-7284-45b8-b625-5da34a56011b</video:player_loc>
+      <video:duration>120</video:duration>
+      <video:publication_date>2026-06-01T16:24:22.052Z</video:publication_date>
+    </video:video>
+  </url>
+</urlset>

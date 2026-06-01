@@ -252,13 +252,13 @@ function Navbar({
                                 </li>
 
                                 {/* Developer (solo menú completo) */}
-                                {!simpleMenu && (
-                                    <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
-                                        <NavLink to="/Developer" onClick={() => setInternalMenuOpen(false)}>
-                                            Desarrollador de Software
-                                        </NavLink>
-                                    </li>
-                                )}
+
+                                <li style={{ borderBottom: "1px solid #8887875E", padding: "20px" }}>
+                                    <NavLink to="/Developer" onClick={() => setInternalMenuOpen(false)}>
+                                        Desarrollador de Software
+                                    </NavLink>
+                                </li>
+
 
                                 {/* Upload (solo menú completo, solo auth) */}
                                 {!simpleMenu && isAuthenticated && (
