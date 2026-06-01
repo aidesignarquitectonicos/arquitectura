@@ -54,9 +54,9 @@ function App() {
                 <Route path="/maquinaria/:id" element={<DetalleMaquina />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/ordenes/:id" element={<ConfirmacionOrden />} />
+                <Route path="/Developer" element={<Developer />} />
                 {/* Rutas protegidas — requieren autenticación */}
                 <Route path="/Upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
-                <Route path="/Developer" element={<PrivateRoute><Developer /></PrivateRoute>} />
                 <Route path="/admin/maquinaria" element={<PrivateRoute><AdminMaquinaria /></PrivateRoute>} />
                 <Route path="/ordenes" element={<PrivateRoute><HistorialOrdenes /></PrivateRoute>} />
               </Routes>
