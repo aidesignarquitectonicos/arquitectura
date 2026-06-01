@@ -19,7 +19,7 @@ export function VideoMetaTags({
     title = "AI Design Arquitectónicos",
     description = "Visualización arquitectónica 3D",
     videoUrl = null,
-    thumbnailUrl = "https://aidesignarquitectonicos.github.io/arquitectura/thumbnail.jpg",
+    thumbnailUrl = "https://raw.githubusercontent.com/aidesignarquitectonicos/arquitectura/main/src/Presentation/Assets/iconot.png",
     duration = null,
     uploadDate = new Date().toISOString(),
     width = 1280,

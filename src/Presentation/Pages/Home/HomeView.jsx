@@ -218,7 +218,7 @@ const HomeView = ({
 
                     {/* Grid de proyectos aleatorios */}
                     <Container maxWidth="lg">
-                        <Grid container spacing={4} justifyContent="center">
+                        <Grid container spacing={4} justifyContent="center" alignItems="center" >
                             {randomProjects.length > 0 ? (
                                 randomProjects.map((project, index) => (
                                     <Grid item xs={12} sm={6} md={4} key={project.uuid || index}>
