@@ -17,6 +17,7 @@ import {
     ArrowBack,
     Close,
     Image,
+    Home,
     Construction,
     Info,
     Lock,
@@ -525,7 +526,7 @@ function Navbar({
                                 ...(simpleMenu
                                     ? [
                                         {
-                                            icon: Image,
+                                            icon: Home,
                                             label: "Inicio",
                                             to: "/",
                                         },
@@ -545,6 +546,11 @@ function Navbar({
                                     icon: Info,
                                     label: "Acerca de",
                                     to: "/About",
+                                },
+                                {
+                                    icon: Code,
+                                    label: "Desarrollador",
+                                    to: "/Developer",
                                 },
                             ]}
                         />
@@ -584,25 +590,6 @@ function Navbar({
                                         icon: History,
                                         label: "Historial de Órdenes",
                                         to: "/ordenes",
-                                    },
-                                    {
-                                        icon: Code,
-                                        label: "Desarrollador",
-                                        to: "/Developer",
-                                    },
-                                ]}
-                            />
-                        )}
-
-                        {/* Developer (visible para todos si es simpleMenu) */}
-                        {simpleMenu && !isAuthenticated && (
-                            <MenuSection
-                                title=""
-                                items={[
-                                    {
-                                        icon: Code,
-                                        label: "Desarrollador",
-                                        to: "/Developer",
                                     },
                                 ]}
                             />
