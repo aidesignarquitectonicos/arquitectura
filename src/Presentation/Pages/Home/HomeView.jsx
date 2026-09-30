@@ -30,6 +30,7 @@ const HomeView = ({
     onSignOut,
     onNavigate,
     onNavigateProject,
+    onVideoEnded,
 }) => {
     const fade = useSpring({ from: { opacity: 0 }, opacity: 1, delay: 500 });
 
@@ -116,10 +117,11 @@ const HomeView = ({
                 >
                     {currentVideo ? (
                         <video
+                            key={currentVideo}
+                            className="home-video-transition"
                             width="100%"
                             height="100%"
                             autoPlay
-                            loop
                             muted
                             playsInline
                             preload="auto"
@@ -134,6 +136,7 @@ const HomeView = ({
                             }}
                             src={currentVideo}
                             controls={isMobile}
+                            onEnded={onVideoEnded}
                             onDoubleClick={handleVideoDoubleClick}
                         />
                     ) : (

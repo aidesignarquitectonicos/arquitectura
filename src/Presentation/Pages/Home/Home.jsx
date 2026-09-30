@@ -4,7 +4,12 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../Data/FirebaseConfig";
 import HomeView from "./HomeView";
-import { loadProjects, pickRandomProjects, pickRandomVideo } from "../../model/HomeModel";
+import {
+    loadProjects,
+    pickRandomProjects,
+    pickRandomVideo,
+    getOrderedVideoSequence,
+} from "../../model/HomeModel";
 
 const Home = () => {
     const url = "https://aidesignarquitectonicos.github.io/arquitectura/";
@@ -13,6 +18,7 @@ const Home = () => {
     const [user, setUser] = useState(null);
     const [projects, setProjects] = useState([]);
     const [currentVideo, setCurrentVideo] = useState(null);
+    const [videoPlaylist, setVideoPlaylist] = useState([]);
     const [randomProjects, setRandomProjects] = useState([]);
 
     const navigate = useNavigate();
@@ -33,13 +39,25 @@ const Home = () => {
     useEffect(() => {
         const fetchProjectVideos = async () => {
             const loadedProjects = await loadProjects();
+            const playlist = getOrderedVideoSequence();
             setProjects(loadedProjects);
-            setCurrentVideo(pickRandomVideo(loadedProjects));
+            setVideoPlaylist(playlist);
+            setCurrentVideo(playlist[0] || null);
             setRandomProjects(pickRandomProjects(loadedProjects));
         };
 
         fetchProjectVideos();
     }, []);
+
+    const handleVideoEnded = () => {
+        if (videoPlaylist.length <= 1) return;
+
+        setCurrentVideo((prevVideo) => {
+            const currentIndex = videoPlaylist.indexOf(prevVideo);
+            const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % videoPlaylist.length : 0;
+            return videoPlaylist[nextIndex];
+        });
+    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -68,6 +86,7 @@ const Home = () => {
             onSignOut={handleSignOut}
             onNavigate={handleNavigate}
             onNavigateProject={handleNavigateToProject}
+            onVideoEnded={handleVideoEnded}
         />
     );
 };
