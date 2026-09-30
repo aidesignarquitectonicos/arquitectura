@@ -10,6 +10,7 @@ import {
     Link,
     Avatar,
 } from "@mui/material";
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { ArrowBack, LinkedIn, Mail, Facebook, Instagram, GitHub } from "@mui/icons-material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import logo from "../../Assets/Anth.png";
@@ -50,6 +51,13 @@ const Developer = () => {
                 url: "https://www.linkedin.com/in/anthony-c-a12928111",
                 color: "#0A66C2",
                 icon: "linkedin",
+            },
+            portfolio: {
+                label: "CV / Portafolio",
+                handle: "anthonycordova.dev",
+                url: "https://18-anth.github.io/CV_Anth/",
+                color: "#000000",
+                icon: "portfolio",
             },
             facebook: {
                 label: "Facebook",
@@ -437,6 +445,7 @@ const Developer = () => {
                                     {[
                                         { key: "linkedin", icon: LinkedIn, data: personalInfo.socialLinks.linkedin },
                                         { key: "github", icon: GitHub, data: personalInfo.socialLinks.github },
+                                        { key: "portfolio", icon: LibraryBooksIcon, data: personalInfo.socialLinks.portfolio },
                                         { key: "facebook", icon: Facebook, data: personalInfo.socialLinks.facebook },
                                         { key: "instagram", icon: Instagram, data: personalInfo.socialLinks.instagram },
                                         { key: "whatsapp", icon: WhatsAppIcon, data: personalInfo.socialLinks.whatsapp },
