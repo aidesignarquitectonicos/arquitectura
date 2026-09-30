@@ -66,6 +66,33 @@ const HomeView = ({
         setTimeout(() => setShowMsg(false), 1600);
     };
 
+    const testimonials = [
+        {
+            initials: "MG",
+            quote: "El equipo de AIDesign transformó completamente nuestra visión en realidad. Su atención al detalle y creatividad superaron nuestras expectativas.",
+            name: "María González",
+            role: "Propietaria de Casa Moderna",
+        },
+        {
+            initials: "CM",
+            quote: "Profesionalismo excepcional y diseños innovadores. Cada espacio refleja funcionalidad y belleza en perfecta armonía.",
+            name: "Carlos Mendoza",
+            role: "Director de Oficinas Corporativas",
+        },
+        {
+            initials: "AR",
+            quote: "La tecnología AI aplicada al diseño arquitectónico es impresionante. Obtuvimos resultados que jamás habríamos imaginado.",
+            name: "Ana Rodríguez",
+            role: "Arquitecta e Inversionista",
+        },
+        {
+            initials: "LF",
+            quote: "El acompañamiento durante todo el proceso fue excelente. El resultado combina diseño, comodidad y una distribución que aprovecha cada espacio.",
+            name: "Lucía Fernández",
+            role: "Cliente residencial",
+        },
+    ];
+
     return (
         <animated.div style={fade}>
             <ThemeProvider theme={theme}>
@@ -501,24 +528,33 @@ const HomeView = ({
 
                     {/* Grid de testimonios */}
                     <Container maxWidth="lg" sx={{ mb: 4 }}>
-                        <Grid container spacing={3} justifyContent="center">
-                            {/* Testimonio 1 */}
-                            <Grid item xs={12} md={4}>
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: {
+                                    xs: "1fr",
+                                    sm: "repeat(2, minmax(0, 1fr))",
+                                    lg: "repeat(4, minmax(0, 1fr))",
+                                },
+                                gap: 3,
+                            }}
+                        >
+                            {testimonials.map((testimonial) => (
                                 <Card
+                                    key={testimonial.initials}
                                     sx={{
-                                        height: { xs: 'auto', md: 350 },
-                                        minHeight: 300,
+                                        minHeight: { xs: 280, lg: 330 },
+                                        height: "100%",
                                         display: "flex",
                                         flexDirection: "column",
                                         alignItems: "flex-start",
                                         textAlign: "left",
                                         background: "transparent",
-                                        padding: "25px",
+                                        padding: "24px",
                                         borderRadius: "15px",
                                         border: "1px solid #667eea",
                                         boxShadow: "none",
-                                        gap: "2.25em",
-                                        position: "relative",
+                                        gap: "1.5em",
                                         transition: "all 0.3s ease",
                                         "&:hover": {
                                             transform: "translateY(-5px)",
@@ -527,18 +563,18 @@ const HomeView = ({
                                         },
                                     }}
                                 >
-                                    <Box sx={{ width: "100%", textAlign: "left" }}>
+                                    <Box sx={{ width: "100%", textAlign: "left", flexGrow: 1 }}>
                                         <Typography
                                             sx={{
                                                 color: "#667eea",
                                                 opacity: 0.6,
                                                 fontSize: "3rem",
                                                 lineHeight: 1,
-                                                fontFamily: 'serif',
-                                                marginBottom: "1rem"
+                                                fontFamily: "serif",
+                                                marginBottom: "1rem",
                                             }}
                                         >
-                                            "
+                                            &ldquo;
                                         </Typography>
                                         <Typography
                                             variant="body1"
@@ -547,10 +583,9 @@ const HomeView = ({
                                                 fontStyle: "italic",
                                                 lineHeight: 1.6,
                                                 fontSize: "1rem",
-                                                marginBottom: "2rem"
                                             }}
                                         >
-                                            "El equipo de AIDesign transformó completamente nuestra visión en realidad. Su atención al detalle y creatividad superaron nuestras expectativas."
+                                            {testimonial.quote}
                                         </Typography>
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
@@ -558,178 +593,27 @@ const HomeView = ({
                                             sx={{
                                                 width: 50,
                                                 height: 50,
+                                                flexShrink: 0,
                                                 background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                                                 fontSize: "1.2rem",
                                                 fontWeight: "bold",
-                                                color: "white"
+                                                color: "white",
                                             }}
                                         >
-                                            MG
+                                            {testimonial.initials}
                                         </Avatar>
                                         <Box>
                                             <Typography variant="h6" fontWeight="bold" color="#242424" sx={{ fontSize: "1rem", marginBottom: "0.25rem" }}>
-                                                María González
+                                                {testimonial.name}
                                             </Typography>
                                             <Typography variant="body2" color="#666" sx={{ fontSize: "0.9rem" }}>
-                                                Propietaria de Casa Moderna
+                                                {testimonial.role}
                                             </Typography>
                                         </Box>
                                     </Box>
                                 </Card>
-                            </Grid>
-
-                            {/* Testimonio 2 */}
-                            <Grid item xs={12} md={4}>
-                                <Card
-                                    sx={{
-                                        height: { xs: 'auto', md: 350 },
-                                        minHeight: 300,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "flex-start",
-                                        textAlign: "left",
-                                        background: "transparent",
-                                        padding: "25px",
-                                        borderRadius: "15px",
-                                        border: "1px solid #667eea",
-                                        boxShadow: "none",
-                                        gap: "2.25em",
-                                        position: "relative",
-                                        transition: "all 0.3s ease",
-                                        "&:hover": {
-                                            transform: "translateY(-5px)",
-                                            boxShadow: "0 10px 30px rgba(102, 126, 234, 0.15)",
-                                            borderColor: "#764ba2",
-                                        },
-                                    }}
-                                >
-                                    <Box sx={{ width: "100%", textAlign: "left" }}>
-                                        <Typography
-                                            sx={{
-                                                color: "#667eea",
-                                                opacity: 0.6,
-                                                fontSize: "3rem",
-                                                lineHeight: 1,
-                                                fontFamily: 'serif',
-                                                marginBottom: "1rem"
-                                            }}
-                                        >
-                                            "
-                                        </Typography>
-                                        <Typography
-                                            variant="body1"
-                                            sx={{
-                                                color: "#242424",
-                                                fontStyle: "italic",
-                                                lineHeight: 1.6,
-                                                fontSize: "1rem",
-                                                marginBottom: "2rem"
-                                            }}
-                                        >
-                                            "Profesionalismo excepcional y diseños innovadores. Cada espacio refleja funcionalidad y belleza en perfecta armonía."
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                                        <Avatar
-                                            sx={{
-                                                width: 50,
-                                                height: 50,
-                                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                                                fontSize: "1.2rem",
-                                                fontWeight: "bold",
-                                                color: "white"
-                                            }}
-                                        >
-                                            CM
-                                        </Avatar>
-                                        <Box>
-                                            <Typography variant="h6" fontWeight="bold" color="#242424" sx={{ fontSize: "1rem", marginBottom: "0.25rem" }}>
-                                                Carlos Mendoza
-                                            </Typography>
-                                            <Typography variant="body2" color="#666" sx={{ fontSize: "0.9rem" }}>
-                                                Director de Oficinas Corporativas
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </Card>
-                            </Grid>
-
-                            {/* Testimonio 3 */}
-                            <Grid item xs={12} md={4}>
-                                <Card
-                                    sx={{
-                                        height: { xs: 'auto', md: 350 },
-                                        minHeight: 300,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "flex-start",
-                                        textAlign: "left",
-                                        background: "transparent",
-                                        padding: "25px",
-                                        borderRadius: "15px",
-                                        border: "1px solid #667eea",
-                                        boxShadow: "none",
-                                        gap: "2.25em",
-                                        position: "relative",
-                                        transition: "all 0.3s ease",
-                                        "&:hover": {
-                                            transform: "translateY(-5px)",
-                                            boxShadow: "0 10px 30px rgba(102, 126, 234, 0.15)",
-                                            borderColor: "#764ba2",
-                                        },
-                                    }}
-                                >
-                                    <Box sx={{ width: "100%", textAlign: "left" }}>
-                                        <Typography
-                                            sx={{
-                                                color: "#667eea",
-                                                opacity: 0.6,
-                                                fontSize: "3rem",
-                                                lineHeight: 1,
-                                                fontFamily: 'serif',
-                                                marginBottom: "1rem"
-                                            }}
-                                        >
-                                            "
-                                        </Typography>
-                                        <Typography
-                                            variant="body1"
-                                            sx={{
-                                                color: "#242424",
-                                                fontStyle: "italic",
-                                                lineHeight: 1.6,
-                                                fontSize: "1rem",
-                                                marginBottom: "2rem"
-                                            }}
-                                        >
-                                            "La tecnología AI aplicada al diseño arquitectónico es impresionante. Obtuvimos resultados que jamás habríamos imaginado."
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                                        <Avatar
-                                            sx={{
-                                                width: 50,
-                                                height: 50,
-                                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                                                fontSize: "1.2rem",
-                                                fontWeight: "bold",
-                                                color: "white"
-                                            }}
-                                        >
-                                            AR
-                                        </Avatar>
-                                        <Box>
-                                            <Typography variant="h6" fontWeight="bold" color="#242424" sx={{ fontSize: "1rem", marginBottom: "0.25rem" }}>
-                                                Ana Rodríguez
-                                            </Typography>
-                                            <Typography variant="body2" color="#666" sx={{ fontSize: "0.9rem" }}>
-                                                Arquitecta e Inversionista
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </Card>
-                            </Grid>
-                        </Grid>
+                            ))}
+                        </Box>
                     </Container>
 
                     {/* Estadísticas */}
