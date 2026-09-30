@@ -279,12 +279,19 @@ function GalleryView({ project, index, image }) {
                                 {alertInfo.message}
                             </Alert>
                         )}
-                        <Grid container spacing={3}>
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 420px))",
+                                justifyContent: "center",
+                                gap: 3,
+                            }}
+                        >
 
 
                             {filteredProjects.map((project) => (
-                                <Grid item xs={12} sm={6} key={project.uuid}>
-                                    <Box item key={project.uuid} sx={{ marginBottom: 5 }}>
+                                <Box key={project.uuid} sx={{ minWidth: 0, width: "100%" }}>
+                                    <Box sx={{ marginBottom: 5 }}>
                                         <animated.div style={fadeIn}>
                                             <Box
                                                 sx={{
@@ -377,7 +384,7 @@ function GalleryView({ project, index, image }) {
                                                         >
                                                             <Box
                                                                 sx={{
-                                                                    height: { xs: 250, md: '100%' },
+                                                                    aspectRatio: "16 / 10",
                                                                     width: "100%",
                                                                     display: "flex",
                                                                     position: "relative",
@@ -432,9 +439,9 @@ function GalleryView({ project, index, image }) {
                                             </div>
                                         </animated.div>
                                     </Box>
-                                </Grid>
+                                </Box>
                             ))}
-                        </Grid>
+                        </Box>
                     </Grid>
                 </Grid>
             </animated.div>
