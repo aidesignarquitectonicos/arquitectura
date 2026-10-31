@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 //import GalleryView from "../../Components/View/GalleryView";
 import Card from "@mui/joy/Card";
 import CardCover from "@mui/joy/CardCover";
-import icono from "../../Assets/icono.png";
+import icono from "../../Assets/iconot.png";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 import { VideoMetaTags } from "../../Components/VideoMetaTags";
 
@@ -344,7 +344,7 @@ function ProjectDetails() {
                             '&:hover': { background: 'rgba(0,0,0,0.7)' },
                         }}
                     >
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                     </IconButton>
                     <Box
                         sx={{

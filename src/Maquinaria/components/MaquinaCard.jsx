@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { formatPrecioMaquina } from "../utils/formatPrecio";
 
 const PLACEHOLDER = "https://via.placeholder.com/400x250?text=Maquinaria";
 
@@ -69,12 +70,8 @@ export default function MaquinaCard({ maquina }) {
                     {marca}
                 </Typography>
                 <Box sx={{ display: "flex", gap: 1, mt: 1, flexWrap: "wrap" }}>
-                    {precioHora && (
-                        <Chip label={`$${precioHora}/hora`} size="small" variant="outlined" color="primary" />
-                    )}
-                    {precioDia && (
-                        <Chip label={`$${precioDia}/día`} size="small" variant="outlined" color="primary" />
-                    )}
+                    <Chip label={formatPrecioMaquina(precioHora, "hora")} size="small" variant="outlined" color="primary" />
+                    <Chip label={formatPrecioMaquina(precioDia, "día")} size="small" variant="outlined" color="primary" />
                 </Box>
             </CardContent>
             <CardActions sx={{ px: 2, pb: 2, pt: 1 }}>

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    Box,
     TextField,
     FormControlLabel,
     Switch,
@@ -14,14 +13,13 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useMaquinaria } from "../context/MaquinariaContext";
 
-const TIPOS = ["Excavadora", "Retroexcavadora", "Volqueta", "Cargadora", "Compactadora", "Grúa"];
-
 export default function FiltrosMaquinaria() {
     const {
         filtroTipo, setFiltroTipo,
         filtroDisponible, setFiltroDisponible,
         filtroPrecioMax, setFiltroPrecioMax,
         busqueda, setBusqueda,
+        tiposMaquina,
     } = useMaquinaria();
 
     return (
@@ -61,7 +59,7 @@ export default function FiltrosMaquinaria() {
                     onChange={(e) => setFiltroTipo(e.target.value)}
                 >
                     <MenuItem value="">Todos</MenuItem>
-                    {TIPOS.map((t) => (
+                    {tiposMaquina.map((t) => (
                         <MenuItem key={t} value={t}>{t}</MenuItem>
                     ))}
                 </Select>

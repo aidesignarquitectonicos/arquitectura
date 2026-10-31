@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { loadMaquinas, loadMaquina } from "../model/MaquinariaModel";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { loadMaquinas, loadTiposMaquina } from "../model/MaquinariaModel";
 
 const MaquinariaContext = createContext(null);
 
@@ -7,12 +7,25 @@ export function MaquinariaProvider({ children }) {
     const [maquinas, setMaquinas] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [tiposMaquina, setTiposMaquina] = useState([]);
 
     // Filtros
     const [filtroTipo, setFiltroTipo] = useState("");
     const [filtroDisponible, setFiltroDisponible] = useState(false);
     const [filtroPrecioMax, setFiltroPrecioMax] = useState("");
     const [busqueda, setBusqueda] = useState("");
+
+    const refreshTiposMaquina = useCallback(async () => {
+        const data = await loadTiposMaquina();
+        setTiposMaquina(data);
+        setFiltroTipo((actual) => (data.includes(actual) ? actual : ""));
+        setError(null);
+        return data;
+    }, []);
+
+    useEffect(() => {
+        refreshTiposMaquina().catch((e) => setError(e.message));
+    }, [refreshTiposMaquina]);
 
     const fetchMaquinas = useCallback(async () => {
         setLoading(true);
@@ -54,6 +67,8 @@ export function MaquinariaProvider({ children }) {
                 error,
                 fetchMaquinas,
                 getMaquinaById,
+                tiposMaquina,
+                refreshTiposMaquina,
                 // Filtros
                 filtroTipo, setFiltroTipo,
                 filtroDisponible, setFiltroDisponible,

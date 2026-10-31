@@ -18,7 +18,7 @@ import { Edit, MoreVert, QrCode, Save, Share } from "@mui/icons-material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-import QRCodePopup from './QRCodePopup';
+import QRCodePopup from "./QRCodePopup";
 import icono from "../../Assets/iconot.png";
 import { convertGoogleDriveUrl } from "../../Data/googleDriveService";
 
@@ -30,19 +30,21 @@ function GalleryView({ project, index, image }) {
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [qrCodePopup, setQrCodePopup] = useState({ open: false, url: '', project: null });
+    const [qrCodePopup, setQrCodePopup] = useState({
+        open: false,
+        url: "",
+        project: null,
+    });
     const [anchorEls, setAnchorEls] = useState({});
 
-
     const handleQRCodePopupOpen = (url, project) => {
-        console.log('URL: ', url); // Verifica la URL
-        console.log('Proyecto: ', project); // Verifica el proyecto
+        console.log("URL: ", url); // Verifica la URL
+        console.log("Proyecto: ", project); // Verifica el proyecto
         setQrCodePopup({ open: true, url, project });
     };
 
-
     const handleQRCodePopupClose = () => {
-        setQrCodePopup({ open: false, url: '', project: null });
+        setQrCodePopup({ open: false, url: "", project: null });
     };
 
     const open = Boolean(anchorEl);
@@ -155,7 +157,6 @@ function GalleryView({ project, index, image }) {
             [uuid]: {
                 ...prevState[uuid],
                 [field]: value,
-
             },
         }));
     };
@@ -173,7 +174,8 @@ function GalleryView({ project, index, image }) {
         }));
     };
 
-    const URLs = "https://aidesignarquitectonicos.github.io/arquitectura/#/project";
+    const URLs =
+        "https://aidesignarquitectonicos.github.io/arquitectura/#/project";
 
     //Compartir Projecto
     const shareProject = async (project) => {
@@ -225,7 +227,7 @@ function GalleryView({ project, index, image }) {
             const updatedProjects = projects.map((project) =>
                 project.uuid === uuid
                     ? { ...project, ...editedProjects[uuid] }
-                    : project
+                    : project,
             );
             setProjects(updatedProjects);
 
@@ -282,13 +284,12 @@ function GalleryView({ project, index, image }) {
                         <Box
                             sx={{
                                 display: "grid",
-                                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 420px))",
+                                gridTemplateColumns:
+                                    "repeat(auto-fit, minmax(min(100%, 360px), 420px))",
                                 justifyContent: "center",
                                 gap: 3,
                             }}
                         >
-
-
                             {filteredProjects.map((project) => (
                                 <Box key={project.uuid} sx={{ minWidth: 0, width: "100%" }}>
                                     <Box sx={{ marginBottom: 5 }}>
@@ -297,7 +298,7 @@ function GalleryView({ project, index, image }) {
                                                 sx={{
                                                     display: "flex",
                                                     justifyContent: "space-between",
-                                                    flexDirection: 'row',
+                                                    flexDirection: "row",
                                                 }}
                                             >
                                                 <div>
@@ -309,15 +310,18 @@ function GalleryView({ project, index, image }) {
                                                                 handleEditChange(
                                                                     project.uuid,
                                                                     "field1",
-                                                                    e.target.value
+                                                                    e.target.value,
                                                                 )
                                                             }
                                                             fullWidth
                                                         />
                                                     ) : (
                                                         <>
-                                                            <Typography variant="h8" component="h3" style={{}}>
-
+                                                            <Typography
+                                                                variant="h8"
+                                                                component="h3"
+                                                                style={{}}
+                                                            >
                                                                 {editedProjects[project.uuid]?.field1 ||
                                                                     project.field1}
                                                             </Typography>
@@ -338,8 +342,15 @@ function GalleryView({ project, index, image }) {
                                                         </IconButton>
                                                     ) : (
                                                         <>
-                                                            <IconButton onClick={(event) => handleClickMenu(event, project.uuid)}>
-                                                                <MoreVert sx={{ color: 'black' }} fontSize="32px" />
+                                                            <IconButton
+                                                                onClick={(event) =>
+                                                                    handleClickMenu(event, project.uuid)
+                                                                }
+                                                            >
+                                                                <MoreVert
+                                                                    sx={{ color: "black" }}
+                                                                    fontSize="32px"
+                                                                />
                                                             </IconButton>
                                                             <Menu
                                                                 key={project.uuid}
@@ -348,26 +359,34 @@ function GalleryView({ project, index, image }) {
                                                                 open={Boolean(anchorEls[project.uuid])}
                                                                 onClose={() => handleClose(project.uuid)}
                                                                 MenuListProps={{
-                                                                    'aria-labelledby': 'options-button',
+                                                                    "aria-labelledby": "options-button",
                                                                 }}
                                                             >
-
                                                                 <MenuItem
                                                                     onClick={() => shareProject(project)}
                                                                     sx={{ color: "black" }}
                                                                     fontSize="32px"
                                                                 >
-                                                                    <Typography sx={{ padding: 2 }}>Compartir </Typography> <Share sx={{ marginRight: 1 }} />
+                                                                    <Typography sx={{ padding: 2 }}>
+                                                                        Compartir{" "}
+                                                                    </Typography>{" "}
+                                                                    <Share sx={{ marginRight: 1 }} />
                                                                 </MenuItem>
                                                                 <MenuItem
-                                                                    onClick={() => handleQRCodePopupOpen(`${URLs}/${project.uuid}`, project)}
+                                                                    onClick={() =>
+                                                                        handleQRCodePopupOpen(
+                                                                            `${URLs}/${project.uuid}`,
+                                                                            project,
+                                                                        )
+                                                                    }
                                                                 >
-                                                                    <Typography sx={{ padding: 2 }}>Código QR</Typography>
+                                                                    <Typography sx={{ padding: 2 }}>
+                                                                        Código QR
+                                                                    </Typography>
                                                                     <QrCode sx={{ marginRight: 1 }} />
                                                                 </MenuItem>
                                                             </Menu>
                                                         </>
-
                                                     )}
                                                 </div>
                                             </Box>
@@ -411,11 +430,18 @@ function GalleryView({ project, index, image }) {
                                                                     onError={(e) => {
                                                                         const img = e.target;
                                                                         if (!img.dataset.retried) {
-                                                                            img.dataset.retried = 'true';
-                                                                            img.src = convertGoogleDriveUrl(image, false);
+                                                                            img.dataset.retried = "true";
+                                                                            img.src = convertGoogleDriveUrl(
+                                                                                image,
+                                                                                false,
+                                                                            );
                                                                         } else {
-                                                                            console.error('❌ Error cargando imagen en galería:', image);
-                                                                            img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%23999"%3EError cargando imagen%3C/text%3E%3C/svg%3E';
+                                                                            console.error(
+                                                                                "❌ Error cargando imagen en galería:",
+                                                                                image,
+                                                                            );
+                                                                            img.src =
+                                                                                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%23999"%3EError cargando imagen%3C/text%3E%3C/svg%3E';
                                                                         }
                                                                     }}
                                                                 />

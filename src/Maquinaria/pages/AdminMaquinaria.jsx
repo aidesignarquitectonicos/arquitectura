@@ -1,8 +1,27 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
-    Box, Typography, Paper, Grid, Button, TextField, Select, MenuItem,
-    InputLabel, FormControl, Divider, IconButton, Chip, Tab, Tabs, Alert,
-    Table, TableHead, TableRow, TableCell, TableBody, Skeleton,
+    Box,
+    Typography,
+    Paper,
+    Grid,
+    Button,
+    TextField,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    Divider,
+    IconButton,
+    Chip,
+    Tab,
+    Tabs,
+    Alert,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Skeleton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -10,16 +29,27 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import Navbar from "../../Presentation/Components/Navbar/Navbar";
 import {
-    loadMaquinas, createMaquina, updateMaquina, deleteMaquina, loadCotizaciones,
+    loadMaquinas,
+    createMaquina,
+    updateMaquina,
+    deleteMaquina,
+    loadCotizaciones,
+    createTipoMaquina,
+    deleteTipoMaquina,
 } from "../model/MaquinariaModel";
-import { useNavigate } from "react-router-dom";
-
-const TIPOS = ["Excavadora", "Retroexcavadora", "Volqueta", "Cargadora", "Compactadora", "Grúa"];
+import { useMaquinaria } from "../context/MaquinariaContext";
 
 const emptyForm = {
-    nombre: "", marca: "", modelo: "", año: "", tipo: "",
-    descripcion: "", estado: "Disponible",
-    precioHora: "", precioDia: "", precioSemana: "",
+    nombre: "",
+    marca: "",
+    modelo: "",
+    año: "",
+    tipo: "",
+    descripcion: "",
+    estado: "Disponible",
+    precioHora: "",
+    precioDia: "",
+    precioSemana: "",
     ubicacion: "",
     specs: {},
     imagenes: [],
@@ -30,8 +60,39 @@ function TabPanel({ children, value, index }) {
     return value === index ? <Box sx={{ pt: 2 }}>{children}</Box> : null;
 }
 
+function parsePastedSpecs(text) {
+    const lines = text
+        .split(/\r\n?|\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+    const specs = {};
+    let pendingKey = "";
+
+    if (lines.some((line) => line.includes("\t"))) {
+        lines.forEach((line) => {
+            const [key, ...values] = line.split("\t").map((part) => part.trim());
+            const value = values.join("\t").trim();
+            if (key && value) specs[key] = value;
+        });
+    } else {
+        for (let i = 0; i < lines.length; i += 2) {
+            if (lines[i + 1]) {
+                specs[lines[i]] = lines[i + 1];
+            } else {
+                pendingKey = lines[i];
+            }
+        }
+    }
+
+    return { specs, pendingKey };
+}
+
 function AdminMaquinaria({ url }) {
-    const navigate = useNavigate();
+    const {
+        tiposMaquina,
+        refreshTiposMaquina,
+        error: maquinariaError,
+    } = useMaquinaria();
     const [tab, setTab] = useState(0);
     const [maquinas, setMaquinas] = useState([]);
     const [cotizaciones, setCotizaciones] = useState([]);
@@ -45,10 +106,14 @@ function AdminMaquinaria({ url }) {
     // Manejo de specs
     const [specKey, setSpecKey] = useState("");
     const [specVal, setSpecVal] = useState("");
+    const [specPasteMessage, setSpecPasteMessage] = useState("");
 
     // Manejo de imagenes/videos (URLs)
     const [newImgUrl, setNewImgUrl] = useState("");
     const [newVideoUrl, setNewVideoUrl] = useState("");
+    const [newTipo, setNewTipo] = useState("");
+    const [tipoError, setTipoError] = useState(null);
+    const [tipoSaving, setTipoSaving] = useState(false);
 
     const fetchAll = useCallback(async () => {
         setLoading(true);
@@ -58,15 +123,43 @@ function AdminMaquinaria({ url }) {
         setLoading(false);
     }, []);
 
-    useEffect(() => { fetchAll(); }, [fetchAll]);
+    useEffect(() => {
+        fetchAll();
+    }, [fetchAll]);
 
     const handleChange = (field) => (e) =>
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
     const handleAddSpec = () => {
         if (!specKey) return;
-        setForm((prev) => ({ ...prev, specs: { ...prev.specs, [specKey]: specVal } }));
-        setSpecKey(""); setSpecVal("");
+        setForm((prev) => ({
+            ...prev,
+            specs: { ...prev.specs, [specKey]: specVal },
+        }));
+        setSpecKey("");
+        setSpecVal("");
+    };
+
+    const handlePasteSpecs = (event) => {
+        const pastedText = event.clipboardData.getData("text/plain");
+        if (!pastedText.includes("\n") && !pastedText.includes("\t")) return;
+
+        event.preventDefault();
+        const { specs, pendingKey } = parsePastedSpecs(pastedText);
+        const count = Object.keys(specs).length;
+        if (count > 0) {
+            setForm((prev) => ({
+                ...prev,
+                specs: { ...prev.specs, ...specs },
+            }));
+        }
+        setSpecKey(pendingKey);
+        setSpecVal("");
+        setSpecPasteMessage(
+            count > 0
+                ? `${count} especificaciones agregadas.${pendingKey ? ` "${pendingKey}" quedó pendiente de valor.` : ""}`
+                : "No se encontraron pares de clave y valor. Pega dos columnas o una lista alternada.",
+        );
     };
 
     const handleRemoveSpec = (key) => {
@@ -81,7 +174,10 @@ function AdminMaquinaria({ url }) {
     };
 
     const handleRemoveImagen = (idx) => {
-        setForm((prev) => ({ ...prev, imagenes: prev.imagenes.filter((_, i) => i !== idx) }));
+        setForm((prev) => ({
+            ...prev,
+            imagenes: prev.imagenes.filter((_, i) => i !== idx),
+        }));
     };
 
     const handleAddVideo = () => {
@@ -91,7 +187,52 @@ function AdminMaquinaria({ url }) {
     };
 
     const handleRemoveVideo = (idx) => {
-        setForm((prev) => ({ ...prev, videos: prev.videos.filter((_, i) => i !== idx) }));
+        setForm((prev) => ({
+            ...prev,
+            videos: prev.videos.filter((_, i) => i !== idx),
+        }));
+    };
+
+    const handleAddTipo = async (event) => {
+        event.preventDefault();
+        const tipo = newTipo.trim();
+        if (!tipo) return;
+        if (
+            tiposMaquina.some(
+                (actual) => actual.toLocaleLowerCase() === tipo.toLocaleLowerCase(),
+            )
+        ) {
+            setTipoError("Esta categoría ya existe.");
+            return;
+        }
+
+        setTipoSaving(true);
+        setTipoError(null);
+        try {
+            await createTipoMaquina(tipo);
+            await refreshTiposMaquina();
+            setNewTipo("");
+        } catch (e) {
+            setTipoError(e.message);
+        } finally {
+            setTipoSaving(false);
+        }
+    };
+
+    const handleDeleteTipo = async (tipo) => {
+        if (
+            !window.confirm(
+                `¿Eliminar la categoría "${tipo}"? Las máquinas existentes conservarán este tipo.`,
+            )
+        )
+            return;
+        setTipoError(null);
+        try {
+            await deleteTipoMaquina(tipo);
+            await refreshTiposMaquina();
+        } catch (e) {
+            setTipoError(e.message);
+        }
     };
 
     const handleEdit = (maquina) => {
@@ -157,14 +298,22 @@ function AdminMaquinaria({ url }) {
         }
     };
     const handleBack = () => {
-        window.location.href = 'https://aidesignarquitectonicos.github.io/arquitectura/';
+        window.location.href =
+            "https://aidesignarquitectonicos.github.io/arquitectura/";
     };
 
     return (
         <>
-            <Navbar variant="back"
-                title="Admin — Maquinaria" onBack={handleBack} />
-            <Box sx={{ pt: 10, pb: 10, px: { xs: 2, sm: 4 }, maxWidth: 1100, mx: "auto" }}>
+            <Navbar variant="back" title="Admin — Maquinaria" onBack={handleBack} />
+            <Box
+                sx={{
+                    pt: 10,
+                    pb: 10,
+                    px: { xs: 2, sm: 4 },
+                    maxWidth: 1100,
+                    mx: "auto",
+                }}
+            >
                 <Typography variant="h5" fontWeight={700} gutterBottom>
                     Panel de Administración
                 </Typography>
@@ -173,17 +322,26 @@ function AdminMaquinaria({ url }) {
                     <Tab label={editingId ? "✏️ Editar Máquina" : "➕ Nueva Máquina"} />
                     <Tab label="Lista de Máquinas" />
                     <Tab label="Cotizaciones" />
+                    <Tab label="Categorías" />
                 </Tabs>
 
                 {/* ── FORMULARIO ── */}
                 <TabPanel value={tab} index={0}>
                     {ok && (
-                        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setOk(false)}>
+                        <Alert
+                            severity="success"
+                            sx={{ mb: 2 }}
+                            onClose={() => setOk(false)}
+                        >
                             {editingId ? "Actualizado" : "Creado"} correctamente.
                         </Alert>
                     )}
                     {error && (
-                        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                        <Alert
+                            severity="error"
+                            sx={{ mb: 2 }}
+                            onClose={() => setError(null)}
+                        >
                             {error}
                         </Alert>
                     )}
@@ -191,79 +349,227 @@ function AdminMaquinaria({ url }) {
                     <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Nombre *" fullWidth size="small" value={form.nombre} onChange={handleChange("nombre")} />
+                                <TextField
+                                    label="Nombre *"
+                                    fullWidth
+                                    size="small"
+                                    value={form.nombre}
+                                    onChange={handleChange("nombre")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Marca *" fullWidth size="small" value={form.marca} onChange={handleChange("marca")} />
+                                <TextField
+                                    label="Marca *"
+                                    fullWidth
+                                    size="small"
+                                    value={form.marca}
+                                    onChange={handleChange("marca")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="Modelo" fullWidth size="small" value={form.modelo} onChange={handleChange("modelo")} />
+                                <TextField
+                                    label="Modelo"
+                                    fullWidth
+                                    size="small"
+                                    value={form.modelo}
+                                    onChange={handleChange("modelo")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="Año" fullWidth size="small" value={form.año} onChange={handleChange("año")} />
+                                <TextField
+                                    label="Año"
+                                    fullWidth
+                                    size="small"
+                                    value={form.año}
+                                    onChange={handleChange("año")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <FormControl fullWidth size="small">
                                     <InputLabel>Tipo</InputLabel>
-                                    <Select value={form.tipo} label="Tipo" onChange={handleChange("tipo")}>
-                                        {TIPOS.map((t) => <MenuItem key={t} value={t}>{t}</MenuItem>)}
+                                    <Select
+                                        value={form.tipo}
+                                        label="Tipo"
+                                        onChange={handleChange("tipo")}
+                                    >
+                                        {[
+                                            ...new Set([...tiposMaquina, form.tipo].filter(Boolean)),
+                                        ].map((t) => (
+                                            <MenuItem key={t} value={t}>
+                                                {t}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <FormControl fullWidth size="small">
                                     <InputLabel>Estado</InputLabel>
-                                    <Select value={form.estado} label="Estado" onChange={handleChange("estado")}>
+                                    <Select
+                                        value={form.estado}
+                                        label="Estado"
+                                        onChange={handleChange("estado")}
+                                    >
                                         <MenuItem value="Disponible">Disponible</MenuItem>
                                         <MenuItem value="Ocupado">Ocupado</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="Precio/hora ($)" type="number" fullWidth size="small" value={form.precioHora} onChange={handleChange("precioHora")} />
+                                <TextField
+                                    label="Precio/hora ($)"
+                                    type="number"
+                                    fullWidth
+                                    size="small"
+                                    value={form.precioHora}
+                                    onChange={handleChange("precioHora")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="Precio/día ($)" type="number" fullWidth size="small" value={form.precioDia} onChange={handleChange("precioDia")} />
+                                <TextField
+                                    label="Precio/día ($)"
+                                    type="number"
+                                    fullWidth
+                                    size="small"
+                                    value={form.precioDia}
+                                    onChange={handleChange("precioDia")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Precio/semana ($)" type="number" fullWidth size="small" value={form.precioSemana} onChange={handleChange("precioSemana")} />
+                                <TextField
+                                    label="Precio/semana ($)"
+                                    type="number"
+                                    fullWidth
+                                    size="small"
+                                    value={form.precioSemana}
+                                    onChange={handleChange("precioSemana")}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Ubicación" fullWidth size="small" value={form.ubicacion} onChange={handleChange("ubicacion")} />
+                                <TextField
+                                    label="Ubicación"
+                                    fullWidth
+                                    size="small"
+                                    value={form.ubicacion}
+                                    onChange={handleChange("ubicacion")}
+                                />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField label="Descripción" fullWidth size="small" multiline rows={3} value={form.descripcion} onChange={handleChange("descripcion")} />
+                                <TextField
+                                    label="Descripción"
+                                    fullWidth
+                                    size="small"
+                                    multiline
+                                    rows={3}
+                                    value={form.descripcion}
+                                    onChange={handleChange("descripcion")}
+                                />
                             </Grid>
                         </Grid>
 
                         <Divider sx={{ my: 3 }} />
 
                         {/* Specs */}
-                        <Typography fontWeight={600} gutterBottom>Especificaciones técnicas</Typography>
+                        <Typography fontWeight={600} gutterBottom>
+                            Especificaciones técnicas
+                        </Typography>
                         <Box sx={{ display: "flex", gap: 1, mb: 1, flexWrap: "wrap" }}>
-                            <TextField label="Clave (ej: peso)" size="small" value={specKey} onChange={(e) => setSpecKey(e.target.value)} sx={{ width: 180 }} />
-                            <TextField label="Valor (ej: 20t)" size="small" value={specVal} onChange={(e) => setSpecVal(e.target.value)} sx={{ width: 180 }} />
-                            <Button variant="outlined" size="small" onClick={handleAddSpec} startIcon={<AddIcon />}>Agregar</Button>
+                            <TextField
+                                label="Clave (ej: peso)"
+                                size="small"
+                                value={specKey}
+                                onChange={(e) => setSpecKey(e.target.value)}
+                                onPaste={handlePasteSpecs}
+                                helperText="Pega aquí dos columnas o una lista alternada de claves y valores."
+                                sx={{ width: 180 }}
+                            />
+                            <TextField
+                                label="Valor (ej: 20t)"
+                                size="small"
+                                value={specVal}
+                                onChange={(e) => setSpecVal(e.target.value)}
+                                sx={{ width: 180 }}
+                            />
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={handleAddSpec}
+                                startIcon={<AddIcon />}
+                            >
+                                Agregar
+                            </Button>
                         </Box>
+                        {specPasteMessage && (
+                            <Alert
+                                severity={
+                                    specPasteMessage.startsWith("No se") ? "warning" : "success"
+                                }
+                                sx={{ mb: 1 }}
+                                onClose={() => setSpecPasteMessage("")}
+                            >
+                                {specPasteMessage}
+                            </Alert>
+                        )}
                         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
                             {Object.entries(form.specs).map(([k, v]) => (
-                                <Chip key={k} label={`${k}: ${v}`} onDelete={() => handleRemoveSpec(k)} />
+                                <Chip
+                                    key={k}
+                                    label={`${k}: ${v}`}
+                                    onDelete={() => handleRemoveSpec(k)}
+                                />
                             ))}
                         </Box>
 
                         <Divider sx={{ my: 2 }} />
 
                         {/* Imágenes */}
-                        <Typography fontWeight={600} gutterBottom>Imágenes (URLs)</Typography>
+                        <Typography fontWeight={600} gutterBottom>
+                            Imágenes (URLs)
+                        </Typography>
                         <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-                            <TextField label="URL de imagen" size="small" sx={{ flex: 1 }} value={newImgUrl} onChange={(e) => setNewImgUrl(e.target.value)} />
-                            <Button variant="outlined" size="small" onClick={handleAddImagen} startIcon={<AddIcon />}>Agregar</Button>
+                            <TextField
+                                label="URL de imagen"
+                                size="small"
+                                sx={{ flex: 1 }}
+                                value={newImgUrl}
+                                onChange={(e) => setNewImgUrl(e.target.value)}
+                            />
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={handleAddImagen}
+                                startIcon={<AddIcon />}
+                            >
+                                Agregar
+                            </Button>
                         </Box>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 2 }}>
+                        <Box
+                            sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 2 }}
+                        >
                             {form.imagenes.map((url, i) => (
-                                <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                    <Typography variant="body2" noWrap sx={{ flex: 1, maxWidth: 400, overflow: "hidden", textOverflow: "ellipsis" }}>{url}</Typography>
-                                    <IconButton size="small" color="error" onClick={() => handleRemoveImagen(i)}><DeleteIcon fontSize="small" /></IconButton>
+                                <Box
+                                    key={i}
+                                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                                >
+                                    <Typography
+                                        variant="body2"
+                                        noWrap
+                                        sx={{
+                                            flex: 1,
+                                            maxWidth: 400,
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        }}
+                                    >
+                                        {url}
+                                    </Typography>
+                                    <IconButton
+                                        size="small"
+                                        color="error"
+                                        onClick={() => handleRemoveImagen(i)}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
                                 </Box>
                             ))}
                         </Box>
@@ -271,16 +577,53 @@ function AdminMaquinaria({ url }) {
                         <Divider sx={{ my: 2 }} />
 
                         {/* Videos */}
-                        <Typography fontWeight={600} gutterBottom>Videos (URLs de YouTube o Google Drive)</Typography>
+                        <Typography fontWeight={600} gutterBottom>
+                            Videos (URLs de YouTube o Google Drive)
+                        </Typography>
                         <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-                            <TextField label="URL de video" size="small" sx={{ flex: 1 }} value={newVideoUrl} onChange={(e) => setNewVideoUrl(e.target.value)} />
-                            <Button variant="outlined" size="small" onClick={handleAddVideo} startIcon={<AddIcon />}>Agregar</Button>
+                            <TextField
+                                label="URL de video"
+                                size="small"
+                                sx={{ flex: 1 }}
+                                value={newVideoUrl}
+                                onChange={(e) => setNewVideoUrl(e.target.value)}
+                            />
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={handleAddVideo}
+                                startIcon={<AddIcon />}
+                            >
+                                Agregar
+                            </Button>
                         </Box>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 3 }}>
+                        <Box
+                            sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 3 }}
+                        >
                             {form.videos.map((url, i) => (
-                                <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                    <Typography variant="body2" noWrap sx={{ flex: 1, maxWidth: 400, overflow: "hidden", textOverflow: "ellipsis" }}>{url}</Typography>
-                                    <IconButton size="small" color="error" onClick={() => handleRemoveVideo(i)}><DeleteIcon fontSize="small" /></IconButton>
+                                <Box
+                                    key={i}
+                                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                                >
+                                    <Typography
+                                        variant="body2"
+                                        noWrap
+                                        sx={{
+                                            flex: 1,
+                                            maxWidth: 400,
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        }}
+                                    >
+                                        {url}
+                                    </Typography>
+                                    <IconButton
+                                        size="small"
+                                        color="error"
+                                        onClick={() => handleRemoveVideo(i)}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
                                 </Box>
                             ))}
                         </Box>
@@ -293,10 +636,18 @@ function AdminMaquinaria({ url }) {
                                 disabled={saving}
                                 sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600 }}
                             >
-                                {saving ? "Guardando..." : editingId ? "Actualizar" : "Crear Máquina"}
+                                {saving
+                                    ? "Guardando..."
+                                    : editingId
+                                        ? "Actualizar"
+                                        : "Crear Máquina"}
                             </Button>
                             {editingId && (
-                                <Button variant="outlined" onClick={handleCancelEdit} sx={{ borderRadius: 2, textTransform: "none" }}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleCancelEdit}
+                                    sx={{ borderRadius: 2, textTransform: "none" }}
+                                >
                                     Cancelar
                                 </Button>
                             )}
@@ -304,20 +655,117 @@ function AdminMaquinaria({ url }) {
                     </Paper>
                 </TabPanel>
 
+                {/* ── CATEGORÍAS ── */}
+                <TabPanel value={tab} index={3}>
+                    <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
+                        <Typography variant="h6" fontWeight={600} gutterBottom>
+                            Categorías de maquinaria
+                        </Typography>
+                        <Typography color="text.secondary" variant="body2" sx={{ mb: 2 }}>
+                            Las categorías nuevas estarán disponibles al registrar máquinas y
+                            en los filtros del catálogo. Eliminar una categoría no modifica
+                            las máquinas que ya la tienen asignada.
+                        </Typography>
+                        {tipoError && (
+                            <Alert
+                                severity="error"
+                                sx={{ mb: 2 }}
+                                onClose={() => setTipoError(null)}
+                            >
+                                {tipoError}
+                            </Alert>
+                        )}
+                        {maquinariaError && !tipoError && (
+                            <Alert severity="error" sx={{ mb: 2 }}>
+                                {maquinariaError}
+                            </Alert>
+                        )}
+                        <Box
+                            component="form"
+                            onSubmit={handleAddTipo}
+                            sx={{ display: "flex", gap: 1, mb: 3, flexWrap: "wrap" }}
+                        >
+                            <TextField
+                                label="Nombre de la categoría"
+                                size="small"
+                                value={newTipo}
+                                onChange={(e) => setNewTipo(e.target.value)}
+                                inputProps={{ maxLength: 50 }}
+                                sx={{ flex: "1 1 240px" }}
+                            />
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                startIcon={<AddIcon />}
+                                disabled={tipoSaving || !newTipo.trim()}
+                            >
+                                {tipoSaving ? "Guardando..." : "Agregar categoría"}
+                            </Button>
+                        </Box>
+                        {tiposMaquina.length === 0 ? (
+                            <Typography color="text.secondary">
+                                No hay categorías registradas.
+                            </Typography>
+                        ) : (
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                {tiposMaquina.map((tipo) => (
+                                    <Box
+                                        key={tipo}
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            border: "1px solid",
+                                            borderColor: "divider",
+                                            borderRadius: 1,
+                                            px: 2,
+                                            py: 0.5,
+                                        }}
+                                    >
+                                        <Typography>{tipo}</Typography>
+                                        <IconButton
+                                            size="small"
+                                            color="error"
+                                            aria-label={`Eliminar categoría ${tipo}`}
+                                            onClick={() => handleDeleteTipo(tipo)}
+                                        >
+                                            <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                    </Box>
+                                ))}
+                            </Box>
+                        )}
+                    </Paper>
+                </TabPanel>
+
                 {/* ── LISTA DE MÁQUINAS ── */}
                 <TabPanel value={tab} index={1}>
                     {loading ? (
-                        [1, 2, 3].map((n) => <Skeleton key={n} height={60} sx={{ mb: 1 }} />)
+                        [1, 2, 3].map((n) => (
+                            <Skeleton key={n} height={60} sx={{ mb: 1 }} />
+                        ))
                     ) : (
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><b>Nombre</b></TableCell>
-                                    <TableCell><b>Marca</b></TableCell>
-                                    <TableCell><b>Tipo</b></TableCell>
-                                    <TableCell><b>Estado</b></TableCell>
-                                    <TableCell><b>$/hora</b></TableCell>
-                                    <TableCell align="right"><b>Acciones</b></TableCell>
+                                    <TableCell>
+                                        <b>Nombre</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Marca</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Tipo</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Estado</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>$/hora</b>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <b>Acciones</b>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -338,7 +786,11 @@ function AdminMaquinaria({ url }) {
                                             <IconButton size="small" onClick={() => handleEdit(m)}>
                                                 <EditIcon fontSize="small" />
                                             </IconButton>
-                                            <IconButton size="small" color="error" onClick={() => handleDelete(m.id)}>
+                                            <IconButton
+                                                size="small"
+                                                color="error"
+                                                onClick={() => handleDelete(m.id)}
+                                            >
                                                 <DeleteIcon fontSize="small" />
                                             </IconButton>
                                         </TableCell>
@@ -352,17 +804,29 @@ function AdminMaquinaria({ url }) {
                 {/* ── COTIZACIONES ── */}
                 <TabPanel value={tab} index={2}>
                     {loading ? (
-                        [1, 2, 3].map((n) => <Skeleton key={n} height={60} sx={{ mb: 1 }} />)
+                        [1, 2, 3].map((n) => (
+                            <Skeleton key={n} height={60} sx={{ mb: 1 }} />
+                        ))
                     ) : cotizaciones.length === 0 ? (
-                        <Typography color="text.secondary">Sin cotizaciones registradas.</Typography>
+                        <Typography color="text.secondary">
+                            Sin cotizaciones registradas.
+                        </Typography>
                     ) : (
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><b>Cliente</b></TableCell>
-                                    <TableCell><b>Fecha</b></TableCell>
-                                    <TableCell><b>Total</b></TableCell>
-                                    <TableCell><b>Máquinas</b></TableCell>
+                                    <TableCell>
+                                        <b>Cliente</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Fecha</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Total</b>
+                                    </TableCell>
+                                    <TableCell>
+                                        <b>Máquinas</b>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -370,12 +834,19 @@ function AdminMaquinaria({ url }) {
                                     <TableRow key={c.id} hover>
                                         <TableCell>{c.cliente}</TableCell>
                                         <TableCell>
-                                            {c.fecha ? new Date(c.fecha).toLocaleDateString("es-EC") : "—"}
+                                            {c.fecha
+                                                ? new Date(c.fecha).toLocaleDateString("es-EC")
+                                                : "—"}
                                         </TableCell>
                                         <TableCell>${Number(c.total).toFixed(2)}</TableCell>
                                         <TableCell>
                                             {(c.items ?? []).map((i, idx) => (
-                                                <Chip key={idx} label={i.nombre} size="small" sx={{ mr: 0.5 }} />
+                                                <Chip
+                                                    key={idx}
+                                                    label={i.nombre}
+                                                    size="small"
+                                                    sx={{ mr: 0.5 }}
+                                                />
                                             ))}
                                         </TableCell>
                                     </TableRow>

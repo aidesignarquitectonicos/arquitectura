@@ -1,19 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-    Box, Typography, Chip, Grid, Divider, Tab, Tabs,
-    ImageList, ImageListItem, Paper, Rating, TextField,
-    Button, Avatar, Alert, Skeleton, IconButton, Dialog,
+    Box,
+    Typography,
+    Chip,
+    Grid,
+    Divider,
+    Tab,
+    Tabs,
+    ImageList,
+    ImageListItem,
+    Paper,
+    Rating,
+    TextField,
+    Button,
+    Avatar,
+    Alert,
+    Skeleton,
+    IconButton,
+    Dialog,
     DialogContent,
 } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Navbar from "../../Presentation/Components/Navbar/Navbar";
 import { loadMaquina, addReview } from "../model/MaquinariaModel";
 import { useCotizacion } from "../context/CotizacionContext";
 import CotizacionWidget from "../components/CotizacionWidget";
 import CarritoFab from "../components/CarritoFab";
+import { formatPrecioMaquina } from "../utils/formatPrecio";
 
 const WHATSAPP_NUMBER = "593999999999"; // ← Cambiar por el número real
 
@@ -30,6 +49,40 @@ export default function DetalleMaquina() {
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState(0);
     const [zoomImg, setZoomImg] = useState(null);
+    const [imageZoom, setImageZoom] = useState(1);
+    const zoomViewportRef = useRef(null);
+
+    const openImageZoom = (url) => {
+        setImageZoom(1);
+        setZoomImg(url);
+    };
+
+    const closeImageZoom = () => {
+        setZoomImg(null);
+        setImageZoom(1);
+    };
+
+    const handleImageWheel = (event) => {
+        event.preventDefault();
+        setImageZoom((zoom) =>
+            Math.min(3, Math.max(1, zoom + (event.deltaY < 0 ? 0.25 : -0.25))),
+        );
+    };
+
+    useEffect(() => {
+        const viewport = zoomViewportRef.current;
+        if (!viewport) return;
+
+        if (imageZoom === 1) {
+            viewport.scrollTo({ left: 0, top: 0 });
+            return;
+        }
+
+        viewport.scrollTo({
+            left: (viewport.scrollWidth - viewport.clientWidth) / 2,
+            top: (viewport.scrollHeight - viewport.clientHeight) / 2,
+        });
+    }, [imageZoom, zoomImg]);
 
     // Review form
     const [reviewer, setReviewer] = useState("");
@@ -47,7 +100,7 @@ export default function DetalleMaquina() {
 
     const handleWhatsApp = () => {
         const msg = encodeURIComponent(
-            `Hola! Me interesa cotizar la maquinaria: ${maquina?.nombre} (${maquina?.marca})`
+            `Hola! Me interesa cotizar la maquinaria: ${maquina?.nombre} (${maquina?.marca})`,
         );
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
     };
@@ -69,7 +122,11 @@ export default function DetalleMaquina() {
     const handleEnviarReview = async () => {
         if (!reviewer || !comentario) return;
         setReviewSaving(true);
-        await addReview(id, { usuario: reviewer, calificacion: ratingVal, comentario });
+        await addReview(id, {
+            usuario: reviewer,
+            calificacion: ratingVal,
+            comentario,
+        });
         setReviewOk(true);
         setReviewSaving(false);
         setReviewer("");
@@ -82,9 +139,17 @@ export default function DetalleMaquina() {
     if (loading) {
         return (
             <>
-                <Navbar variant="back" title="Detalle" onBack={() => navigate("/maquinaria")} />
+                <Navbar
+                    variant="back"
+                    title="Detalle"
+                    onBack={() => navigate("/maquinaria")}
+                />
                 <Box sx={{ pt: 10, px: 2, maxWidth: 900, mx: "auto" }}>
-                    <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 3, mb: 2 }} />
+                    <Skeleton
+                        variant="rectangular"
+                        height={300}
+                        sx={{ borderRadius: 3, mb: 2 }}
+                    />
                     <Skeleton width="60%" height={40} />
                     <Skeleton width="40%" />
                 </Box>
@@ -95,7 +160,11 @@ export default function DetalleMaquina() {
     if (!maquina) {
         return (
             <>
-                <Navbar variant="back" title="No encontrado" onBack={() => navigate("/maquinaria")} />
+                <Navbar
+                    variant="back"
+                    title="No encontrado"
+                    onBack={() => navigate("/maquinaria")}
+                />
                 <Box sx={{ pt: 12, textAlign: "center" }}>
                     <Typography>Máquina no encontrada.</Typography>
                 </Box>
@@ -104,24 +173,40 @@ export default function DetalleMaquina() {
     }
 
     const {
-        nombre, marca, modelo, año, estado = "Disponible",
-        descripcion, specs = {}, imagenes = [], videos = [], reviews = [],
-        precioHora, precioDia, precioSemana, ubicacion,
+        nombre,
+        marca,
+        modelo,
+        año,
+        estado = "Disponible",
+        descripcion,
+        specs = {},
+        imagenes = [],
+        videos = [],
+        reviews = [],
+        precioHora,
+        precioDia,
+        precioSemana,
+        ubicacion,
     } = maquina;
 
     return (
         <>
-            <Navbar variant="back" title={nombre} onBack={() => navigate("/maquinaria")} />
+            <Navbar
+                variant="back"
+                title={nombre}
+                onBack={() => navigate("/maquinaria")}
+            />
 
-            <Box sx={{ pt: 9, pb: 12, px: { xs: 2, sm: 4 }, maxWidth: 960, mx: "auto" }}>
-
+            <Box
+                sx={{ pt: 9, pb: 12, px: { xs: 2, sm: 4 }, maxWidth: 960, mx: "auto" }}
+            >
                 {/* Hero imagen */}
                 {imagenes[0] && (
                     <Box
                         component="img"
                         src={imagenes[0]}
                         alt={nombre}
-                        onClick={() => setZoomImg(imagenes[0])}
+                        onClick={() => openImageZoom(imagenes[0])}
                         sx={{
                             width: "100%",
                             maxHeight: 340,
@@ -134,10 +219,24 @@ export default function DetalleMaquina() {
                 )}
 
                 {/* Info básica */}
-                <Box sx={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 1, mb: 1 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexWrap: "wrap",
+                        gap: 1,
+                        mb: 1,
+                    }}
+                >
                     <Box>
-                        <Typography variant="h5" fontWeight={700}>{nombre}</Typography>
-                        <Typography color="text.secondary">{marca}{modelo ? ` — ${modelo}` : ""}{año ? ` (${año})` : ""}</Typography>
+                        <Typography variant="h5" fontWeight={700}>
+                            {nombre}
+                        </Typography>
+                        <Typography color="text.secondary">
+                            {marca}
+                            {modelo ? ` — ${modelo}` : ""}
+                            {año ? ` (${año})` : ""}
+                        </Typography>
                     </Box>
                     <Chip
                         label={estado}
@@ -148,9 +247,21 @@ export default function DetalleMaquina() {
 
                 {/* Precios */}
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
-                    {precioHora && <Chip label={`$${precioHora}/hora`} color="primary" variant="outlined" />}
-                    {precioDia && <Chip label={`$${precioDia}/día`} color="primary" variant="outlined" />}
-                    {precioSemana && <Chip label={`$${precioSemana}/semana`} color="primary" variant="outlined" />}
+                    <Chip
+                        label={formatPrecioMaquina(precioHora, "hora")}
+                        color="primary"
+                        variant="outlined"
+                    />
+                    <Chip
+                        label={formatPrecioMaquina(precioDia, "día")}
+                        color="primary"
+                        variant="outlined"
+                    />
+                    <Chip
+                        label={formatPrecioMaquina(precioSemana, "semana")}
+                        color="primary"
+                        variant="outlined"
+                    />
                     {ubicacion && <Chip label={`📍 ${ubicacion}`} variant="outlined" />}
                 </Box>
 
@@ -178,7 +289,12 @@ export default function DetalleMaquina() {
                 <Divider sx={{ mb: 2 }} />
 
                 {/* Tabs */}
-                <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons="auto">
+                <Tabs
+                    value={tab}
+                    onChange={(_, v) => setTab(v)}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                >
                     <Tab label="Descripción" />
                     <Tab label="Especificaciones" />
                     <Tab label="Galería" />
@@ -197,9 +313,14 @@ export default function DetalleMaquina() {
                 {/* Especificaciones */}
                 <TabPanel value={tab} index={1}>
                     {Object.keys(specs).length === 0 ? (
-                        <Typography color="text.secondary">Sin especificaciones registradas.</Typography>
+                        <Typography color="text.secondary">
+                            Sin especificaciones registradas.
+                        </Typography>
                     ) : (
-                        <Paper variant="outlined" sx={{ borderRadius: 3, overflow: "hidden" }}>
+                        <Paper
+                            variant="outlined"
+                            sx={{ borderRadius: 3, overflow: "hidden" }}
+                        >
                             {Object.entries(specs).map(([key, val], i) => (
                                 <Box
                                     key={key}
@@ -208,11 +329,16 @@ export default function DetalleMaquina() {
                                         px: 2,
                                         py: 1.5,
                                         bgcolor: i % 2 === 0 ? "#f9f9f9" : "white",
+                                        justifyContent: "space-between",
                                     }}
                                 >
-                                    <Typography fontWeight={600} sx={{ minWidth: 160, textTransform: "capitalize" }}>
-                                        {key}
+                                    <Typography
+                                        fontWeight={600}
+                                        sx={{ minWidth: 160, textTransform: "capitalize" }}
+                                    >
+                                        {key}:
                                     </Typography>
+
                                     <Typography color="text.secondary">{val}</Typography>
                                 </Box>
                             ))}
@@ -223,14 +349,24 @@ export default function DetalleMaquina() {
                 {/* Galería */}
                 <TabPanel value={tab} index={2}>
                     {imagenes.length === 0 ? (
-                        <Typography color="text.secondary">Sin imágenes disponibles.</Typography>
+                        <Typography color="text.secondary">
+                            Sin imágenes disponibles.
+                        </Typography>
                     ) : (
-                        <ImageList cols={3} gap={8} sx={{ borderRadius: 2, overflow: "hidden" }}>
+                        <ImageList
+                            cols={3}
+                            gap={8}
+                            sx={{ borderRadius: 2, overflow: "hidden" }}
+                        >
                             {imagenes.map((url, i) => (
                                 <ImageListItem
                                     key={i}
-                                    onClick={() => setZoomImg(url)}
-                                    sx={{ cursor: "zoom-in", borderRadius: 2, overflow: "hidden" }}
+                                    onClick={() => openImageZoom(url)}
+                                    sx={{
+                                        cursor: "zoom-in",
+                                        borderRadius: 2,
+                                        overflow: "hidden",
+                                    }}
                                 >
                                     <img
                                         src={url}
@@ -247,7 +383,9 @@ export default function DetalleMaquina() {
                 {/* Videos */}
                 <TabPanel value={tab} index={3}>
                     {videos.length === 0 ? (
-                        <Typography color="text.secondary">Sin videos disponibles.</Typography>
+                        <Typography color="text.secondary">
+                            Sin videos disponibles.
+                        </Typography>
                     ) : (
                         <Grid container spacing={2}>
                             {videos.map((url, i) => (
@@ -259,7 +397,12 @@ export default function DetalleMaquina() {
                                             title={`Video ${i + 1}`}
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowFullScreen
-                                            sx={{ width: "100%", height: 220, borderRadius: 2, border: "none" }}
+                                            sx={{
+                                                width: "100%",
+                                                height: 220,
+                                                borderRadius: 2,
+                                                border: "none",
+                                            }}
                                         />
                                     ) : (
                                         <Box
@@ -283,26 +426,47 @@ export default function DetalleMaquina() {
                 {/* Reseñas */}
                 <TabPanel value={tab} index={5}>
                     {reviews.map((r) => (
-                        <Paper key={r.id} variant="outlined" sx={{ p: 2, mb: 2, borderRadius: 3 }}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                        <Paper
+                            key={r.id}
+                            variant="outlined"
+                            sx={{ p: 2, mb: 2, borderRadius: 3 }}
+                        >
+                            <Box
+                                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
+                            >
                                 <Avatar sx={{ width: 32, height: 32, fontSize: 14 }}>
                                     {r.usuario?.[0]?.toUpperCase() ?? "?"}
                                 </Avatar>
                                 <Typography fontWeight={600}>{r.usuario}</Typography>
                                 <Rating value={r.calificacion} readOnly size="small" />
                             </Box>
-                            <Typography variant="body2" color="text.secondary">{r.comentario}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {r.comentario}
+                            </Typography>
                         </Paper>
                     ))}
 
                     <Divider sx={{ my: 2 }} />
-                    <Typography fontWeight={600} gutterBottom>Deja tu reseña</Typography>
+                    <Typography fontWeight={600} gutterBottom>
+                        Deja tu reseña
+                    </Typography>
                     {reviewOk && (
-                        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setReviewOk(false)}>
+                        <Alert
+                            severity="success"
+                            sx={{ mb: 2 }}
+                            onClose={() => setReviewOk(false)}
+                        >
                             Reseña enviada. ¡Gracias!
                         </Alert>
                     )}
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 480 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                            maxWidth: 480,
+                        }}
+                    >
                         <TextField
                             label="Tu nombre"
                             size="small"
@@ -310,7 +474,9 @@ export default function DetalleMaquina() {
                             onChange={(e) => setReviewer(e.target.value)}
                         />
                         <Box>
-                            <Typography variant="body2" mb={0.5}>Calificación</Typography>
+                            <Typography variant="body2" mb={0.5}>
+                                Calificación
+                            </Typography>
                             <Rating value={ratingVal} onChange={(_, v) => setRatingVal(v)} />
                         </Box>
                         <TextField
@@ -325,7 +491,11 @@ export default function DetalleMaquina() {
                             variant="contained"
                             onClick={handleEnviarReview}
                             disabled={reviewSaving || !reviewer || !comentario}
-                            sx={{ alignSelf: "flex-start", borderRadius: 2, textTransform: "none" }}
+                            sx={{
+                                alignSelf: "flex-start",
+                                borderRadius: 2,
+                                textTransform: "none",
+                            }}
                         >
                             {reviewSaving ? "Enviando..." : "Enviar reseña"}
                         </Button>
@@ -334,15 +504,100 @@ export default function DetalleMaquina() {
             </Box>
 
             {/* Zoom de imagen */}
-            <Dialog open={!!zoomImg} onClose={() => setZoomImg(null)} maxWidth="lg">
-                <DialogContent sx={{ p: 0, position: "relative" }}>
+            <Dialog open={!!zoomImg} onClose={closeImageZoom} maxWidth="lg">
+                <DialogContent
+                    ref={zoomViewportRef}
+                    onWheel={handleImageWheel}
+                    sx={{
+                        p: 0,
+                        position: "relative",
+                        width: "90vw",
+                        height: "85vh",
+                        overflow: "auto",
+                        bgcolor: "black",
+                    }}
+                >
                     <IconButton
-                        onClick={() => setZoomImg(null)}
-                        sx={{ position: "absolute", top: 8, right: 8, bgcolor: "rgba(0,0,0,0.5)", color: "white" }}
+                        onClick={closeImageZoom}
+                        aria-label="Cerrar imagen ampliada"
+                        sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            bgcolor: "rgba(0,0,0,0.5)",
+                            color: "white",
+                        }}
                     >
                         <CloseIcon />
                     </IconButton>
-                    <img src={zoomImg} alt="zoom" style={{ maxWidth: "90vw", maxHeight: "85vh", display: "block" }} />
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            zIndex: 1,
+                            left: 8,
+                            bottom: 8,
+                            display: "flex",
+                            alignItems: "center",
+                            bgcolor: "rgba(0,0,0,0.55)",
+                            borderRadius: 2,
+                        }}
+                    >
+                        <IconButton
+                            onClick={() => setImageZoom((zoom) => Math.max(1, zoom - 0.25))}
+                            disabled={imageZoom <= 1}
+                            aria-label="Alejar imagen"
+                            sx={{ color: "white" }}
+                        >
+                            <ZoomOutIcon />
+                        </IconButton>
+                        <Typography
+                            color="white"
+                            sx={{ minWidth: 48, textAlign: "center" }}
+                        >
+                            {Math.round(imageZoom * 100)}%
+                        </Typography>
+                        <IconButton
+                            onClick={() => setImageZoom((zoom) => Math.min(3, zoom + 0.25))}
+                            disabled={imageZoom >= 3}
+                            aria-label="Acercar imagen"
+                            sx={{ color: "white" }}
+                        >
+                            <ZoomInIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => setImageZoom(1)}
+                            disabled={imageZoom === 1}
+                            aria-label="Restablecer zoom"
+                            sx={{ color: "white" }}
+                        >
+                            <RestartAltIcon />
+                        </IconButton>
+                    </Box>
+                    {zoomImg && (
+                        <Box
+                            sx={{
+                                width: "max-content",
+                                minWidth: "100%",
+                                height: "max-content",
+                                minHeight: "100%",
+                                display: "grid",
+                                placeItems: "center",
+                            }}
+                        >
+                            <img
+                                src={zoomImg}
+                                alt={`Imagen ampliada de ${nombre}`}
+                                style={{
+                                    display: "block",
+                                    width: `${imageZoom * 90}vw`,
+                                    height: `${imageZoom * 85}vh`,
+                                    objectFit: "contain",
+                                    cursor: imageZoom > 1 ? "zoom-out" : "zoom-in",
+                                }}
+                                onClick={() => setImageZoom((zoom) => (zoom === 1 ? 2 : 1))}
+                            />
+                        </Box>
+                    )}
                 </DialogContent>
             </Dialog>
 
